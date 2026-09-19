@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import { company, categories } from '../data/company';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = company.tagline } = Astro.props;
+const fullTitle = `${title} - ${company.nameZh}`;
+---
+
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.url.href} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">{company.nameZh}</a>
+        <nav class="site-nav" aria-label="主導覽">
+          <a href="/about/">關於我們</a>
+          {categories.map((c) => <a href={`/products/${c.slug}/`}>{c.nameZh}</a>)}
+          <a href="/inquiry/">詢價車</a>
+          <a href="/contact/">聯絡我們</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <dl>
+          <dt>公司</dt><dd>{company.nameZh}（{company.nameEn}）</dd>
+          <dt>地址</dt><dd>{company.address}</dd>
+          <dt>電話</dt><dd><a href={`tel:${company.tel.replace(/-/g, '')}`}>{company.tel}</a></dd>
+          <dt>傳真</dt><dd>{company.fax}</dd>
+          <dt>信箱</dt><dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
+        </dl>
+      </div>
+    </footer>
+  </body>
+</html>

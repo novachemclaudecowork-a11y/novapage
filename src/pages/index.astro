@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { company, categories } from '../data/company';
+---
+
+<BaseLayout title="首頁">
+  <h1>{company.nameZh}</h1>
+  <p>{company.tagline}</p>
+
+  <h2>產品線</h2>
+  <ul>
+    {categories.map((c) => (
+      <li><a href={`/products/${c.slug}/`}>{c.nameZh}</a></li>
+    ))}
+  </ul>
+
+  <hr />
+
+  <p>
+    <strong>施工中：</strong>這是新網站的基礎骨架。
+    實際版面、文案與產品資料待現行網站鏡像檔取得後建置，
+    步驟請見 <code>docs/鏡像操作指南.md</code>。
+  </p>
+</BaseLayout>

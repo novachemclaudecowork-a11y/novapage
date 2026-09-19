@@ -1,0 +1,85 @@
+/*
+ * 全站基礎樣式。
+ * 目前為中性配色的暫定版本 —— 取得現行網站鏡像檔後，
+ * 會改為沿用原站的品牌色與字體，以維持外觀一致。
+ */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f6f7f9;
+  --color-border: #e2e5ea;
+  --color-text: #1a1d21;
+  --color-text-muted: #5b6370;
+  --color-brand: #12447a;
+  --color-brand-hover: #0d3460;
+
+  --space-gutter: 16px;
+  --max-width: 1140px;
+  --radius: 6px;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", "Noto Sans TC",
+               "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: var(--color-brand); }
+a:hover { color: var(--color-brand-hover); }
+
+img { max-width: 100%; height: auto; }
+
+.container {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--space-gutter);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.site-header .container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  padding-block: 16px;
+}
+.site-header .brand {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-decoration: none;
+}
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin-inline-start: auto;
+}
+.site-nav a {
+  text-decoration: none;
+  color: var(--color-text);
+  padding-block: 4px;
+}
+.site-nav a:hover { color: var(--color-brand); }
+
+.site-footer {
+  margin-top: 64px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+}
+.site-footer .container { padding-block: 32px; }
+.site-footer dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+.site-footer dt { font-weight: 600; color: var(--color-text); }
+.site-footer dd { margin: 0; }
