@@ -1,11 +1,8 @@
 {
   // Cloudflare Workers 專案設定。
   //
-  // 若本專案是以 Cloudflare **Pages** 部署，這個檔案不會被使用，
+  // 若本專案改以 Cloudflare **Pages** 部署，這個檔案不會被使用，
   // 轉址走的是 functions/_middleware.js。
-  //
-  // 以 **Workers** 部署時，才會由 worker/index.js 處理轉址，
-  // 再把其餘請求交給 dist/ 的靜態檔案。
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "novapage",
   "main": "worker/index.js",
@@ -13,7 +10,17 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    // 找不到對應檔案時回傳 Astro 產生的 404 頁面
+
+    // 一律先跑 worker/index.js。
+    //
+    // 預設（false）是先比對靜態資源，比不到才交給 Worker；但只要設了
+    // not_found_handling，資源路由器就會自己回應找不到的請求，
+    // Worker 永遠不會被呼叫，舊網址轉址因此全部失效。
+    // 本機 wrangler dev 不會呈現這個差異，只有部署後才看得出來。
+    "run_worker_first": true,
+
+    // Worker 內呼叫 env.ASSETS.fetch() 後，找不到檔案時回傳
+    // Astro 產生的 404 頁面
     "not_found_handling": "404-page"
   }
 }
