@@ -163,7 +163,7 @@
     "code": "MPV",
     "category": "screen-inks",
     "subcategory": "mpv",
-    "published": false,
+    "published": true,
     "order": 100,
     "images": [],
     "documents": [],
