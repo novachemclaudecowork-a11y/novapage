@@ -460,6 +460,107 @@ function renderProductsTab(root) {
   );
 }
 
+/* ---------- 分類 ---------- */
+
+/** 某個產品線底下有幾項已上架的產品 */
+function publishedCountIn(subSlug) {
+  return state.products.filter((p) => p.published && p.subcategory === subSlug).length;
+}
+
+function renderCategoriesTab(root) {
+  const rerender = () => { root.replaceChildren(); renderCategoriesTab(root); };
+
+  root.append(
+    el('p', { class: 'note' },
+      '這裡控制左側選單上顯示哪些分類與產品線。',
+      el('br'),
+      '「隱藏」的項目不會出現在網站選單上，但產品本身若仍上架，' +
+      '產品頁與舊連結都還是正常的。'),
+  );
+
+  const sorted = [...state.categories].sort((a, b) => a.order - b.order);
+
+  for (const cat of sorted) {
+    const subs = el('ul', { class: 'cat-subs' });
+
+    for (const sub of [...(cat.children ?? [])].sort((a, b) => a.order - b.order)) {
+      const count = publishedCountIn(sub.slug);
+      const hidden = sub.published === false;
+
+      // 依「有沒有產品」與「有沒有隱藏」給出實際會發生什麼的說明，
+      // 讓使用者不必自己推敲兩個開關的交互作用
+      let note = '';
+      let warn = false;
+      if (hidden) {
+        note = '已隱藏：不會出現在選單上';
+        if (count > 0) {
+          note += `（底下 ${count} 項產品仍在網站上，可從主分類找到）`;
+        }
+      } else if (count === 0) {
+        note = '選單上會顯示為灰色，點進去是「尚未上架內容，請來電洽詢」。' +
+               '若此品項已停售，建議改為隱藏。';
+        warn = true;
+      }
+
+      subs.append(
+        el('li', {
+          class: hidden ? 'hidden-line' : undefined,
+          dataset: { slug: sub.slug },
+        },
+          el('input', {
+            type: 'number', class: 'cat-order', value: sub.order,
+            'aria-label': `${sub.name} 的排序`,
+            onchange: (e) => { sub.order = Number(e.target.value) || 0; markDirty('categories'); },
+          }),
+          el('input', {
+            type: 'text', value: sub.name, 'aria-label': '產品線名稱',
+            oninput: (e) => { sub.name = e.target.value; markDirty('categories'); },
+          }),
+          el('span', { class: 'cat-count' }, count ? `${count} 項產品` : '無產品'),
+          el('button', {
+            class: `pill ${hidden ? 'off' : 'on'}`, type: 'button',
+            title: hidden ? '點擊改為顯示' : '點擊改為隱藏',
+            onclick: () => {
+              sub.published = hidden;
+              markDirty('categories');
+              rerender();
+            },
+          }, hidden ? '已隱藏' : '顯示中'),
+          note ? el('span', { class: `cat-note${warn ? ' warn' : ''}` }, note) : null,
+        ),
+      );
+    }
+
+    root.append(
+      el('div', { class: 'cat-group', dataset: { slug: cat.slug } },
+        el('div', { class: 'cat-main' },
+          el('input', {
+            type: 'number', class: 'cat-order', value: cat.order,
+            'aria-label': `${cat.name} 的排序`,
+            onchange: (e) => { cat.order = Number(e.target.value) || 0; markDirty('categories'); },
+          }),
+          el('input', {
+            type: 'text', value: cat.name, 'aria-label': '分類名稱',
+            oninput: (e) => { cat.name = e.target.value; markDirty('categories'); },
+          }),
+          el('span', { class: 'cat-count' },
+            `${state.products.filter((p) => p.published && p.category === cat.slug).length} 項產品`),
+          el('button', {
+            class: `pill ${cat.published === false ? 'off' : 'on'}`, type: 'button',
+            title: cat.published === false ? '點擊改為顯示' : '點擊改為隱藏',
+            onclick: () => {
+              cat.published = cat.published === false;
+              markDirty('categories');
+              rerender();
+            },
+          }, cat.published === false ? '已隱藏' : '顯示中'),
+        ),
+        subs,
+      ),
+    );
+  }
+}
+
 /* ---------- 最新訊息 ---------- */
 
 function renderNewsTab(root) {
@@ -568,6 +669,7 @@ function render() {
   const root = $('content');
   root.replaceChildren();
   if (state.tab === 'products') renderProductsTab(root);
+  else if (state.tab === 'categories') renderCategoriesTab(root);
   else if (state.tab === 'news') renderNewsTab(root);
   else renderAboutTab(root);
 }

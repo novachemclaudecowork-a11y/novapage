@@ -98,13 +98,16 @@ function main() {
       categoryMap[cat.legacy_m] = `/category/${cat.slug}/`;
     }
     for (const sub of cat.children ?? []) {
-      if (!sub.legacy_m2 || sub.published === false) continue;
+      if (!sub.legacy_m2) continue;
       const inSub = products.filter((p) => p.published && p.subcategory === sub.slug);
+
       if (inSub.length === 1) {
         // 只有一項產品時不產生列表頁（見 src/data/site.ts 的 needsListingPage），
-        // 因此只能導到產品頁，不可登記列表頁的網址，否則會導向不存在的頁面
+        // 只能導到產品頁。產品線即使被隱藏，只要產品本身還上架，
+        // 產品頁就存在，舊網址仍應導過去而不是退回主分類。
         subcategoryProductMap[sub.legacy_m2] = `/products/${inSub[0].slug}/`;
-      } else {
+      } else if (sub.published !== false) {
+        // 列表頁只在產品線未被隱藏時才會產生
         subcategoryMap[sub.legacy_m2] = `/category/${cat.slug}/${sub.slug}/`;
       }
     }

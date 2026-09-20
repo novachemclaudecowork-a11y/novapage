@@ -165,6 +165,45 @@ await page.waitForSelector('#f-name');
 check('新產品帶入輸入的名稱', await page.inputValue('#f-name'), '矽膠油墨測試');
 check('新產品預設不上架', await page.isChecked('#f-pub'), false);
 
+console.log('\n分類管理：');
+await page.locator('button[data-tab="categories"]').click();
+await page.waitForSelector('.cat-group');
+check('列出兩個主分類', await page.locator('.cat-group').count(), 2);
+check('列出所有產品線', await page.locator('.cat-subs li').count(), 3);
+
+// 沒有產品的產品線要提醒使用者實際會發生什麼
+// 名稱在 input 的 value 裡，無法用文字選取，改用 data-slug
+const emptyRow = page.locator('.cat-subs li[data-slug="mpv"]');
+check('無產品的產品線顯示「無產品」', (await emptyRow.locator('.cat-count').textContent()), '無產品');
+check('並提示點進去會是來電洽詢', (await emptyRow.locator('.cat-note').textContent())?.includes('來電洽詢'), true);
+
+// 切換隱藏
+const toggle = emptyRow.locator('button.pill');
+check('預設為顯示中', await toggle.textContent(), '顯示中');
+await toggle.click();
+await page.waitForTimeout(200);
+check('可切換為已隱藏',
+  await page.locator('.cat-subs li[data-slug="mpv"]').locator('button.pill').textContent(),
+  '已隱藏');
+
+// 改名與排序
+await page.locator('.cat-subs li[data-slug="cw-waterbased"]').locator('input[type="text"]').fill('CW 水性油墨（改）');
+await page.locator('.cat-group[data-slug="screen-inks"] .cat-main input[type="number"]').fill('5');
+await page.waitForTimeout(150);
+
+await page.locator('#save').click();
+await page.waitForTimeout(600);
+const catPayload = saved.filter((s) => s.section === 'categories').pop();
+check('送出分類資料', Boolean(catPayload), true);
+const inks = catPayload?.body.value.find((c) => c.slug === 'screen-inks');
+check('主分類排序已更新', inks?.order, 5);
+check('產品線改名已保存',
+  inks?.children.find((s) => s.slug === 'cw-waterbased')?.name, 'CW 水性油墨（改）');
+check('隱藏狀態已保存',
+  inks?.children.find((s) => s.slug === 'mpv')?.published, false);
+check('轉址所需的 legacy_m2 未遺失',
+  inks?.children.find((s) => s.slug === 'mpv')?.legacy_m2, '129');
+
 console.log('\n分頁切換：');
 await page.locator('button[data-tab="about"]').click();
 await page.waitForSelector('#a-body');

@@ -139,3 +139,24 @@ td.actions { text-align: end; white-space: nowrap; }
 .spin { display: inline-block; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+/* ---------- 分類管理 ---------- */
+.cat-group { border: 2px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+.cat-main {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 12px 20px; background: var(--brand-soft); border-bottom: 1px solid var(--border);
+}
+.cat-main input[type="text"] { flex: 1; min-width: 9rem; font-weight: 700; padding: 7px 10px; }
+.cat-subs { list-style: none; margin: 0; padding: 0; }
+.cat-subs li {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
+  padding: 9px 20px 9px 36px; border-bottom: 1px solid var(--border);
+}
+.cat-subs li:last-child { border-bottom: 0; }
+.cat-subs li.hidden-line { background: repeating-linear-gradient(135deg,#fafbfc 0 8px,#f2f4f7 8px 16px); }
+.cat-subs input[type="text"] { flex: 1; min-width: 8rem; padding: 7px 10px; }
+/* 需要比通用的 input[type="number"] 更高的優先權，否則會被撐成整行 */
+input.cat-order { width: 4.5rem; flex: none; text-align: center; padding: 7px 6px; }
+.cat-count { font-size: .8125rem; color: var(--muted); flex: none; min-width: 5.5rem; }
+.cat-note { font-size: .75rem; color: var(--muted); flex-basis: 100%; line-height: 1.5; }
+.cat-note.warn { color: var(--danger); }
