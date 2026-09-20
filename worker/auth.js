@@ -12,6 +12,10 @@
  *   SESSION_SECRET       同上，用來簽發通行證
  */
 const COOKIE_NAME = 'novapage_admin';
+
+// Cloudflare Workers 的 Web Crypto 對 PBKDF2 疊代次數的上限。
+// 超過這個值，crypto.subtle.deriveBits 會直接失敗。
+const MAX_ITERATIONS = 100_000;
 const SESSION_HOURS = 12;
 
 // 同一來源在時間窗內可嘗試的次數。
@@ -90,7 +94,18 @@ export async function verifyPassword(password, env, clientId) {
     throw new Error('後台密碼設定格式不正確');
   }
 
-  const derived = await pbkdf2(password ?? '', decodeBase64(saltB64), Number(iterationsText));
+  // Cloudflare Workers 的 PBKDF2 上限為 10 萬次疊代。
+  // 早期版本的產生器用了 20 萬次，那種雜湊在此無法驗證，
+  // 直接說明該怎麼處理，而不是拋出平台的英文錯誤訊息。
+  const iterations = Number(iterationsText);
+  if (!Number.isFinite(iterations) || iterations > MAX_ITERATIONS) {
+    throw new Error(
+      `後台密碼設定不相容（疊代次數 ${iterationsText} 超過平台上限 ${MAX_ITERATIONS}）。` +
+        '請重新執行 npm run admin:password 產生一組新的，並更新 Cloudflare 上的 ADMIN_PASSWORD_HASH。',
+    );
+  }
+
+  const derived = await pbkdf2(password ?? '', decodeBase64(saltB64), iterations);
   const ok = timingSafeEqual(derived, decodeBase64(hashB64));
   if (!ok) recordFailure(clientId);
   else attempts.delete(clientId);

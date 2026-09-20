@@ -17,7 +17,10 @@ import {
 
 // 刻意含英文字母，否則大小寫那一項測不到東西
 const PASSWORD = 'NovaChem1988測試密碼';
-const ITERATIONS = 1000; // 測試用低疊代，加快執行；正式設定為 20 萬次
+// 測試用低疊代以加快執行。正式設定為 10 萬次——那是 Cloudflare Workers
+// 對 PBKDF2 的上限，超過會在驗證時失敗，且只有部署後才看得出來。
+// 這支測試跑在 Node 上，測不到該限制，真實環境的驗證見 test_worker_login.mjs。
+const ITERATIONS = 1000;
 
 const b64 = (bytes) => Buffer.from(bytes).toString('base64');
 

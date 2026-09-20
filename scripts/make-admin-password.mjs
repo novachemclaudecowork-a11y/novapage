@@ -16,10 +16,15 @@ import { stdin, stdout } from 'node:process';
 
 if (!globalThis.crypto) globalThis.crypto = webcrypto;
 
+// ⚠️ Cloudflare Workers 的 Web Crypto 對 PBKDF2 設有 10 萬次疊代的上限，
+// 超過會在驗證時直接失敗（"iteration counts above 100000 are not supported"）。
+// 本機 Node 沒有這個限制，因此只有部署後才會顯現，請勿調高。
+//
 // 疊代次數越高，每次嘗試越慢，暴力破解的成本也越高。
-// 20 萬次在 Cloudflare Workers 上約需 100 毫秒，使用者無感，
-// 但攻擊者每秒能試的次數會被壓到很低。
-const ITERATIONS = 200_000;
+// 10 萬次在 Workers 上約需數十毫秒，使用者無感，
+// 搭配至少 12 字元的密碼與嘗試次數限制已足夠。
+const ITERATIONS = 100_000;
+const MAX_SUPPORTED_ITERATIONS = 100_000;
 const MIN_LENGTH = 12;
 
 const b64 = (buf) => Buffer.from(buf).toString('base64');
