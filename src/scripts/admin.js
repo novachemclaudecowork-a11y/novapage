@@ -563,6 +563,35 @@ function renderCategoriesTab(root) {
 
 /* ---------- 最新訊息 ---------- */
 
+/** 前台樣式，從頁面上那個不會執行的 <script type="text/css"> 取出 */
+function siteCss() {
+  return document.getElementById('preview-css')?.textContent ?? '';
+}
+
+/**
+ * 產生預覽用的 HTML。
+ *
+ * 內容會放進 sandbox iframe，不給 allow-scripts 也不給 allow-same-origin，
+ * 所以即使內文貼進了 <script> 或 onerror 也不會執行、碰不到後台頁面。
+ * 排版直接套前台的 global.css，看到的就是網站上的樣子。
+ */
+function previewDoc(post) {
+  const escape = (t) => String(t).replace(/[&<>"]/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  return `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<style>${siteCss()}</style>
+<style>
+  body { padding: 20px 24px; }
+  /* 預覽不需要橫向捲軸，圖片一律縮到框內 */
+  img { max-width: 100%; }
+</style>
+</head><body><article class="news-post">
+<h1>${escape(post.title) || '<span style="color:#9aa3b0">（尚未填標題）</span>'}</h1>
+<time datetime="${escape(post.date)}">${escape(post.date)}</time>
+<div>${post.body || '<p style="color:#9aa3b0">（尚未填內容）</p>'}</div>
+</article></body></html>`;
+}
+
 function renderNewsTab(root) {
   const list = el('div');
   const rerender = () => { root.replaceChildren(); renderNewsTab(root); };
@@ -592,8 +621,24 @@ function renderNewsTab(root) {
   }
 
   for (const [index, post] of state.news.entries()) {
+    const frame = el('iframe', {
+      class: 'news-preview-frame', sandbox: '', title: '預覽',
+      srcdoc: previewDoc(post),
+    });
+    // 每次按鍵都重畫 iframe 會閃，稍微延遲再更新。
+    // 掛在整個面板上，標題與日期改動也會跟著重畫。
+    let timer;
+    const refresh = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { frame.srcdoc = previewDoc(post); }, 250);
+    };
+
     list.append(
-      el('div', { class: `panel${post.published ? '' : ' draft'}`, dataset: { slug: post.slug } },
+      el('div', {
+        class: `panel${post.published ? '' : ' draft'}`,
+        dataset: { slug: post.slug },
+        oninput: refresh,
+      },
         // 發布狀態放在最上面。先前只有面板底部一個不起眼的勾選框，
         // 結果是寫完按了儲存、網站上卻什麼也沒出現。
         el('div', { class: 'news-head' },
@@ -610,6 +655,12 @@ function renderNewsTab(root) {
             post.published
               ? '儲存後一到兩分鐘會出現在網站上。'
               : '目前只存在後台，網站上看不到。按左邊的「草稿」即可發布。'),
+          post.published
+            ? el('a', {
+                class: 'news-head-link', href: `/news/${post.slug}/`, target: '_blank',
+                rel: 'noopener',
+              }, '在網站上查看 ↗')
+            : null,
         ),
         el('div', { class: 'grid2' },
           el('div', { class: 'field' },
@@ -628,13 +679,21 @@ function renderNewsTab(root) {
             }),
           ),
         ),
-        el('div', { class: 'field', style: 'margin-top:14px' },
-          el('label', { for: `n-body-${index}` }, '內容'),
-          el('textarea', {
-            id: `n-body-${index}`,
-            oninput: (e) => { post.body = e.target.value; markDirty('news'); },
-          }, post.body ?? ''),
-          el('p', { class: 'hint' }, '可使用 HTML。'),
+        el('div', { class: 'news-edit' },
+          el('div', { class: 'field' },
+            el('label', { for: `n-body-${index}` }, '內容'),
+            el('textarea', {
+              id: `n-body-${index}`,
+              oninput: (e) => { post.body = e.target.value; markDirty('news'); },
+            }, post.body ?? ''),
+            el('p', { class: 'hint' },
+              '可使用 HTML。分段用 <p>…</p>，小標題用 <h2>…</h2>。'),
+          ),
+          el('div', { class: 'field' },
+            el('label', {}, '預覽（網站上的樣子）'),
+            frame,
+            el('p', { class: 'hint' }, '邊打字邊更新，不必儲存。'),
+          ),
         ),
         el('div', { style: 'margin-top:16px; display:flex; gap:10px; align-items:center' },
           el('button', {

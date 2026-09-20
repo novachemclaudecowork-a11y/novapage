@@ -227,8 +227,28 @@ await page.waitForTimeout(200);
 check('可切換為已發布', await page.locator('.news-head .pill').textContent(), '已發布');
 check('已發布就不再標示為草稿', await page.locator('.panel.draft').count(), 0);
 
+console.log('\n最新訊息的即時預覽：');
+const preview = page.locator('.news-preview-frame');
+check('有預覽框', await preview.count(), 1);
+// sandbox 為空字串＝最嚴格：內文就算貼進 <script> 也不會執行、碰不到後台
+check('預覽是完全沙箱化的', await preview.getAttribute('sandbox'), '');
+check('未填內容時有提示', (await preview.getAttribute('srcdoc'))?.includes('（尚未填內容）'), true);
+
 await page.locator('#n-title-0').fill('測試訊息');
-await page.waitForTimeout(150);
+await page.locator('#n-body-0').fill('<p>第一段</p><h2>小標題</h2>');
+await page.waitForTimeout(500);
+const srcdoc = await preview.getAttribute('srcdoc');
+check('預覽跟著內容更新', srcdoc?.includes('<p>第一段</p>') && srcdoc?.includes('<h2>小標題</h2>'), true);
+check('預覽跟著標題更新', srcdoc?.includes('測試訊息'), true);
+check('預覽套用前台樣式', srcdoc?.includes('--brand: #203c8a'), true);
+// 內文若含引號或標籤字元，標題欄位必須逸出，不能把預覽的 HTML 結構打壞
+await page.locator('#n-title-0').fill('引號"與<標籤>');
+await page.waitForTimeout(500);
+check('標題中的特殊字元有逸出',
+  (await preview.getAttribute('srcdoc'))?.includes('&quot;與&lt;標籤&gt;'), true);
+await page.locator('#n-title-0').fill('測試訊息');
+await page.waitForTimeout(400);
+
 await page.locator('#save').click();
 await page.waitForTimeout(600);
 const newsPayload = saved.filter((s) => s.section === 'news').pop();

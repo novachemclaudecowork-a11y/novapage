@@ -1,5 +1,9 @@
 ---
 import '../../styles/admin.css';
+// 前台的樣式原封不動帶進來，給最新訊息的即時預覽用。
+// 預覽放在 sandbox iframe 裡，直接套用同一份 CSS，看到的就是網站上的樣子；
+// 不能用 /_astro/... 的路徑，那個檔名每次建置都會變。
+import siteCss from '../../styles/global.css?raw';
 
 // 後台主畫面。
 // 只有通過驗證的請求才看得到這個頁面，驗證在 worker/index.js 執行。
@@ -43,6 +47,9 @@ import '../../styles/admin.css';
         <p class="empty"><span class="spin">◐</span> 載入中…</p>
       </div>
     </main>
+
+    <!-- type 不是 module/javascript，瀏覽器不會執行，只是拿來存放預覽用的樣式 -->
+    <script type="text/css" id="preview-css" is:inline set:html={siteCss}></script>
 
     <script src="../../scripts/admin.js"></script>
   </body>
