@@ -1,0 +1,30 @@
+---
+// 後台介面（第三階段建置中）。
+// 這個頁面只有通過 Cloudflare Access 驗證的請求才看得到，
+// 驗證由 worker/index.js 執行，見該檔的說明。
+---
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>後台</title>
+  </head>
+  <body>
+    <h1>後台</h1>
+    <p id="status">確認登入狀態中…</p>
+    <script>
+      fetch('/admin/api/me')
+        .then((r) => r.json())
+        .then((d) => {
+          document.getElementById('status').textContent = d.email
+            ? `已登入：${d.email}`
+            : `無法確認身分：${d.error ?? '未知錯誤'}`;
+        })
+        .catch((e) => {
+          document.getElementById('status').textContent = `連線失敗：${e.message}`;
+        });
+    </script>
+  </body>
+</html>

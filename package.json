@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "redirects": "node scripts/build-redirects.mjs",
-    "test": "node scripts/check_node.mjs && node scripts/test_redirects.mjs",
+    "test": "node scripts/check_node.mjs && node scripts/test_access.mjs && node scripts/test_redirects.mjs",
     "check:node": "node scripts/check_node.mjs",
     "check": "astro check"
   },

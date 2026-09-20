@@ -15,7 +15,7 @@
  * 且子分類的 pg 是該產品線內部的序號，與主分類各自獨立，兩者不可互換。
  * 詳見 docs/鏡像分析報告.md 第四節。
  */
-import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -61,9 +61,7 @@ const LISTING_PATHS = ['/product.asp', '/product.html', '/product.aspx'];
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
 function main() {
-  const products = readdirSync(join(CONTENT, 'products'))
-    .filter((f) => f.endsWith('.json'))
-    .map((f) => readJson(join(CONTENT, 'products', f)));
+  const products = readJson(join(CONTENT, 'products.json'));
   const categories = readJson(join(CONTENT, 'categories.json'));
   const legacy = readJson(join(ROOT, 'src', 'data', 'legacy-urls.json'));
   const corrections = readJson(join(ROOT, 'src', 'data', 'name-corrections.json'));

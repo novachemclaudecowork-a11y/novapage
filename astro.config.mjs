@@ -14,6 +14,9 @@ const site = process.env.SITE_URL || process.env.CF_PAGES_URL || 'https://www.no
 
 export default defineConfig({
   site,
-  integrations: [sitemap()],
+  integrations: [
+    // 後台不列入 sitemap，也不該被搜尋引擎發現
+    sitemap({ filter: (page) => !page.includes('/admin') }),
+  ],
   build: { format: 'directory' },
 });

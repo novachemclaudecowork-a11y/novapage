@@ -6,6 +6,7 @@
  * 不參與日常建置，請勿再從那裡取資料。
  */
 import categoriesData from '../../content/categories.json';
+import productsData from '../../content/products.json';
 import aboutData from '../../content/about.json';
 
 export interface Subcategory {
@@ -48,15 +49,11 @@ export interface Product {
   legacy: { m: string; pg: number };
 }
 
-// Vite 會在建置時把 content/products 底下每個 JSON 一併打包進來，
-// 新增產品檔後不需要改這裡。
-const productModules = import.meta.glob<{ default: Product }>(
-  '../../content/products/*.json',
-  { eager: true },
-);
-
-const allProducts: Product[] = Object.values(productModules)
-  .map((m) => m.default)
+// 所有產品放在同一個檔案裡。
+// 這樣後台只需一次讀取、一次寫入，不會受 Cloudflare 的子請求數量限制，
+// 也不會出現部分產品存檔成功、部分失敗的情況。
+const allProducts: Product[] = (productsData as Product[])
+  .slice()
   .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name, 'zh-Hant'));
 
 const allCategories = (categoriesData as Category[])
