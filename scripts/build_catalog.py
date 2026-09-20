@@ -15,9 +15,14 @@
 import json
 import pathlib
 import re
+import sys
 from urllib.parse import parse_qs, urlparse
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
 from bs4 import BeautifulSoup
+
+from normalize_text import normalize
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MIRROR = ROOT / "site-mirror" / "www.novananoinks.com.tw"
@@ -224,12 +229,14 @@ def main() -> int:
         if hit and hit[0] is main:
             sub = hit[1]
 
+        # 舊站的英數字都是全形，於此統一整理為半形
+        # （中文標點保留原樣，詳見 scripts/normalize_text.py）
         items.append({
             "slug": slug,
-            "name": name,
-            "code": p["code"],
-            "spec_html": p["spec_html"],
-            "spec_text": p["spec_text"],
+            "name": normalize(name),
+            "code": normalize(p["code"]),
+            "spec_html": normalize(p["spec_html"]),
+            "spec_text": normalize(p["spec_text"]),
             "images": p["images"],
             "category": main["slug"] if main else "",
             "subcategory": sub["slug"] if sub else None,
