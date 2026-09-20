@@ -1,30 +1,48 @@
 ---
-// 後台介面（第三階段建置中）。
-// 這個頁面只有通過 Cloudflare Access 驗證的請求才看得到，
-// 驗證由 worker/index.js 執行，見該檔的說明。
+import '../../styles/admin.css';
+
+// 後台主畫面。
+// 只有通過驗證的請求才看得到這個頁面，驗證在 worker/index.js 執行。
+// 實際的操作邏輯在 src/scripts/admin.js。
 ---
+
 <!doctype html>
 <html lang="zh-Hant-TW">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>後台</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <title>網站後台｜貝星貿易</title>
   </head>
   <body>
-    <h1>後台</h1>
-    <p id="status">確認登入狀態中…</p>
-    <script>
-      fetch('/admin/api/me')
-        .then((r) => r.json())
-        .then((d) => {
-          document.getElementById('status').textContent = d.email
-            ? `已登入：${d.email}`
-            : `無法確認身分：${d.error ?? '未知錯誤'}`;
-        })
-        .catch((e) => {
-          document.getElementById('status').textContent = `連線失敗：${e.message}`;
-        });
-    </script>
+    <header class="bar">
+      <h1>貝星貿易　網站後台</h1>
+      <span class="status" id="status"></span>
+      <span class="spacer"></span>
+      <button class="btn" type="button" id="save" disabled>儲存</button>
+      <button class="btn ghost" type="button" id="logout">登出</button>
+    </header>
+
+    <nav class="tabs" aria-label="後台功能">
+      <button type="button" data-tab="products" aria-selected="true">產品</button>
+      <button type="button" data-tab="news" aria-selected="false">最新訊息</button>
+      <button type="button" data-tab="about" aria-selected="false">公司簡介</button>
+    </nav>
+
+    <main>
+      <p class="note" id="notice" hidden></p>
+
+      <p class="note">
+        修改後請按右上角的<strong>儲存</strong>。儲存會送到 GitHub 並觸發網站重新建置，
+        <strong>約一兩分鐘後</strong>正式網站才會看到變更。
+        每次儲存都有完整紀錄，改錯了可以還原。
+      </p>
+
+      <div id="content">
+        <p class="empty"><span class="spin">◐</span> 載入中…</p>
+      </div>
+    </main>
+
+    <script src="../../scripts/admin.js"></script>
   </body>
 </html>

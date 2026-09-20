@@ -12,7 +12,8 @@
     "test": "node scripts/check_node.mjs && node scripts/test_access.mjs && node scripts/test_auth.mjs && node scripts/test_redirects.mjs",
     "check:node": "node scripts/check_node.mjs",
     "check": "astro check",
-    "admin:password": "node scripts/make-admin-password.mjs"
+    "admin:password": "node scripts/make-admin-password.mjs",
+    "test:ui": "node scripts/test_admin_ui.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
