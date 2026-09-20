@@ -7,6 +7,15 @@
   "name": "novapage",
   "main": "worker/index.js",
   "compatibility_date": "2026-09-01",
+
+  // 非機密設定。機密項目（GITHUB_TOKEN、ADMIN_PASSWORD_HASH、SESSION_SECRET）
+  // 必須在 Cloudflare 的 Settings → Variables and Secrets 以 Secret 方式新增，
+  // 不可寫在這裡，否則會進到版本庫。
+  "vars": {
+    "GITHUB_REPO": "novachemclaudecowork-a11y/novapage",
+    "GITHUB_BRANCH": "claude/website-clone-assessment-x09jd5"
+  },
+
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

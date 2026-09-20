@@ -7,3 +7,4 @@ dist/
 .env.*
 .wrangler/
 __pycache__/
+.dev.vars

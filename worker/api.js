@@ -1,13 +1,24 @@
 /**
  * 後台 API。
  *
- * 每個端點都必須先通過 Cloudflare Access 的身分驗證（見 worker/access.js）。
- * 驗證失敗一律回 401，不會有任何「設定沒做好就放行」的情況。
+ * 支援兩種登入方式，擇一即可：
+ *   1. 密碼登入（worker/auth.js）—— 不需任何前置設定，隨處可用
+ *   2. Cloudflare Access（worker/access.js）—— 日後搬到自有網域後可改用
+ * 兩者皆未通過時一律回 401，不會有「設定沒做好就放行」的情況。
  *
  * 所有寫入都會變成 GitHub 上的一筆 commit，commit 訊息會記錄操作者的
  * Email，因此誰在什麼時候改了什麼，在 repo 的歷史裡查得到。
  */
 import { verifyAccessJwt } from './access.js';
+import {
+  clientIdOf,
+  createSession,
+  isRateLimited,
+  readSessionCookie,
+  sessionCookieHeader,
+  verifyPassword,
+  verifySession,
+} from './auth.js';
 import { GitHubContent } from './github.js';
 
 const PATHS = {
@@ -114,16 +125,70 @@ async function readJsonFile(gh, path, fallback) {
   return { value: JSON.parse(file.text), sha: file.sha };
 }
 
+/**
+ * 判斷請求是否已登入。
+ * 先試 Cloudflare Access，再試密碼登入的通行證；都不通過回傳 null。
+ */
+export async function authenticate(request, env) {
+  if (env.ACCESS_TEAM_DOMAIN && env.ACCESS_AUD) {
+    try {
+      return await verifyAccessJwt(request, env);
+    } catch {
+      // Access 未通過時繼續嘗試密碼登入，兩種方式可並存
+    }
+  }
+  if (await verifySession(readSessionCookie(request), env)) {
+    return { email: '後台管理者', via: 'password' };
+  }
+  return null;
+}
+
 export async function handleAdminApi(request, env) {
   const url = new URL(request.url);
   const route = url.pathname.replace(/^\/admin\/api\/?/, '').replace(/\/$/, '');
 
-  let user;
-  try {
-    user = await verifyAccessJwt(request, env);
-  } catch (err) {
-    return fail(err.message || '未授權', 401);
+  // 登入端點本身不能要求已登入
+  if (route === 'login') {
+    if (request.method !== 'POST') return fail('請以 POST 登入', 405);
+    const clientId = clientIdOf(request);
+    if (isRateLimited(clientId)) {
+      return fail('嘗試次數過多，請稍後再試', 429);
+    }
+    let password = '';
+    try {
+      password = (await request.json()).password ?? '';
+    } catch {
+      return fail('請求格式不正確');
+    }
+    try {
+      if (!(await verifyPassword(password, env, clientId))) {
+        return fail('密碼不正確', 401);
+      }
+    } catch (err) {
+      return fail(err.message, 500);
+    }
+    const token = await createSession(env);
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'Set-Cookie': sessionCookieHeader(token),
+      },
+    });
   }
+
+  if (route === 'logout') {
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'Set-Cookie': sessionCookieHeader(null),
+      },
+    });
+  }
+
+  const user = await authenticate(request, env);
+  if (!user) return fail('尚未登入', 401);
 
   if (route === 'me') {
     return json({ email: user.email });
