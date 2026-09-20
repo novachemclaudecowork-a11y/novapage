@@ -1,0 +1,268 @@
+[
+  {
+    "slug": "screen-inks",
+    "name": "網印油墨",
+    "order": 10,
+    "published": true,
+    "legacy_m": "1",
+    "children": [
+      {
+        "slug": "mpv",
+        "name": "MPV通用油墨",
+        "order": 10,
+        "published": true,
+        "legacy_m2": "129"
+      },
+      {
+        "slug": "pet-label",
+        "name": "PET商標貼紙油墨",
+        "order": 20,
+        "published": true,
+        "legacy_m2": "130"
+      },
+      {
+        "slug": "pet-water-transfer",
+        "name": "PET水轉自行車標油墨",
+        "order": 30,
+        "published": true,
+        "legacy_m2": "131"
+      },
+      {
+        "slug": "410-scratch",
+        "name": "410 刮刮樂網印油墨",
+        "order": 40,
+        "published": true,
+        "legacy_m2": "132"
+      },
+      {
+        "slug": "pd-metal-glass",
+        "name": "PD金屬玻璃網印油墨",
+        "order": 50,
+        "published": true,
+        "legacy_m2": "133"
+      },
+      {
+        "slug": "cp-color-paste",
+        "name": "CP通用色膏",
+        "order": 60,
+        "published": true,
+        "legacy_m2": "134"
+      },
+      {
+        "slug": "pu-elastic",
+        "name": "PU彈性網印油墨",
+        "order": 70,
+        "published": true,
+        "legacy_m2": "135"
+      },
+      {
+        "slug": "cw-waterbased",
+        "name": "CW水性油墨",
+        "order": 80,
+        "published": true,
+        "legacy_m2": "136"
+      },
+      {
+        "slug": "ti-heat-transfer",
+        "name": "TI布熱轉網印油墨",
+        "order": 90,
+        "published": true,
+        "legacy_m2": "137"
+      },
+      {
+        "slug": "ri-rub-transfer",
+        "name": "RI擦壓轉印油墨",
+        "order": 100,
+        "published": true,
+        "legacy_m2": "138"
+      },
+      {
+        "slug": "pp",
+        "name": "PP網印油墨",
+        "order": 110,
+        "published": true,
+        "legacy_m2": "139"
+      },
+      {
+        "slug": "ot-sandblast",
+        "name": "OT耐噴砂網印油墨",
+        "order": 120,
+        "published": true,
+        "legacy_m2": "140"
+      },
+      {
+        "slug": "metallic-glitter",
+        "name": "金銀漿、中細閃、螢光粉",
+        "order": 130,
+        "published": true,
+        "legacy_m2": "141"
+      },
+      {
+        "slug": "silicone",
+        "name": "矽膠油墨",
+        "order": 140,
+        "published": true,
+        "legacy_m2": ""
+      }
+    ]
+  },
+  {
+    "slug": "thinners-cleaners",
+    "name": "稀釋劑&洗版劑",
+    "order": 20,
+    "published": true,
+    "legacy_m": "2",
+    "children": [
+      {
+        "slug": "bs-thinner",
+        "name": "BS 稀釋劑",
+        "order": 10,
+        "published": true,
+        "legacy_m2": "142"
+      },
+      {
+        "slug": "sw-cleaner",
+        "name": "SW 洗版劑",
+        "order": 20,
+        "published": true,
+        "legacy_m2": "143"
+      },
+      {
+        "slug": "pp-primer",
+        "name": "PP 處理劑",
+        "order": 30,
+        "published": true,
+        "legacy_m2": "144"
+      },
+      {
+        "slug": "anti-clog",
+        "name": "防塞劑",
+        "order": 40,
+        "published": true,
+        "legacy_m2": "145"
+      },
+      {
+        "slug": "wiping-agent",
+        "name": "擦拭劑",
+        "order": 50,
+        "published": true,
+        "legacy_m2": "146"
+      },
+      {
+        "slug": "defoamer",
+        "name": "消泡劑/助劑",
+        "order": 60,
+        "published": true,
+        "legacy_m2": "147"
+      },
+      {
+        "slug": "thickener",
+        "name": "暫凝膏",
+        "order": 70,
+        "published": true,
+        "legacy_m2": "148"
+      },
+      {
+        "slug": "matting-paste",
+        "name": "消光膏",
+        "order": 80,
+        "published": true,
+        "legacy_m2": "149"
+      },
+      {
+        "slug": "rubber-primer",
+        "name": "橡膠處理劑",
+        "order": 90,
+        "published": true,
+        "legacy_m2": "168"
+      }
+    ]
+  },
+  {
+    "slug": "platemaking",
+    "name": "製版資材",
+    "order": 30,
+    "published": true,
+    "legacy_m": "4",
+    "children": [
+      {
+        "slug": "emulsion",
+        "name": "感光乳劑",
+        "order": 10,
+        "published": true,
+        "legacy_m2": "150"
+      },
+      {
+        "slug": "ink-remover",
+        "name": "芳香除墨劑",
+        "order": 20,
+        "published": true,
+        "legacy_m2": "151"
+      },
+      {
+        "slug": "ghost-remover",
+        "name": "除鬼影劑",
+        "order": 30,
+        "published": true,
+        "legacy_m2": "152"
+      },
+      {
+        "slug": "stencil-remover",
+        "name": "剝膜粉/膏",
+        "order": 40,
+        "published": true,
+        "legacy_m2": "153"
+      },
+      {
+        "slug": "degreaser",
+        "name": "脫脂劑",
+        "order": 50,
+        "published": true,
+        "legacy_m2": "154"
+      },
+      {
+        "slug": "block-out",
+        "name": "補版膠",
+        "order": 60,
+        "published": true,
+        "legacy_m2": "155"
+      },
+      {
+        "slug": "edge-sealer",
+        "name": "補邊劑",
+        "order": 70,
+        "published": true,
+        "legacy_m2": "156"
+      },
+      {
+        "slug": "hardener",
+        "name": "單液型補強液",
+        "order": 80,
+        "published": true,
+        "legacy_m2": "157"
+      },
+      {
+        "slug": "frame-adhesive",
+        "name": "鋁框接著膠",
+        "order": 90,
+        "published": true,
+        "legacy_m2": "158"
+      },
+      {
+        "slug": "other-supplies",
+        "name": "其他資材",
+        "order": 100,
+        "published": true,
+        "legacy_m2": "159"
+      }
+    ]
+  },
+  {
+    "slug": "cab-381",
+    "name": "醋酸丁酸纖維素 CAB-381-0.5",
+    "order": 40,
+    "published": true,
+    "legacy_m": "10",
+    "children": []
+  }
+]

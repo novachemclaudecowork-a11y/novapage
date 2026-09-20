@@ -1,0 +1,18 @@
+{
+  "slug": "cp-color-paste",
+  "name": "CP通用色膏",
+  "code": "06",
+  "category": "screen-inks",
+  "subcategory": "cp-color-paste",
+  "published": true,
+  "order": 40,
+  "images": [
+    "/images/products/1/125-1b.jpg"
+  ],
+  "documents": [],
+  "spec_html": "",
+  "legacy": {
+    "m": "1",
+    "pg": 4
+  }
+}

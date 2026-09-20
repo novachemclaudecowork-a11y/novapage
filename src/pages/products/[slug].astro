@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import CategoryNav from '../../components/CategoryNav.astro';
 import {
   categoryOf,
-  imageUrl,
+  plainText,
   products,
   productsOf,
   subcategoryOf,
@@ -30,9 +30,7 @@ const crumbs = [{ label: '產品介紹', href: '/products/' }];
 if (category) crumbs.push({ label: category.name, href: `/category/${category.slug}/` });
 crumbs.push({ label: product.name });
 
-const summary = product.spec_text
-  ? product.spec_text.replace(/\s+/g, ' ').slice(0, 150)
-  : `${product.name}｜貝星貿易`;
+const summary = plainText(product.spec_html).slice(0, 150) || `${product.name}｜貝星貿易`;
 ---
 
 <BaseLayout title={product.name} description={summary} sidebar>
@@ -47,7 +45,7 @@ const summary = product.spec_text
   <article class="product">
     <div class="product-photo">
       {photo
-        ? <img src={imageUrl(photo)} alt={product.name} width="420" height="315" />
+        ? <img src={photo} alt={product.name} width="420" height="315" />
         : <div class="placeholder">尚無產品照</div>}
     </div>
 

@@ -1,0 +1,16 @@
+{
+  "slug": "opp-release-film",
+  "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
+  "code": "RI-OPP",
+  "category": "platemaking",
+  "subcategory": "other-supplies",
+  "published": true,
+  "order": 360,
+  "images": [],
+  "documents": [],
+  "spec_html": "<p>OPP薄膜經過電暈處理，具有良好的印刷適用性，可套色印刷以呈現精美的外觀</p>\n<p>單面 ，左上切角為印刷面</p>\n<p>離型時可達到極輕且穩定的離型力</p>",
+  "legacy": {
+    "m": "4",
+    "pg": 14
+  }
+}

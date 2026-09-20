@@ -21,7 +21,7 @@ import json
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-CATALOG = ROOT / "src" / "data" / "catalog.json"
+CONTENT = ROOT / "content"
 LEGACY = ROOT / "src" / "data" / "legacy-urls.json"
 CORRECTIONS = ROOT / "src" / "data" / "name-corrections.json"
 SHARED = ROOT / "src" / "lib" / "legacy-redirects.mjs"
@@ -64,9 +64,22 @@ LISTING_PATHS = ["/product.asp", "/product.html", "/product.aspx"]
 
 
 def main() -> int:
-    catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+    # 資料來源為 content/，與網站本身一致；後台改了什麼，轉址就跟著改
+    products = [
+        json.loads(f.read_text(encoding="utf-8"))
+        for f in sorted((CONTENT / "products").glob("*.json"))
+    ]
+    categories = json.loads((CONTENT / "categories.json").read_text(encoding="utf-8"))
+    catalog = {"products": products, "categories": categories}
     legacy = json.loads(LEGACY.read_text(encoding="utf-8"))
     corrections = json.loads(CORRECTIONS.read_text(encoding="utf-8"))
+
+    # 已下架的產品不再有頁面，其舊網址導向所屬分類而非 404
+    category_of_product = {
+        p["slug"]: f'/category/{p["category"]}/'
+        for p in products
+        if not p["published"]
+    }
 
     # (m, m2, pg) → 產品新網址。
     #
@@ -74,6 +87,7 @@ def main() -> int:
     # 序號，與主分類的 pg 各自獨立。例如 m=4&pg=2 是「補版膠」，
     # 但 m=4&m2=159&pg=2 是「刮刀/刮膠」。只用 (m, pg) 會導到錯誤的產品。
     slug_by_name = {p["name"]: p["slug"] for p in catalog["products"]}
+    published = {p["slug"]: p["published"] for p in catalog["products"]}
     product_map: dict[str, str] = {}
     unmapped: set[str] = set()
     for info in legacy.values():
@@ -83,15 +97,21 @@ def main() -> int:
             unmapped.add(info["name"])
             continue
         key = f'{info["m"]}|{info.get("m2", "")}|{info["pg"]}'
-        product_map[key] = f"/products/{slug}/"
+        product_map[key] = (
+            f"/products/{slug}/" if published.get(slug) else category_of_product[slug]
+        )
     # m → 主分類新網址
-    category_map = {c["legacy_m"]: f'/category/{c["slug"]}/' for c in catalog["categories"]}
+    category_map = {
+        c["legacy_m"]: f'/category/{c["slug"]}/'
+        for c in catalog["categories"]
+        if c.get("legacy_m") and c.get("published", True)
+    }
     # m2 → 產品線新網址
     sub_map = {
         s["legacy_m2"]: f'/category/{c["slug"]}/{s["slug"]}/'
         for c in catalog["categories"]
         for s in c["children"]
-        if s["legacy_m2"]  # 新站自行補上的產品線沒有舊站 m2，跳過
+        if s["legacy_m2"] and s.get("published", True)  # 新站自行補上的產品線沒有舊站 m2
     }
 
     # m2 → 該產品線底下唯一那項產品的新網址。
@@ -100,7 +120,7 @@ def main() -> int:
     # 這類舊網址導到產品頁比導到只有一項產品的列表頁更貼近原本的內容。
     products_in_sub: dict[str, list[str]] = {}
     for prod in catalog["products"]:
-        if prod["subcategory"]:
+        if prod["subcategory"] and prod["published"]:
             products_in_sub.setdefault(prod["subcategory"], []).append(prod["slug"])
     sub_product_map = {}
     for c in catalog["categories"]:

@@ -1,0 +1,16 @@
+{
+  "slug": "matting-paste",
+  "name": "消光膏",
+  "code": "OT-020",
+  "category": "thinners-cleaners",
+  "subcategory": "matting-paste",
+  "published": true,
+  "order": 200,
+  "images": [],
+  "documents": [],
+  "spec_html": "<ul>\n<li><span style=\"font-size: 12pt;\"><strong>優異消光效果</strong>：有效降低油墨光澤度，呈現均勻的啞光或半啞光外觀。</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\"><strong>透明度佳</strong>：高純度二氧化矽不影響油墨顏色鮮豔度，保持色彩清晰。</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\"><strong>分散性良好</strong>：易於在油墨中分散，不易產生顆粒或霧點。</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\"><strong>表面細緻觸感</strong>：能提供油墨塗層柔和、不刺眼的啞光質感。</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\"><strong>耐磨性提升</strong>：部分SiO₂能同時增強塗層耐刮、耐磨性能。消光可調：依粒徑大小及添加量，可靈活調整啞光效果。</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\"><strong>化學穩定性高</strong>：不與油墨樹脂或顏料發生化學反應，確保長期穩定。</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\"><strong>適用性廣</strong>：可用於溶劑型、UV型等多種油墨體系。</span></li>\n</ul>",
+  "legacy": {
+    "m": "2",
+    "pg": 7
+  }
+}

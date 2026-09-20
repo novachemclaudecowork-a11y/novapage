@@ -1,10 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
-import { company, staticPages } from '../data/site';
+import { about, company } from '../data/site';
 
-const page = staticPages.about;
-const paragraphs = (page.text ?? '').split('\n').filter((l) => l.trim());
+const paragraphs = about.body.split('\n').filter((line) => line.trim());
 ---
 
 <BaseLayout title="公司簡介" description={company.description}>

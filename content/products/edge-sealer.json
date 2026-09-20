@@ -1,0 +1,16 @@
+{
+  "slug": "edge-sealer",
+  "name": "補邊劑",
+  "code": "EM-1201",
+  "category": "platemaking",
+  "subcategory": "edge-sealer",
+  "published": true,
+  "order": 230,
+  "images": [],
+  "documents": [],
+  "spec_html": "<p><strong><span style=\"font-size: 13.3333px;\">特色：</span></strong></p>\n<p><span style=\"font-size: 13.3333px;\">乾燥快，黏度適中，施工簡單</span></p>\n<p>不含有毒物質</p>\n<p>適用於各種網布材質</p>\n<p><strong><span style=\"font-size: 13.3333px;\">使用說明：</span></strong></p>\n<p><span style=\"font-size: 13.3333px;\">張網完成後，用小刮槽(1-2CM)裝補邊劑，將印刷面的四個長長都進行刮塗，可防止印刷或洗版過程中油墨或溶劑侵蝕到網網框接著膠，能有效防止網框脫膠(或用小毛筆刷過即可)</span></p>",
+  "legacy": {
+    "m": "4",
+    "pg": 1
+  }
+}

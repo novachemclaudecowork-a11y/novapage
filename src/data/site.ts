@@ -1,37 +1,89 @@
-import catalog from './catalog.json';
-import pages from './pages.json';
+/**
+ * 網站資料來源。
+ *
+ * 所有產品與分類資料都讀自專案根目錄的 content/，那是後台唯一會寫入的地方。
+ * site-mirror/ 與 scripts/extract_products.py 等只是當初從舊站匯入的工具，
+ * 不參與日常建置，請勿再從那裡取資料。
+ */
+import categoriesData from '../../content/categories.json';
+import aboutData from '../../content/about.json';
 
 export interface Subcategory {
-  name: string;
   slug: string;
+  name: string;
+  order: number;
+  published: boolean;
   legacy_m2: string;
-  legacy_pd_type: string;
-  product_count: number;
+  /** 由產品資料推算，非儲存欄位 */
+  productCount?: number;
 }
 
 export interface Category {
-  name: string;
   slug: string;
+  name: string;
+  order: number;
+  published: boolean;
   legacy_m: string;
-  legacy_pd_type: string;
   children: Subcategory[];
-  note?: string;
+}
+
+export interface ProductDocument {
+  /** 例如「安全資料表」「產品說明書」 */
+  label: string;
+  /** 檔案路徑，例如 /documents/cw-waterbased-sds.pdf */
+  file: string;
 }
 
 export interface Product {
   slug: string;
   name: string;
   code: string;
-  spec_html: string;
-  spec_text: string;
-  images: string[];
   category: string;
   subcategory: string | null;
+  published: boolean;
+  order: number;
+  images: string[];
+  documents: ProductDocument[];
+  spec_html: string;
   legacy: { m: string; pg: number };
 }
 
-export const categories = catalog.categories as Category[];
-export const products = catalog.products as Product[];
+// Vite 會在建置時把 content/products 底下每個 JSON 一併打包進來，
+// 新增產品檔後不需要改這裡。
+const productModules = import.meta.glob<{ default: Product }>(
+  '../../content/products/*.json',
+  { eager: true },
+);
+
+const allProducts: Product[] = Object.values(productModules)
+  .map((m) => m.default)
+  .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name, 'zh-Hant'));
+
+const allCategories = (categoriesData as Category[])
+  .slice()
+  .sort((a, b) => a.order - b.order);
+
+/** 網站上實際顯示的產品（已上架者） */
+export const products: Product[] = allProducts.filter((p) => p.published);
+
+/** 含已下架者。轉址與後台需要完整清單。 */
+export const productsIncludingUnpublished: Product[] = allProducts;
+
+export const categories: Category[] = allCategories
+  .filter((c) => c.published)
+  .map((c) => ({
+    ...c,
+    children: c.children
+      .filter((s) => s.published)
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((s) => ({
+        ...s,
+        productCount: products.filter((p) => p.subcategory === s.slug).length,
+      })),
+  }));
+
+export const about = aboutData as { title: string; body: string };
 
 export const company = {
   nameZh: '貝星貿易股份有限公司',
@@ -48,11 +100,6 @@ export const company = {
     '並擁有自主研發能力。全系列產品符合 RoHS、REACH、TSCA 等規範。',
 } as const;
 
-export const staticPages = pages as Record<
-  string,
-  { title: string; nav: string; html?: string; text?: string; missing?: boolean }
->;
-
 export const mainNav = [
   { label: '首頁', href: '/' },
   { label: '公司簡介', href: '/about/' },
@@ -62,10 +109,16 @@ export const mainNav = [
   { label: '聯絡我們', href: '/contact/' },
 ] as const;
 
-/** 舊站的產品照路徑（/upload/1/126-1b.jpg?t=…）轉為新站路徑 */
-export function imageUrl(src: string): string {
-  const clean = src.split('?')[0].replace(/^\/upload\//, '');
-  return `/images/products/${clean}`;
+/** 由 spec_html 取出純文字，供 meta description 與站內搜尋使用 */
+export function plainText(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export function productsOf(categorySlug: string): Product[] {
@@ -78,7 +131,5 @@ export function categoryOf(product: Product): Category | undefined {
 
 export function subcategoryOf(product: Product): Subcategory | undefined {
   if (!product.subcategory) return undefined;
-  return categories
-    .flatMap((c) => c.children)
-    .find((s) => s.slug === product.subcategory);
+  return categories.flatMap((c) => c.children).find((s) => s.slug === product.subcategory);
 }

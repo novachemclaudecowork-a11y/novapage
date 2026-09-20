@@ -6,3 +6,4 @@ dist/
 .env
 .env.*
 .wrangler/
+__pycache__/

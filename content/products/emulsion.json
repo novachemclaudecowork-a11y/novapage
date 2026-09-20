@@ -1,0 +1,19 @@
+{
+  "slug": "emulsion",
+  "name": "高解度感光乳劑",
+  "code": "EM-感光乳劑系列",
+  "category": "platemaking",
+  "subcategory": "emulsion",
+  "published": true,
+  "order": 320,
+  "images": [
+    "/images/products/4/156-1b.jpg",
+    "/images/products/4/156-2b.jpg"
+  ],
+  "documents": [],
+  "spec_html": "<p><strong><span style=\"font-size: 12pt;\">油性：</span></strong></p>\n<p style=\"margin-left: 30px;\"><span style=\"font-size: 12pt;\">EM-101；CP2油性感光乳劑(純偶氮、油性、最經濟)</span></p>\n<p style=\"margin-left: 30px;\"><span style=\"font-size: 12pt;\">EM-102；HV油性感光乳劑(雙重固化、加強細字)</span></p>\n<p><strong><span style=\"font-size: 12pt;\">水性：</span></strong></p>\n<p style=\"margin-left: 30px;\"><span style=\"font-size: 12pt;\">水性感光乳劑(純偶氮、水性、加強耐水)</span></p>\n<p style=\"margin-left: 30px;\"><span style=\"font-size: 12pt;\">單液型感光乳劑(開蓋即可使用，最有效率)</span></p>\n<p><strong><span style=\"font-size: 12pt; color: #000000;\">水油兩用：</span></strong></p>\n<p style=\"margin-left: 30px;\"><span style=\"font-size: 12pt; color: #000000;\"><span style=\"font-size: 12pt;\">EM-103；HD水油兩用感光乳劑 (雙重固化、水油型</span>、最耐刷<span style=\"font-size: 12pt;\">)</span></span></p>\n<p><strong><span style=\"color: #000000; font-size: 16px;\">包裝規格：</span></strong></p>\n<p style=\"margin-left: 30px;\"><span style=\"color: #000000; font-size: 16px;\">1KG、4KG、200KG​</span></p>\n<p><img alt=\"\" height=\"1280\" src=\"/data/data1/Stencil_Profile_vs._Print_Quality_web__26464.png\" style=\"font-size: 16px;\" width=\"1280\"/></p>\n<p><strong><span style=\"font-size: 12pt; color: #ff0000;\">各類型感光乳劑、水、油性製版、厚膜製版、單液型乳劑、水油兩用乳劑，完全供應</span></strong></p>",
+  "legacy": {
+    "m": "4",
+    "pg": 10
+  }
+}

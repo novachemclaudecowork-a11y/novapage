@@ -4,14 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "npm run redirects && astro dev",
+    "prebuild": "node scripts/build-redirects.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check",
-    "data": "python3 scripts/extract_products.py && python3 scripts/build_catalog.py && python3 scripts/prepare_assets.py && python3 scripts/build_redirects.py",
-    "rebuild": "npm run data && npm run build && npm test",
+    "redirects": "node scripts/build-redirects.mjs",
     "test": "node scripts/check_node.mjs && node scripts/test_redirects.mjs",
-    "check:node": "node scripts/check_node.mjs"
+    "check:node": "node scripts/check_node.mjs",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

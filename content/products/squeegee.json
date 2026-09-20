@@ -1,0 +1,18 @@
+{
+  "slug": "squeegee",
+  "name": "刮刀/刮膠",
+  "code": "ME-絲印刮刀",
+  "category": "platemaking",
+  "subcategory": "other-supplies",
+  "published": true,
+  "order": 330,
+  "images": [
+    "/images/products/4/168-1l.jpg"
+  ],
+  "documents": [],
+  "spec_html": "<p>特點：</p>\n<p>   1.耐磨性好，耐溶劑性優越</p>\n<p>   2.棱角分明，可以完成高精度的印刷</p>\n<p>   3.充分考慮并避免印刷時出現蛇形等彎曲</p>\n<p>規格：</p>\n<ul>\n<li>度數：60/65/70/75/80/85°</li>\n<li><span style=\"font-size: 10pt;\">形狀：平口/單斜/V型</span></li>\n<li><span style=\"font-size: 10pt;\">長度：1.5/3.7 M（可切割）</span></li>\n<li><span style=\"font-size: 10pt;\">顏色：綠/藍/黃/紅/淺綠</span></li>\n</ul>\n<p> <span style=\"font-size: 13.3333px;\">注意事項:</span></p>\n<ol style=\"font-size: 13.3333px;\">\n<li data-end=\"106\" data-start=\"22\">為了寄送方便，我們的刮刀卷材經過收縮包裝，以便於保護和方便辨識。收貨後，我們建議您在可能的情況下將刮刀展開並平放。存放環境應保持低濕度，溫度介於 15–30°C，並避免陽光直射。</li>\n<li data-end=\"106\" data-start=\"22\">刮刀無需磨削或打磨，因為它本身具有優異且平行的刀口。當需要重新打磨時，我們的刮刀能夠很好地再次打磨——但在打磨之前，請至少讓刮刀休息 12 小時，這有助於打磨時有較好的平整度。</li>\n<li data-end=\"106\" data-start=\"22\"><span style=\"font-size: 10pt;\">刮刀在使用後應立即用柔軟的布清潔，不應放置於溶劑中浸泡。</span></li>\n</ol>",
+  "legacy": {
+    "m": "4",
+    "pg": 11
+  }
+}

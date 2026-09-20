@@ -1,0 +1,16 @@
+{
+  "slug": "thickener",
+  "name": "暫凝膏",
+  "code": "OT-021",
+  "category": "thinners-cleaners",
+  "subcategory": "thickener",
+  "published": true,
+  "order": 210,
+  "images": [],
+  "documents": [],
+  "spec_html": "<ul>\n<li style=\"box-sizing: border-box; line-height: 22px; color: #333333; font-family: 'Arial, taipei'; font-size: 13.3333px;\">\n<pre><span style=\"font-size: 12pt;\"><strong data-end=\"141\" data-start=\"132\">觸變效果佳</strong>：能在靜置時增加油墨黏度，印刷時受剪切力又能恢復流動。</span></pre>\n</li>\n<li style=\"box-sizing: border-box; line-height: 22px; color: #333333; font-family: 'Arial, taipei'; font-size: 13.3333px;\">\n<pre><span style=\"font-size: 12pt;\"><strong data-end=\"183\" data-start=\"173\">改善細字印刷</strong>：有效防止墨水在細線、細字部位的擴散，提升解析度。</span></pre>\n</li>\n<li style=\"box-sizing: border-box; line-height: 22px; color: #333333; font-family: 'Arial, taipei'; font-size: 13.3333px;\">\n<pre><span style=\"font-size: 12pt;\"><strong data-end=\"221\" data-start=\"213\">立體感強</strong>：提高油墨的堆疊性，使印刷圖案更具立體效果。</span></pre>\n</li>\n<li style=\"box-sizing: border-box; line-height: 22px; color: #333333; font-family: 'Arial, taipei'; font-size: 13.3333px;\">\n<pre><span style=\"font-size: 12pt;\"><strong data-end=\"256\" data-start=\"248\">防止流掛</strong>：減少印刷後的流動、擴散或下垂，保持圖案邊緣清晰。</span></pre>\n</li>\n<li style=\"box-sizing: border-box; line-height: 22px; color: #333333; font-family: 'Arial, taipei'; font-size: 13.3333px;\">\n<pre><span style=\"font-size: 12pt;\"><strong data-end=\"334\" data-start=\"326\">用量靈活</strong>：可依配方調整添加量，控制油墨的流動與觸變平衡。</span></pre>\n</li>\n<li style=\"box-sizing: border-box; line-height: 22px; color: #333333; font-family: 'Arial, taipei'; font-size: 13.3333px;\">\n<pre><span style=\"font-size: 12pt;\"><strong data-end=\"372\" data-start=\"363\">廣泛相容性</strong>：適用於多種樹脂與溶劑型、UV型油墨體系。<br/>(另有暫凝粉販售，可自行添入油墨分散，建議搭配高速攪拌機效果較佳)</span></pre>\n</li>\n</ul>",
+  "legacy": {
+    "m": "2",
+    "pg": 8
+  }
+}

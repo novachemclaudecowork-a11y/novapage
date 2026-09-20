@@ -1,0 +1,16 @@
+{
+  "slug": "hardener",
+  "name": "單液型補強液",
+  "code": "EM-1241",
+  "category": "platemaking",
+  "subcategory": "hardener",
+  "published": true,
+  "order": 250,
+  "images": [],
+  "documents": [],
+  "spec_html": "<p><span style=\"font-size: 13.3333px;\">使用說明</span></p>\n<p><span style=\"font-size: 13.3333px;\">網版製版完成後，以棉布沾補強液正反面擦拭版膜，待補強液乾燥後，可重覆擦拭2~3次!即可達到補強的效果</span></p>\n<p><span style=\"font-size: 13.3333px;\">(擦拭1~2次：版膜可再生 / 擦拭3次以上：不易再生)</span></p>",
+  "legacy": {
+    "m": "4",
+    "pg": 3
+  }
+}

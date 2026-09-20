@@ -1,6 +1,6 @@
-# 純路徑轉址備援。帶查詢字串的舊網址由 functions/_middleware.js 處理，
+# 純路徑轉址備援。帶查詢字串的舊網址由 worker/index.js 處理，
 # 因為 _redirects 不比對查詢字串。
-# 由 scripts/build_redirects.py 產生，請勿手動編輯。
+# 由 scripts/build-redirects.mjs 產生，請勿手動編輯。
 
 /index.asp / 301
 /index.aspx / 301

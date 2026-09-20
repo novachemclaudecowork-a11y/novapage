@@ -1,0 +1,18 @@
+{
+  "slug": "ink-remover",
+  "name": "芳香除墨劑",
+  "code": "EM-502",
+  "category": "platemaking",
+  "subcategory": "ink-remover",
+  "published": true,
+  "order": 290,
+  "images": [
+    "/images/products/4/157-1b.jpg"
+  ],
+  "documents": [],
+  "spec_html": "<p><strong><span style=\"font-size: 12pt;\">特色：</span></strong></p>\n<p><span style=\"font-size: 12pt;\">油墨洗淨力較強，針對氣味特別改良，屬芳香族溶劑，不刺鼻，較一般洗版劑更不傷害皮膚或呼吸道。能同時親合水性與油性的油墨，</span><span style=\"font-size: 12pt;\">同時亦可用來去除網版再生時所殘留的輕微鬼影。</span></p>\n<p><span style=\"font-size: 12pt;\">適用於清洗水性油墨、溶劑型油墨、UV油墨</span></p>",
+  "legacy": {
+    "m": "4",
+    "pg": 7
+  }
+}

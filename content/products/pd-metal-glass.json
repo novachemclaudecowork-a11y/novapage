@@ -1,0 +1,18 @@
+{
+  "slug": "pd-metal-glass",
+  "name": "PD金屬玻璃網印油墨",
+  "code": "05",
+  "category": "screen-inks",
+  "subcategory": "pd-metal-glass",
+  "published": true,
+  "order": 30,
+  "images": [
+    "/images/products/1/124-1b.jpg"
+  ],
+  "documents": [],
+  "spec_html": "<p><span style=\"font-size: 12pt;\"><strong>PD系列油墨，是針對金屬，玻璃．．．等材質特別研發而所製作的網印油墨。</strong>PD系列油墨為兩液型油墨，須配合<strong>硬化劑</strong>一起使用，其添加比例為8：2，在附著上均有優秀的表現。</span></p>\n<p><span style=\"font-size: 12pt;\">〔用　　途〕</span></p>\n<p><span style=\"font-size: 12pt;\">金屬鋁箔，玻璃，木材，烤漆．．．．．等材質</span></p>\n<p><span style=\"font-size: 12pt;\">〔網　　目〕</span></p>\n<p><span style=\"font-size: 12pt;\">200～300目，張力15牛頓以上</span></p>\n<p><span style=\"font-size: 12pt;\">〔乾燥方式〕</span></p>\n<p><span style=\"font-size: 12pt;\">自然乾燥：4～8小時</span></p>\n<p><span style=\"font-size: 12pt;\">烘乾：60度　　約20分鐘</span></p>\n<p><span style=\"font-size: 12pt;\">〔稀 釋 劑〕</span></p>\n<p><span style=\"font-size: 12pt;\">BS-012（慢乾稀釋劑）．BS-010（快乾稀釋劑）</span></p>\n<p><span style=\"font-size: 12pt;\">〔洗 版 劑〕</span></p>\n<p><span style=\"font-size: 12pt;\">SW-002（#2洗版劑）</span></p>\n<p><span style=\"font-size: 12pt;\">尚有各種洗版劑可供貴公司選購</span></p>\n<p><span style=\"font-size: 12pt;\">〔特　　性〕</span></p>\n<p><span style=\"font-size: 12pt;\">附著度佳，印刷性好</span></p>",
+  "legacy": {
+    "m": "1",
+    "pg": 3
+  }
+}

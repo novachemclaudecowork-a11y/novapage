@@ -1,14 +1,9 @@
 // 舊站網址轉址的對照表與判斷邏輯。
-// 由 scripts/build_redirects.py 產生，請勿手動編輯。
-//
-// Cloudflare 的 _redirects 檔只比對路徑，無法處理舊站
-// /view.html?id=127&m=1&pg=5 這種以查詢字串決定內容的網址，
-// 因此必須在程式中讀取查詢參數後再導向。
+// 由 scripts/build-redirects.mjs 產生，請勿手動編輯。
 //
 // 本模組只放純邏輯，不綁定平台。實際的進入點有兩個：
 //   functions/_middleware.js   Cloudflare Pages 專案使用
 //   worker/index.js            Cloudflare Workers 專案使用
-// 兩者都引用這裡的 resolveLegacy()。
 
 const PATH_MAP = {
   "/index.asp": "/",
@@ -40,7 +35,7 @@ const PAGE_ID_MAP = {
 };
 
 // 鍵為 `${m}|${m2}|${pg}` —— 舊站實際用來決定顯示哪項產品的組合。
-// m2 不可省略：子分類頁的 pg 是該子分類內部的序號，與主分類各自獨立。
+// m2 不可省略：子分類的 pg 是該產品線內部的序號，與主分類各自獨立。
 const PRODUCT_MAP = {
   "1||10": "/products/mpv/",
   "1||11": "/products/pet-label/",
@@ -119,7 +114,6 @@ const SUBCATEGORY_MAP = {
   "147": "/category/thinners-cleaners/defoamer/",
   "148": "/category/thinners-cleaners/thickener/",
   "149": "/category/thinners-cleaners/matting-paste/",
-  "168": "/category/thinners-cleaners/rubber-primer/",
   "150": "/category/platemaking/emulsion/",
   "151": "/category/platemaking/ink-remover/",
   "152": "/category/platemaking/ghost-remover/",
@@ -129,7 +123,8 @@ const SUBCATEGORY_MAP = {
   "156": "/category/platemaking/edge-sealer/",
   "157": "/category/platemaking/hardener/",
   "158": "/category/platemaking/frame-adhesive/",
-  "159": "/category/platemaking/other-supplies/"
+  "159": "/category/platemaking/other-supplies/",
+  "168": "/category/thinners-cleaners/rubber-primer/"
 };
 
 // m2 → 該產品線底下唯一那項產品
@@ -154,7 +149,6 @@ const SUBCATEGORY_PRODUCT_MAP = {
   "147": "/products/defoamer/",
   "148": "/products/thickener/",
   "149": "/products/matting-paste/",
-  "168": "/products/rubber-primer/",
   "150": "/products/emulsion/",
   "151": "/products/ink-remover/",
   "152": "/products/ghost-remover/",
@@ -163,11 +157,20 @@ const SUBCATEGORY_PRODUCT_MAP = {
   "155": "/products/block-out/",
   "156": "/products/edge-sealer/",
   "157": "/products/hardener/",
-  "158": "/products/frame-adhesive/"
+  "158": "/products/frame-adhesive/",
+  "168": "/products/rubber-primer/"
 };
 
-const PRODUCT_PATHS = new Set(["/view.asp", "/view.html", "/view.aspx"]);
-const LISTING_PATHS = new Set(["/product.asp", "/product.html", "/product.aspx"]);
+const PRODUCT_PATHS = new Set([
+  "/view.asp",
+  "/view.html",
+  "/view.aspx"
+]);
+const LISTING_PATHS = new Set([
+  "/product.asp",
+  "/product.html",
+  "/product.aspx"
+]);
 
 /**
  * 依舊網址算出新網址，找不到對應時回傳 null。

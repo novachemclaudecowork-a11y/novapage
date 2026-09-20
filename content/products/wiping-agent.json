@@ -1,0 +1,16 @@
+{
+  "slug": "wiping-agent",
+  "name": "擦拭劑",
+  "code": "BS-010",
+  "category": "thinners-cleaners",
+  "subcategory": "wiping-agent",
+  "published": true,
+  "order": 160,
+  "images": [],
+  "documents": [],
+  "spec_html": "<ul>\n<li><span style=\"font-size: 12pt;\">外觀：無色透明液體</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\">用途：<strong>弱腐蝕性的溶劑</strong>，當稀釋劑能有效<strong>防止油墨燒底</strong>。</span></li>\n</ul>",
+  "legacy": {
+    "m": "2",
+    "pg": 3
+  }
+}

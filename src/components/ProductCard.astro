@@ -1,5 +1,5 @@
 ---
-import { imageUrl, type Product } from '../data/site';
+import type { Product } from '../data/site';
 
 interface Props { product: Product }
 const { product } = Astro.props;
@@ -9,7 +9,7 @@ const photo = product.images[0];
 <a class="card" href={`/products/${product.slug}/`}>
   <span class="card-media">
     {photo
-      ? <img src={imageUrl(photo)} alt={product.name} loading="lazy" />
+      ? <img src={photo} alt={product.name} loading="lazy" />
       : <span class="placeholder">尚無產品照</span>}
   </span>
   <span class="card-body">

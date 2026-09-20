@@ -1,0 +1,18 @@
+{
+  "slug": "pu-elastic",
+  "name": "PU彈性網印油墨",
+  "code": "07",
+  "category": "screen-inks",
+  "subcategory": "pu-elastic",
+  "published": true,
+  "order": 50,
+  "images": [
+    "/images/products/1/126-1b.jpg"
+  ],
+  "documents": [],
+  "spec_html": "<p><strong><span style=\"font-size: 12pt;\">PU系列油墨是一種專門為印製尼龍布．．．等素材而製的網版印刷油墨。</span></strong></p>\n<p><span style=\"font-size: 12pt;\">〔用　　途〕</span></p>\n<p><span style=\"font-size: 12pt;\">適合印刷於尼龍布上</span></p>\n<p><span style=\"font-size: 12pt;\">〔網　　目〕</span></p>\n<p><span style=\"font-size: 12pt;\">200～350目（特多龍或尼龍網）</span></p>\n<p><span style=\"font-size: 12pt;\">〔乾燥方式〕</span></p>\n<p><span style=\"font-size: 12pt;\">自然乾燥：20～30分鐘</span></p>\n<p><span style=\"font-size: 12pt;\">烘乾：50～60度　　約6分鐘</span></p>\n<p><span style=\"font-size: 12pt;\">〔稀 釋 劑〕</span></p>\n<p><span style=\"font-size: 12pt;\">BS-007（中乾稀釋劑）．BS-017（特慢乾稀釋劑）</span></p>\n<p><span style=\"font-size: 12pt;\">〔洗 版 劑〕</span></p>\n<p><span style=\"font-size: 12pt;\">SW-002（#2洗版劑）</span></p>\n<p><span style=\"font-size: 12pt;\">尚有各種洗版劑可供貴公司選購</span></p>\n<p><span style=\"font-size: 12pt;\">〔特　　性〕</span></p>\n<p><span style=\"font-size: 12pt;\">優良柔軟性,優良附著力</span></p>",
+  "legacy": {
+    "m": "1",
+    "pg": 5
+  }
+}

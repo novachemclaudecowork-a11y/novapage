@@ -1,0 +1,16 @@
+{
+  "slug": "spatula",
+  "name": "調墨刀/調油刀/油墨攪拌刀/抹刀",
+  "code": "ME-調墨刀",
+  "category": "platemaking",
+  "subcategory": "other-supplies",
+  "published": true,
+  "order": 350,
+  "images": [],
+  "documents": [],
+  "spec_html": "<p><span style=\"font-size: 12pt;\">特點：</span></p>\n<p><span style=\"font-size: 12pt;\">1.日制進口不銹鋼.</span></p>\n<p><span style=\"font-size: 12pt;\">2.鋼性好，高韌性，受力后自動恢復原形。</span></p>\n<p><span style=\"font-size: 12pt;\">3.不與油墨等物質發生化學反應。</span></p>\n<p><span style=\"font-size: 12pt;\">4.木柄結構，鉚釘聯接，手感舒適，堅固耐用</span></p>",
+  "legacy": {
+    "m": "4",
+    "pg": 13
+  }
+}

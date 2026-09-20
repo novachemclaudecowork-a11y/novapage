@@ -1,0 +1,16 @@
+{
+  "slug": "anti-clog",
+  "name": "防塞劑",
+  "code": "BS-051",
+  "category": "thinners-cleaners",
+  "subcategory": "anti-clog",
+  "published": true,
+  "order": 170,
+  "images": [],
+  "documents": [],
+  "spec_html": "<ul>\n<li><span style=\"font-size: 12pt;\">外觀：無色透明液體</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\">性能：乾燥速度較慢，有助于油墨在網版上的流暢性，不易堵版</span></li>\n</ul>\n<ul>\n<li><span style=\"font-size: 12pt;\">用途：稀釋絲印油墨使用</span></li>\n</ul>",
+  "legacy": {
+    "m": "2",
+    "pg": 4
+  }
+}

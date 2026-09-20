@@ -25,9 +25,9 @@ const { activeCategory, activeSubcategory } = Astro.props;
               <li>
                 <a
                   href={`/category/${cat.slug}/${sub.slug}/`}
-                  class={sub.product_count === 0 ? 'empty' : undefined}
+                  class={sub.productCount === 0 ? 'empty' : undefined}
                   aria-current={sub.slug === activeSubcategory ? 'true' : undefined}
-                  title={sub.product_count === 0 ? '此產品線尚未上架內容' : undefined}
+                  title={sub.productCount === 0 ? '此產品線尚未上架內容' : undefined}
                 >
                   {sub.name}
                 </a>
