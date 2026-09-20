@@ -4,13 +4,15 @@
  * 用真實瀏覽器開啟後台，攔截 /admin/api/* 改由本程式回應，
  * 藉此在不碰到正式資料的情況下，驗證介面的行為與它送出的內容是否正確。
  *
- * 用法：
- *   npm run build && npx astro preview --port 4330 &
- *   node scripts/test_admin_ui.mjs
+ * 用法：npm run build && node scripts/test_admin_ui.mjs
+ * （測試會自己把 dist/ 端起來，不必另外開伺服器）
  */
 import { chromium } from 'playwright';
+import { startStaticServer } from './lib/static-server.mjs';
 
-const BASE = process.env.ADMIN_TEST_BASE ?? 'http://127.0.0.1:4330';
+// 指定 ADMIN_TEST_BASE 就改測那個網址（例如已部署的測試站），否則自己端 dist/
+const server = process.env.ADMIN_TEST_BASE ? null : await startStaticServer();
+const BASE = process.env.ADMIN_TEST_BASE ?? server.base;
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 const fixture = () => ({
@@ -129,6 +131,31 @@ await page.selectOption('#f-cat', 'thinners-cleaners');
 await page.waitForTimeout(100);
 check('換主分類後產品線重新載入', await page.locator('#f-sub option').count(), 2);
 
+console.log('\n產品說明的即時預覽：');
+const specPreview = page.locator('.preview-frame');
+check('有預覽框', await specPreview.count(), 1);
+check('預覽是完全沙箱化的', await specPreview.getAttribute('sandbox'), '');
+await page.fill('#f-spec', '<p>第一段</p><h3>用途</h3>');
+await page.waitForTimeout(500);
+let specDoc = await specPreview.getAttribute('srcdoc');
+check('預覽跟著說明更新',
+  specDoc?.includes('<p>第一段</p>') && specDoc?.includes('<h3>用途</h3>'), true);
+check('預覽跟著產品名稱更新', specDoc?.includes('CW水性油墨（改）'), true);
+check('預覽套用前台樣式', specDoc?.includes('--brand: #203c8a'), true);
+// 產品頁在沒有說明時會顯示來電洽詢，預覽要如實反映
+await page.fill('#f-spec', '');
+await page.waitForTimeout(500);
+specDoc = await specPreview.getAttribute('srcdoc');
+check('說明清空後顯示產品頁的替代文字', specDoc?.includes('尚無說明資料'), true);
+// 名稱含特殊字元時不能打壞預覽的 HTML 結構
+await page.fill('#f-name', '引號"與<標籤>');
+await page.waitForTimeout(500);
+check('名稱中的特殊字元有逸出',
+  (await specPreview.getAttribute('srcdoc'))?.includes('&quot;與&lt;標籤&gt;'), true);
+await page.fill('#f-name', 'CW水性油墨（改）');
+await page.fill('#f-spec', '<p>測試說明</p>');
+await page.waitForTimeout(400);
+
 console.log('\n照片：');
 check('顯示既有照片一張', await page.locator('.thumb').count(), 1);
 await page.locator('.thumb button').click();
@@ -228,7 +255,7 @@ check('可切換為已發布', await page.locator('.news-head .pill').textConten
 check('已發布就不再標示為草稿', await page.locator('.panel.draft').count(), 0);
 
 console.log('\n最新訊息的即時預覽：');
-const preview = page.locator('.news-preview-frame');
+const preview = page.locator('.preview-frame');
 check('有預覽框', await preview.count(), 1);
 // sandbox 為空字串＝最嚴格：內文就算貼進 <script> 也不會執行、碰不到後台
 check('預覽是完全沙箱化的', await preview.getAttribute('sandbox'), '');
@@ -261,6 +288,7 @@ if (failedRequests.length) failures.push(`有資源載入失敗：${failedReques
 else pass++;
 
 await browser.close();
+await server?.stop();
 
 console.log(`\n${failures.length ? '❌' : '✅'} 通過 ${pass} 項${failures.length ? `，失敗 ${failures.length} 項` : '，全數符合預期'}`);
 for (const f of failures) console.log('   ' + f);

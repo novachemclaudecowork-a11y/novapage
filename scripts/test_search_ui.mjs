@@ -4,13 +4,15 @@
  * 比對邏輯本身由 scripts/test_search.mjs 驗證，這裡測的是使用者實際的操作路徑：
  * 從頁首搜尋、網址帶關鍵字、邊打字邊出結果、查無結果、點進產品頁。
  *
- * 用法：
- *   npm run build && npx astro preview --port 4330 &
- *   node scripts/test_search_ui.mjs
+ * 用法：npm run build && node scripts/test_search_ui.mjs
+ * （測試會自己把 dist/ 端起來，不必另外開伺服器）
  */
 import { chromium } from 'playwright';
+import { startStaticServer } from './lib/static-server.mjs';
 
-const BASE = process.env.SEARCH_TEST_BASE ?? 'http://127.0.0.1:4330';
+// 指定 SEARCH_TEST_BASE 就改測那個網址（例如已部署的測試站），否則自己端 dist/
+const server = process.env.SEARCH_TEST_BASE ? null : await startStaticServer();
+const BASE = process.env.SEARCH_TEST_BASE ?? server.base;
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 const failures = [];
@@ -78,6 +80,7 @@ check('無水平捲動', !(await mPage.evaluate(
 )));
 
 await browser.close();
+await server?.stop();
 
 console.log(`\n資源與 console：${problems.length ? problems.join(' | ') : '無問題'}`);
 if (problems.length) failures.push(`有資源或 console 問題：${problems.join(' | ')}`);

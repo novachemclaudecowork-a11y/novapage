@@ -141,6 +141,82 @@ async function upload(file, kind, name) {
   return api('upload', { method: 'POST', body: form });
 }
 
+/* ---------- 預覽 ---------- */
+
+/** 把值放進 HTML 屬性或內文前一律逸出 */
+function escapeHtml(text) {
+  return String(text ?? '').replace(/[&<>"]/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+}
+
+/** 灰字的提示文字，用在還沒填內容的地方 */
+const placeholder = (text) => `<p style="color:#9aa3b0">${escapeHtml(text)}</p>`;
+
+/**
+ * 包成一份完整的預覽網頁。
+ *
+ * 前台的 global.css 原封不動內嵌進來（頁面上那個不會執行的
+ * <script type="text/css">），所以預覽的字體、間距、顏色就是網站上的樣子。
+ * 不能改成引用 /_astro/… 的路徑，那個檔名每次建置都會變。
+ */
+function previewShell(inner) {
+  const css = document.getElementById('preview-css')?.textContent ?? '';
+  return `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<style>${css}</style>
+<style>
+  body { padding: 20px 24px; }
+  /* 預覽不需要橫向捲軸，圖片一律縮到框內 */
+  img { max-width: 100%; }
+</style>
+</head><body>${inner}</body></html>`;
+}
+
+/**
+ * 建立預覽框。
+ *
+ * sandbox 為空字串＝最嚴格：不給 allow-scripts 也不給 allow-same-origin，
+ * 所以即使內文貼進 <script> 或 onerror 也不會執行、碰不到後台頁面。
+ *
+ * @param {() => string} buildDoc 每次更新時重新產生整份預覽 HTML
+ * @returns {{ frame: HTMLIFrameElement, refresh: () => void }}
+ */
+function makePreview(buildDoc) {
+  const frame = el('iframe', {
+    class: 'preview-frame', sandbox: '', title: '預覽',
+    srcdoc: buildDoc(),
+  });
+  // 每次按鍵都重畫 iframe 會閃，稍微延遲再更新
+  let timer;
+  const refresh = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { frame.srcdoc = buildDoc(); }, 250);
+  };
+  return { frame, refresh };
+}
+
+/** 最新訊息在網站上的樣子 */
+function newsPreviewDoc(post) {
+  return previewShell(`<article class="news-post">
+<h1>${escapeHtml(post.title) || '<span style="color:#9aa3b0">（尚未填標題）</span>'}</h1>
+<time datetime="${escapeHtml(post.date)}">${escapeHtml(post.date)}</time>
+<div>${post.body || placeholder('（尚未填內容）')}</div>
+</article>`);
+}
+
+/** 產品說明在產品頁上的樣子。標題與說明的排版比照 src/pages/products/[slug].astro */
+function productPreviewDoc(product) {
+  const spec = product.spec_html
+    ? `<div class="spec"><h2 style="margin-top:1.5rem">產品說明</h2>${product.spec_html}</div>`
+    : '<div class="spec"><p class="notice warn">此產品尚無說明資料，歡迎來電洽詢。</p></div>';
+  return previewShell(`<article>
+<h1>${escapeHtml(product.name) || '<span style="color:#9aa3b0">（尚未填名稱）</span>'}</h1>
+<dl class="product-meta">${
+    product.code ? `<dt>產品編號</dt><dd>${escapeHtml(product.code)}</dd>` : ''
+  }</dl>
+${spec}
+</article>`);
+}
+
 /* ---------- 產品 ---------- */
 
 function categoryName(slug) {
@@ -266,6 +342,10 @@ function renderProductEditor(product) {
     oninput: (e) => { product.spec_html = e.target.value; markDirty('products'); },
   }, product.spec_html ?? '');
 
+  // 產品說明同樣是 HTML，同樣看不出效果，所以比照最新訊息並排一個預覽。
+  // refresh 掛在整張表單上，名稱與產品編號改動也會跟著重畫。
+  const specPreview = makePreview(() => productPreviewDoc(product));
+
   /* 照片 */
   const thumbs = el('div', { class: 'thumbs' });
   const renderThumbs = () => {
@@ -360,7 +440,7 @@ function renderProductEditor(product) {
     },
   });
 
-  return el('div', { class: 'panel' },
+  return el('div', { class: 'panel', oninput: specPreview.refresh },
     el('h2', {}, `編輯產品：${product.name || '（未命名）'}`),
     el('div', { class: 'grid2' },
       field('產品名稱', nameInput),
@@ -378,11 +458,18 @@ function renderProductEditor(product) {
         el('label', { for: 'f-pub' }, '在網站上顯示'),
       ),
     ),
-    el('div', { class: 'field', style: 'margin-top:14px' },
-      el('label', { for: 'f-spec' }, '產品說明'),
-      specInput,
-      el('p', { class: 'hint' },
-        '可使用 HTML。換段落請用 <p>文字</p>，換行用 <br>。'),
+    el('div', { class: 'edit-with-preview' },
+      el('div', { class: 'field' },
+        el('label', { for: 'f-spec' }, '產品說明'),
+        specInput,
+        el('p', { class: 'hint' },
+          '可使用 HTML。換段落請用 <p>文字</p>，換行用 <br>。'),
+      ),
+      el('div', { class: 'field' },
+        el('label', {}, '預覽（產品頁上的樣子）'),
+        specPreview.frame,
+        el('p', { class: 'hint' }, '邊打字邊更新，不必儲存。'),
+      ),
     ),
     el('div', { class: 'field', style: 'margin-top:18px' },
       el('label', { for: 'f-image' }, '產品照片'),
@@ -563,35 +650,6 @@ function renderCategoriesTab(root) {
 
 /* ---------- 最新訊息 ---------- */
 
-/** 前台樣式，從頁面上那個不會執行的 <script type="text/css"> 取出 */
-function siteCss() {
-  return document.getElementById('preview-css')?.textContent ?? '';
-}
-
-/**
- * 產生預覽用的 HTML。
- *
- * 內容會放進 sandbox iframe，不給 allow-scripts 也不給 allow-same-origin，
- * 所以即使內文貼進了 <script> 或 onerror 也不會執行、碰不到後台頁面。
- * 排版直接套前台的 global.css，看到的就是網站上的樣子。
- */
-function previewDoc(post) {
-  const escape = (t) => String(t).replace(/[&<>"]/g, (c) =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-  return `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8">
-<style>${siteCss()}</style>
-<style>
-  body { padding: 20px 24px; }
-  /* 預覽不需要橫向捲軸，圖片一律縮到框內 */
-  img { max-width: 100%; }
-</style>
-</head><body><article class="news-post">
-<h1>${escape(post.title) || '<span style="color:#9aa3b0">（尚未填標題）</span>'}</h1>
-<time datetime="${escape(post.date)}">${escape(post.date)}</time>
-<div>${post.body || '<p style="color:#9aa3b0">（尚未填內容）</p>'}</div>
-</article></body></html>`;
-}
-
 function renderNewsTab(root) {
   const list = el('div');
   const rerender = () => { root.replaceChildren(); renderNewsTab(root); };
@@ -621,17 +679,8 @@ function renderNewsTab(root) {
   }
 
   for (const [index, post] of state.news.entries()) {
-    const frame = el('iframe', {
-      class: 'news-preview-frame', sandbox: '', title: '預覽',
-      srcdoc: previewDoc(post),
-    });
-    // 每次按鍵都重畫 iframe 會閃，稍微延遲再更新。
-    // 掛在整個面板上，標題與日期改動也會跟著重畫。
-    let timer;
-    const refresh = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => { frame.srcdoc = previewDoc(post); }, 250);
-    };
+    // refresh 掛在整個面板上，標題與日期改動也會跟著重畫
+    const { frame, refresh } = makePreview(() => newsPreviewDoc(post));
 
     list.append(
       el('div', {
@@ -679,7 +728,7 @@ function renderNewsTab(root) {
             }),
           ),
         ),
-        el('div', { class: 'news-edit' },
+        el('div', { class: 'edit-with-preview' },
           el('div', { class: 'field' },
             el('label', { for: `n-body-${index}` }, '內容'),
             el('textarea', {
