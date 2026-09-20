@@ -39,6 +39,12 @@ const isCurrent = (href: string) =>
         </ul>
       </nav>
 
+      <form class="search-form" role="search" action="/search/" method="get">
+        <label for="site-search" style="position:absolute;left:-9999px">搜尋產品</label>
+        <input type="search" id="site-search" name="q" placeholder="搜尋產品或型號…" />
+        <button type="submit">搜尋</button>
+      </form>
+
       <a class="inquiry-chip" href="/inquiry/" id="inquiry-chip" hidden>
         詢價清單 <span id="inquiry-count">0</span>
       </a>

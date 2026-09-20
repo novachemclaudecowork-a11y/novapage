@@ -206,3 +206,44 @@ h3 { font-size: 1.0625rem; margin: 1.5rem 0 .5rem; }
 .site-footer dt { font-weight: 600; opacity: .8; }
 .site-footer dd { margin: 0; }
 .site-footer .copyright { border-top: 1px solid rgb(255 255 255 / 20%); padding-top: 16px; font-size: .8125rem; opacity: .85; }
+
+/* ---------- 站內搜尋 ---------- */
+.search-form { display: flex; gap: 6px; align-items: center; }
+.search-form input {
+  width: 100%; max-width: 15rem; padding: 7px 12px; font: inherit; font-size: .875rem;
+  border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--text);
+}
+.search-form input:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
+.search-form button {
+  border: 0; background: var(--brand); color: #fff; cursor: pointer;
+  padding: 7px 14px; border-radius: 999px; font-size: .875rem; font-family: inherit;
+}
+.search-form button:hover { background: var(--brand-dark); }
+@media (min-width: 900px) { .header-main .search-form { order: 3; } }
+
+.search-hero { max-width: 34rem; }
+.search-hero input {
+  width: 100%; padding: 12px 16px; font: inherit; font-size: 1rem;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: #fff; color: var(--text);
+}
+.search-hero input:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
+
+.results { list-style: none; margin: 24px 0 0; padding: 0; }
+.results li { border-bottom: 1px solid var(--border); }
+.results a {
+  display: grid; grid-template-columns: 72px 1fr; gap: 16px; align-items: center;
+  padding: 16px 4px; text-decoration: none; color: inherit;
+}
+.results a:hover { background: var(--brand-light); }
+.results .media {
+  width: 72px; aspect-ratio: 1; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  display: grid; place-items: center; overflow: hidden;
+}
+.results .media img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.results .media span { font-size: .6875rem; color: var(--text-muted); }
+.results .title { font-weight: 600; color: var(--brand-dark); margin: 0 0 2px; }
+.results .meta { font-size: .8125rem; color: var(--text-muted); margin: 0 0 4px; }
+.results .snippet { font-size: .875rem; color: var(--text-muted); margin: 0; }
+.results mark { background: #fff2b8; color: inherit; padding: 0 1px; border-radius: 2px; }

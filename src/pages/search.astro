@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { products } from '../data/site';
+---
+
+<BaseLayout
+  title="搜尋"
+  description={`在 ${products.length} 項產品中搜尋網印油墨、稀釋劑、洗版劑與製版資材。`}
+>
+  <Breadcrumb items={[{ label: '搜尋' }]} />
+  <h1>搜尋產品</h1>
+
+  <form class="search-hero" id="search-form" role="search">
+    <label for="q" class="visually-hidden" style="position:absolute;left:-9999px">搜尋關鍵字</label>
+    <input
+      type="search"
+      id="q"
+      name="q"
+      placeholder="輸入產品名稱、型號或用途，例如 尼龍布、BS-007"
+      autocomplete="off"
+      autofocus
+    />
+  </form>
+
+  <p id="summary" style="margin-top:16px; color:var(--text-muted); font-size:.9375rem"></p>
+  <ul class="results" id="results"></ul>
+</BaseLayout>
+
+<script>
+  import { loadIndex, searchItems, snippetOf } from '../scripts/search.js';
+
+  const form = document.getElementById('search-form');
+  const input = document.getElementById('q');
+  const summary = document.getElementById('summary');
+  const list = document.getElementById('results');
+
+  /** 把命中的關鍵字標起來。以 DOM 節點組裝，不用 innerHTML，避免內容被當成標記解讀。 */
+  function highlight(text, terms) {
+    const fragment = document.createDocumentFragment();
+    if (!terms.length) {
+      fragment.append(text);
+      return fragment;
+    }
+    const pattern = new RegExp(
+      `(${terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`,
+      'gi',
+    );
+    let last = 0;
+    for (const match of text.matchAll(pattern)) {
+      if (match.index > last) fragment.append(text.slice(last, match.index));
+      const mark = document.createElement('mark');
+      mark.textContent = match[0];
+      fragment.append(mark);
+      last = match.index + match[0].length;
+    }
+    if (last < text.length) fragment.append(text.slice(last));
+    return fragment;
+  }
+
+  function render(items, query) {
+    const terms = query.trim().split(/\s+/).filter(Boolean);
+    list.replaceChildren();
+
+    if (!query.trim()) {
+      summary.textContent = '請輸入關鍵字開始搜尋。';
+      return;
+    }
+    if (!items.length) {
+      summary.textContent = `找不到符合「${query}」的產品。試試更簡短的關鍵字，或直接來電洽詢 02-2299-4000。`;
+      return;
+    }
+    summary.textContent = `找到 ${items.length} 項符合「${query}」的產品`;
+
+    for (const item of items) {
+      const media = document.createElement('span');
+      media.className = 'media';
+      if (item.i) {
+        const img = document.createElement('img');
+        img.src = item.i;
+        img.alt = '';
+        img.loading = 'lazy';
+        media.append(img);
+      } else {
+        const span = document.createElement('span');
+        span.textContent = '無照片';
+        media.append(span);
+      }
+
+      const title = document.createElement('p');
+      title.className = 'title';
+      title.append(highlight(item.n, terms));
+
+      const meta = document.createElement('p');
+      meta.className = 'meta';
+      meta.textContent = [item.g, item.c ? `產品編號 ${item.c}` : ''].filter(Boolean).join('　');
+
+      const snippet = document.createElement('p');
+      snippet.className = 'snippet';
+      snippet.append(highlight(snippetOf(item.t, query), terms));
+
+      const body = document.createElement('span');
+      body.append(title, meta, snippet);
+
+      const link = document.createElement('a');
+      link.href = `/products/${item.s}/`;
+      link.append(media, body);
+
+      const li = document.createElement('li');
+      li.append(link);
+      list.append(li);
+    }
+  }
+
+  async function run(query, { updateUrl = true } = {}) {
+    if (updateUrl) {
+      const url = new URL(window.location.href);
+      if (query) url.searchParams.set('q', query);
+      else url.searchParams.delete('q');
+      window.history.replaceState(null, '', url);
+    }
+    if (!query.trim()) {
+      render([], '');
+      return;
+    }
+    try {
+      const index = await loadIndex();
+      render(searchItems(index, query), query);
+    } catch (err) {
+      summary.textContent = `搜尋暫時無法使用：${err.message}`;
+    }
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    run(input.value);
+  });
+
+  let timer;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => run(input.value), 180);
+  });
+
+  const initial = new URLSearchParams(window.location.search).get('q') ?? '';
+  input.value = initial;
+  run(initial, { updateUrl: false });
+</script>
