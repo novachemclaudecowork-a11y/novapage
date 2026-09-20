@@ -1,0 +1,15 @@
+# 鏡像遺漏頁面補抓清單
+#
+# 以下兩頁在主選單上存在，但首次鏡像未抓到。
+# 請在有對外網路的電腦上執行下方指令補抓，再將產生的檔案一併 commit。
+#
+#   wget -e robots=off --restrict-file-names=windows \
+#        --user-agent="Mozilla/5.0" --wait=1 \
+#        -P site-mirror -x -nH \
+#        -i site-mirror/補抓清單.txt
+#
+# 若這兩頁需要會員登入才看得到內容，wget 會抓到登入頁而非實際內容，
+# 屆時請改用瀏覽器登入後「另存新檔」，或直接提供原始的 SDS／說明書檔案。
+
+https://www.novananoinks.com.tw/page/p.asp?id=9
+https://www.novananoinks.com.tw/page/p.asp?id=14
