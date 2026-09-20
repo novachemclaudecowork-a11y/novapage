@@ -293,7 +293,7 @@ translateInitilization();
 <div id="TopMenuDeskTop">
 <link rel="stylesheet" href="/def/responsive-nav/css/defaults.css">
 <link rel="stylesheet" href="/def/responsive-nav/css/nav-core.css">
-<link rel="stylesheet" href="/def/responsive-nav/css/nav-layout_system.css?t=1789892385">
+<link rel="stylesheet" href="/def/responsive-nav/css/nav-layout_system.css?t=1789893842">
 <!--[if lt IE 9]>
 <link rel="stylesheet" href="/def/responsive-nav/css/ie8-core.css">
 <link rel="stylesheet" href="/def/responsive-nav/css/ie8-layout.css">
@@ -594,7 +594,7 @@ $('#HomePdCarousel').owlCarousel({
 
 <tr><td align="center"></td></tr> 
 <tr><td align="center">
-<div id="WebBlockBottom"><p style="text-align: center;"><span style="font-family: 微軟正黑體;"><span style="font-size: 14pt;">貝星貿易股份有限公司</span><br /> <span style="font-size: small;">NOVACHEM TRADING CO., LTD.<br /> 電話：+886-2-22994000 傳真：+886-2-22994263<br /> 地址：242台灣新北市新莊區五權一路九號8樓之1<br /> 郵箱：<a href="mailto:novachem@ms24.hinet.net" target="_blank">novachem@ms24.hinet.net</a>&nbsp;</span></span></p><div>TOTAL:79166</div>
+<div id="WebBlockBottom"><p style="text-align: center;"><span style="font-family: 微軟正黑體;"><span style="font-size: 14pt;">貝星貿易股份有限公司</span><br /> <span style="font-size: small;">NOVACHEM TRADING CO., LTD.<br /> 電話：+886-2-22994000 傳真：+886-2-22994263<br /> 地址：242台灣新北市新莊區五權一路九號8樓之1<br /> 郵箱：<a href="mailto:novachem@ms24.hinet.net" target="_blank">novachem@ms24.hinet.net</a>&nbsp;</span></span></p><div>TOTAL:79169</div>
 </div></td></tr> 
 <tr><td valign="middle" align="center" height="20"></td></tr>
 </table></td></tr>

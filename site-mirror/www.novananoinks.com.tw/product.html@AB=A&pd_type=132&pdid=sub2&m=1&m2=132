@@ -85,7 +85,7 @@ function show_photo($img) {
 	window.parent.document.all.photo.src=$img;
 }
 function show_photo_water(id,f) {
-	window.parent.document.all.photo.src="/water/show_pic_big.html?id="+id+"&f="+f+"&tt=9/20/2026 8:20:56 AM";
+	window.parent.document.all.photo.src="/water/show_pic_big.html?id="+id+"&f="+f+"&tt=9/20/2026 8:45:10 AM";
 }
 function ValidateNumber(e, pnumber) {if (!/^\d+$/.test(pnumber)){var newValue =/^\d+/.exec(e.value);if (newValue != null){e.value = newValue;} else {e.value = "";}}return false;}
 // stop hiding -->
@@ -319,7 +319,7 @@ translateInitilization();
 <div id="TopMenuDeskTop">
 <link rel="stylesheet" href="/def/responsive-nav/css/defaults.css">
 <link rel="stylesheet" href="/def/responsive-nav/css/nav-core.css">
-<link rel="stylesheet" href="/def/responsive-nav/css/nav-layout_system.css?t=1789892456">
+<link rel="stylesheet" href="/def/responsive-nav/css/nav-layout_system.css?t=1789893910">
 <!--[if lt IE 9]>
 <link rel="stylesheet" href="/def/responsive-nav/css/ie8-core.css">
 <link rel="stylesheet" href="/def/responsive-nav/css/ie8-layout.css">
