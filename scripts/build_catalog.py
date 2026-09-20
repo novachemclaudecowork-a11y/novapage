@@ -253,6 +253,10 @@ def main() -> int:
     (OUT / "missing-product-lines.json").write_text(
         json.dumps(empty_subs, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+    # 錯字修正表也輸出一份，讓轉址測試能分辨「刻意修正」與「導到錯的產品」
+    (OUT / "name-corrections.json").write_text(
+        json.dumps(NAME_CORRECTIONS, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     # 舊網址 → 新網址，供上線時設定 301 轉址
     legacy = json.loads((OUT / "legacy-urls.json").read_text(encoding="utf-8"))

@@ -9,9 +9,14 @@
     "preview": "astro preview",
     "check": "astro check",
     "data": "python3 scripts/extract_products.py && python3 scripts/build_catalog.py && python3 scripts/prepare_assets.py && python3 scripts/build_redirects.py",
-    "rebuild": "npm run data && npm run build"
+    "rebuild": "npm run data && npm run build && npm test",
+    "test": "node scripts/test_redirects.mjs"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.3"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

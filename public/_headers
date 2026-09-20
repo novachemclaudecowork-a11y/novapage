@@ -1,0 +1,16 @@
+# Cloudflare Pages 回應標頭設定
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# Astro 產生的資源檔名含內容雜湊，內容一變檔名就變，可永久快取
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 產品照的檔名沿用舊站，不含雜湊，換圖後檔名不變，
+# 因此快取一天即可，避免換了圖客戶端還看到舊的
+/images/*
+  Cache-Control: public, max-age=86400
