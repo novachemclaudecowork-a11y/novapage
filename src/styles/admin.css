@@ -109,7 +109,9 @@ td.actions { text-align: end; white-space: nowrap; }
   border-radius: var(--radius); overflow: hidden; background: var(--bg);
 }
 .thumb img { aspect-ratio: 1; object-fit: contain; padding: 6px; }
-.thumb button {
+/* 只針對移除鈕。寫成 .thumb button 會把卡片裡其他按鈕（例如調整順序的
+   箭頭）也一起絕對定位，全部疊到右上角變成看不見 */
+.thumb .thumb-remove {
   position: absolute; top: 3px; inset-inline-end: 3px;
   width: 22px; height: 22px; border-radius: 50%; border: 0; cursor: pointer;
   background: rgb(0 0 0 / 55%); color: #fff; font-size: .75rem; line-height: 1;
@@ -180,7 +182,43 @@ input.cat-order { width: 4.5rem; flex: none; text-align: center; padding: 7px 6p
   border-radius: var(--radius); background: #fff;
 }
 .edit-with-preview textarea { min-height: 340px; }
+/* 產品預覽多了照片，要高一點才看得到說明 */
+.preview-frame.tall { height: 440px; }
+.edit-with-preview:has(.preview-frame.tall) textarea { min-height: 440px; }
 @media (max-width: 860px) {
   .edit-with-preview { grid-template-columns: 1fr; }
   .edit-with-preview textarea, .preview-frame { min-height: 200px; height: 200px; }
 }
+
+/* HTML 插入鈕：使用者不必自己打標籤 */
+.html-toolbar {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px;
+}
+.html-toolbar .tool {
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  border-radius: var(--radius); padding: 5px 10px; font: inherit; font-size: .8125rem;
+  cursor: pointer; line-height: 1.4;
+}
+.html-toolbar .tool:hover { border-color: var(--brand); color: var(--brand); }
+.html-toolbar .hint { margin: 0 0 0 4px; }
+
+/* 產品照片：後台就要看得出有哪幾張、哪一張是主圖 */
+.thumbs { gap: 14px; }
+.thumb { width: 148px; padding-bottom: 6px; }
+.thumb a { display: block; }
+.thumb .thumb-remove { z-index: 1; }
+.thumb-main {
+  position: absolute; top: 4px; inset-inline-start: 4px;
+  background: var(--brand); color: #fff; font-size: .6875rem;
+  border-radius: 3px; padding: 1px 6px;
+}
+.thumb-name {
+  display: block; padding: 0 6px; font-size: .6875rem; color: var(--muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.thumb-move { display: flex; gap: 4px; padding: 4px 6px 0; }
+.thumb-move button {
+  flex: 1; border: 1px solid var(--border); background: var(--surface);
+  border-radius: 3px; cursor: pointer; font-size: .75rem; line-height: 1.6; padding: 0;
+}
+.thumb-move button:disabled { opacity: .35; cursor: default; }

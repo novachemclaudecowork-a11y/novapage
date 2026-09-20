@@ -159,7 +159,7 @@ const placeholder = (text) => `<p style="color:#9aa3b0">${escapeHtml(text)}</p>`
  * <script type="text/css">），所以預覽的字體、間距、顏色就是網站上的樣子。
  * 不能改成引用 /_astro/… 的路徑，那個檔名每次建置都會變。
  */
-function previewShell(inner) {
+function previewShell(inner, extraCss = '') {
   const css = document.getElementById('preview-css')?.textContent ?? '';
   return `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8">
 <style>${css}</style>
@@ -167,7 +167,7 @@ function previewShell(inner) {
   body { padding: 20px 24px; }
   /* 預覽不需要橫向捲軸，圖片一律縮到框內 */
   img { max-width: 100%; }
-</style>
+${extraCss}</style>
 </head><body>${inner}</body></html>`;
 }
 
@@ -180,9 +180,9 @@ function previewShell(inner) {
  * @param {() => string} buildDoc 每次更新時重新產生整份預覽 HTML
  * @returns {{ frame: HTMLIFrameElement, refresh: () => void }}
  */
-function makePreview(buildDoc) {
+function makePreview(buildDoc, modifier = '') {
   const frame = el('iframe', {
-    class: 'preview-frame', sandbox: '', title: '預覽',
+    class: `preview-frame${modifier ? ` ${modifier}` : ''}`, sandbox: '', title: '預覽',
     srcdoc: buildDoc(),
   });
   // 每次按鍵都重畫 iframe 會閃，稍微延遲再更新
@@ -192,6 +192,70 @@ function makePreview(buildDoc) {
     timer = setTimeout(() => { frame.srcdoc = buildDoc(); }, 250);
   };
   return { frame, refresh };
+}
+
+/* ---------- HTML 插入鈕 ---------- */
+
+/**
+ * 把文字寫進 textarea 目前的選取範圍。
+ *
+ * 用 execCommand 而不是直接改 value，是為了保留瀏覽器的復原紀錄——
+ * 按錯了可以 Ctrl+Z 退回去。某些瀏覽器不支援時再退回 setRangeText。
+ */
+function replaceSelection(textarea, text, caretOffsetFromEnd = 0) {
+  textarea.focus();
+  const start = textarea.selectionStart;
+  if (!document.execCommand?.('insertText', false, text)) {
+    textarea.setRangeText(text, start, textarea.selectionEnd, 'end');
+  }
+  const caret = start + text.length - caretOffsetFromEnd;
+  textarea.setSelectionRange(caret, caret);
+  textarea.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+/**
+ * 產品說明與最新訊息都是 HTML，但使用者不該需要自己打標籤。
+ * 這排按鈕會把選取的文字包起來；沒選取時插入空標籤並把游標放進去。
+ *
+ * @param {HTMLTextAreaElement} textarea
+ * @param {string} headingTag 小標題要用哪一級（產品頁內文用 h3，訊息頁用 h2）
+ */
+function htmlToolbar(textarea, headingTag = 'h3') {
+  const wrap = (tag) => () => {
+    const selected = textarea.value.slice(textarea.selectionStart, textarea.selectionEnd);
+    replaceSelection(textarea, `<${tag}>${selected}</${tag}>`,
+      selected ? 0 : tag.length + 3);
+  };
+
+  const list = () => {
+    const selected = textarea.value.slice(textarea.selectionStart, textarea.selectionEnd);
+    const lines = selected.split('\n').map((l) => l.trim()).filter(Boolean);
+    const items = lines.length ? lines : [''];
+    const html = `<ul>\n${items.map((l) => `  <li>${l}</li>`).join('\n')}\n</ul>`;
+    replaceSelection(textarea, html, lines.length ? 0 : 11);
+  };
+
+  const table = () => {
+    replaceSelection(textarea,
+      '<table>\n  <tr><td>項目</td><td>規格</td></tr>\n' +
+      '  <tr><td></td><td></td></tr>\n</table>', 0);
+  };
+
+  const buttons = [
+    ['段落', '把選取的文字變成一段', wrap('p')],
+    ['小標題', '把選取的文字變成小標題', wrap(headingTag)],
+    ['粗體', '把選取的文字變成粗體', wrap('strong')],
+    ['項目清單', '把選取的每一行變成一個項目', list],
+    ['表格', '插入一個兩欄的表格', table],
+    ['換行', '在游標處換行（同一段內）', () => replaceSelection(textarea, '<br>\n')],
+  ];
+
+  return el('div', { class: 'html-toolbar' },
+    ...buttons.map(([label, title, onclick]) =>
+      el('button', { type: 'button', class: 'tool', title, onclick }, label),
+    ),
+    el('span', { class: 'hint' }, '先選取文字再按，或直接按了再打字。'),
+  );
 }
 
 /** 最新訊息在網站上的樣子 */
@@ -208,13 +272,25 @@ function productPreviewDoc(product) {
   const spec = product.spec_html
     ? `<div class="spec"><h2 style="margin-top:1.5rem">產品說明</h2>${product.spec_html}</div>`
     : '<div class="spec"><p class="notice warn">此產品尚無說明資料，歡迎來電洽詢。</p></div>';
-  return previewShell(`<article>
+  // 產品頁只會用第一張照片；沒有照片時是一塊「尚無產品照」的灰底
+  const photo = product.images[0]
+    ? `<img src="${escapeHtml(product.images[0])}" alt="" width="420" height="315">`
+    : '<div class="placeholder">尚無產品照</div>';
+  return previewShell(`<article class="product">
+<div class="product-photo">${photo}</div>
+<div>
 <h1>${escapeHtml(product.name) || '<span style="color:#9aa3b0">（尚未填名稱）</span>'}</h1>
 <dl class="product-meta">${
     product.code ? `<dt>產品編號</dt><dd>${escapeHtml(product.code)}</dd>` : ''
   }</dl>
 ${spec}
-</article>`);
+</div>
+</article>`,
+  // 預覽框比實際的產品頁窄很多，照片若照原尺寸會把說明整個擠到看不見。
+  // 這裡只縮照片，文字的字級與間距維持和網站一致。
+  `  .product-photo { max-width: 220px; }
+  .product-photo img { max-height: 140px; width: auto; margin: 0 auto; }
+`);
 }
 
 /* ---------- 產品 ---------- */
@@ -344,26 +420,61 @@ function renderProductEditor(product) {
 
   // 產品說明同樣是 HTML，同樣看不出效果，所以比照最新訊息並排一個預覽。
   // refresh 掛在整張表單上，名稱與產品編號改動也會跟著重畫。
-  const specPreview = makePreview(() => productPreviewDoc(product));
+  const specPreview = makePreview(() => productPreviewDoc(product), 'tall');
 
   /* 照片 */
   const thumbs = el('div', { class: 'thumbs' });
   const renderThumbs = () => {
+    const move = (from, to) => {
+      if (to < 0 || to >= product.images.length) return;
+      const [img] = product.images.splice(from, 1);
+      product.images.splice(to, 0, img);
+      markDirty('products');
+      renderThumbs();
+      specPreview.refresh();
+    };
+
+    // replaceChildren 不會忽略 null，直接傳進去會在畫面上印出字串 "null"，
+    // 所以空狀態要另外判斷，不能沿用 el() 那種寫法
+    if (!product.images.length) {
+      thumbs.replaceChildren(el('p', { class: 'hint' }, '尚未加入照片'));
+      return;
+    }
+
     thumbs.replaceChildren(
       ...product.images.map((src, index) =>
         el('div', { class: 'thumb' },
-          el('img', { src, alt: '' }),
+          // 另開分頁看原圖，縮圖看不清楚的時候用得上
+          el('a', { href: src, target: '_blank', rel: 'noopener', title: '另開分頁看原圖' },
+            el('img', { src, alt: '' }),
+          ),
           el('button', {
+            class: 'thumb-remove',
             type: 'button', title: '移除這張照片', 'aria-label': '移除這張照片',
             onclick: () => {
               product.images.splice(index, 1);
               markDirty('products');
               renderThumbs();
+              specPreview.refresh();
             },
           }, '×'),
+          // 產品頁只會用第一張當主圖，所以順序是有意義的，要讓使用者看得出來
+          index === 0 ? el('span', { class: 'thumb-main' }, '主圖') : null,
+          el('span', { class: 'thumb-name', title: src }, src.split('/').pop()),
+          el('div', { class: 'thumb-move' },
+            el('button', {
+              type: 'button', title: '往前移', 'aria-label': `${src} 往前移`,
+              disabled: index === 0,
+              onclick: () => move(index, index - 1),
+            }, '←'),
+            el('button', {
+              type: 'button', title: '往後移', 'aria-label': `${src} 往後移`,
+              disabled: index === product.images.length - 1,
+              onclick: () => move(index, index + 1),
+            }, '→'),
+          ),
         ),
       ),
-      product.images.length ? null : el('p', { class: 'hint' }, '尚未加入照片'),
     );
   };
   renderThumbs();
@@ -381,6 +492,7 @@ function renderProductEditor(product) {
           product.images.push(result.path);
           markDirty('products');
           renderThumbs();
+          specPreview.refresh();
           notify(`已加入「${file.name}」，記得按右上角儲存。`);
         } catch (err) {
           notify(`上傳失敗：${err.message}`, 'warn');
@@ -461,9 +573,9 @@ function renderProductEditor(product) {
     el('div', { class: 'edit-with-preview' },
       el('div', { class: 'field' },
         el('label', { for: 'f-spec' }, '產品說明'),
+        htmlToolbar(specInput, 'h3'),
         specInput,
-        el('p', { class: 'hint' },
-          '可使用 HTML。換段落請用 <p>文字</p>，換行用 <br>。'),
+        el('p', { class: 'hint' }, '也可以直接打 HTML。'),
       ),
       el('div', { class: 'field' },
         el('label', {}, '預覽（產品頁上的樣子）'),
@@ -729,15 +841,19 @@ function renderNewsTab(root) {
           ),
         ),
         el('div', { class: 'edit-with-preview' },
-          el('div', { class: 'field' },
-            el('label', { for: `n-body-${index}` }, '內容'),
-            el('textarea', {
+          (() => {
+            const bodyInput = el('textarea', {
               id: `n-body-${index}`,
               oninput: (e) => { post.body = e.target.value; markDirty('news'); },
-            }, post.body ?? ''),
-            el('p', { class: 'hint' },
-              '可使用 HTML。分段用 <p>…</p>，小標題用 <h2>…</h2>。'),
-          ),
+            }, post.body ?? '');
+            // 訊息頁的 h1 是標題欄位，所以內文的小標題從 h2 開始
+            return el('div', { class: 'field' },
+              el('label', { for: `n-body-${index}` }, '內容'),
+              htmlToolbar(bodyInput, 'h2'),
+              bodyInput,
+              el('p', { class: 'hint' }, '也可以直接打 HTML。'),
+            );
+          })(),
           el('div', { class: 'field' },
             el('label', {}, '預覽（網站上的樣子）'),
             frame,

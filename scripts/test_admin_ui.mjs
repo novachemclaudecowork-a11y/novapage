@@ -20,7 +20,8 @@ const fixture = () => ({
     {
       slug: 'cw-waterbased', name: 'CW水性油墨', code: '08',
       category: 'screen-inks', subcategory: 'cw-waterbased',
-      published: true, order: 60, images: ['/images/products/1/127-1b.jpg'],
+      published: true, order: 60,
+      images: ['/images/products/1/127-1b.jpg', '/images/products/1/121-1l.jpg'],
       documents: [], spec_html: '<p>測試說明</p>', legacy: { m: '1', pg: 6 },
     },
     {
@@ -156,10 +157,75 @@ await page.fill('#f-name', 'CW水性油墨（改）');
 await page.fill('#f-spec', '<p>測試說明</p>');
 await page.waitForTimeout(400);
 
+console.log('\n插入鈕：');
+// 使用者不該需要自己打標籤
+await page.fill('#f-spec', '這是一段話');
+await page.locator('#f-spec').evaluate((t) => t.setSelectionRange(0, 5));
+await page.locator('.html-toolbar .tool', { hasText: '粗體' }).first().click();
+check('選取文字後按粗體會包起來',
+  await page.inputValue('#f-spec'), '<strong>這是一段話</strong>');
+
+await page.fill('#f-spec', '甲\n乙');
+await page.locator('#f-spec').evaluate((t) => t.setSelectionRange(0, 3));
+await page.locator('.html-toolbar .tool', { hasText: '項目清單' }).first().click();
+check('選取多行後按項目清單，每行各成一項',
+  await page.inputValue('#f-spec'), '<ul>\n  <li>甲</li>\n  <li>乙</li>\n</ul>');
+
+await page.fill('#f-spec', '');
+await page.locator('.html-toolbar .tool', { hasText: '小標題' }).first().click();
+// 產品說明在產品頁上是 h2 底下的內文，所以小標題從 h3 開始
+check('產品說明的小標題是 h3', await page.inputValue('#f-spec'), '<h3></h3>');
+check('游標停在標籤中間，可以直接打字',
+  await page.locator('#f-spec').evaluate((t) => t.selectionStart), 4);
+
+await page.fill('#f-spec', '');
+await page.locator('.html-toolbar .tool', { hasText: '表格' }).first().click();
+check('表格插入可用的骨架',
+  (await page.inputValue('#f-spec')).startsWith('<table>'), true);
+
+await page.fill('#f-spec', '');
+await page.locator('.html-toolbar .tool', { hasText: '段落' }).first().click();
+await page.waitForTimeout(400);
+check('按了插入鈕之後預覽也跟著更新',
+  (await page.locator('.preview-frame').getAttribute('srcdoc'))?.includes('<p></p>'), true);
+check('按了插入鈕會標記為尚未儲存', await page.locator('#save').isDisabled(), false);
+
+await page.fill('#f-spec', '<p>測試說明</p>');
+await page.waitForTimeout(300);
+
 console.log('\n照片：');
-check('顯示既有照片一張', await page.locator('.thumb').count(), 1);
-await page.locator('.thumb button').click();
-check('移除後歸零', await page.locator('.thumb').count(), 0);
+// 後台要看得出有哪幾張、哪一張是主圖，不必跑到前台去對
+check('列出既有的兩張照片', await page.locator('.thumb').count(), 2);
+check('第一張標示為主圖', await page.locator('.thumb-main').count(), 1);
+check('主圖標在第一張上',
+  await page.locator('.thumb').first().locator('.thumb-main').count(), 1);
+check('顯示檔名',
+  (await page.locator('.thumb-name').allTextContents()), ['127-1b.jpg', '121-1l.jpg']);
+check('可另開分頁看原圖',
+  await page.locator('.thumb a').first().getAttribute('href'), '/images/products/1/127-1b.jpg');
+// .thumb button 曾把箭頭鈕一起絕對定位，四顆全疊到右上角看不見
+const firstMove = page.locator('.thumb').first().locator('.thumb-move button');
+check('每張都有調整順序的箭頭', await page.locator('.thumb-move').count(), 2);
+check('第一張不能再往前', await firstMove.first().isDisabled(), true);
+check('箭頭看得到（不是被疊在角落）',
+  (await firstMove.last().boundingBox())?.height > 10, true);
+
+await firstMove.last().click();
+await page.waitForTimeout(200);
+check('往後移之後換第二張當主圖',
+  await page.locator('.thumb-name').first().textContent(), '121-1l.jpg');
+
+await page.locator('.thumb').first().locator('.thumb-remove').click();
+await page.waitForTimeout(150);
+check('移除一張後剩一張', await page.locator('.thumb').count(), 1);
+await page.locator('.thumb').first().locator('.thumb-remove').click();
+await page.waitForTimeout(150);
+check('全部移除後顯示空狀態文字',
+  (await page.locator('.thumbs').textContent())?.trim(), '尚未加入照片');
+// replaceChildren 不會忽略 null，之前會在縮圖旁邊印出字串 "null"
+check('空狀態不會印出 null',
+  (await page.locator('.thumbs').textContent())?.includes('null'), false);
+
 await page.setInputFiles('#f-image', {
   name: 'test.png', mimeType: 'image/png',
   buffer: Buffer.from('89504e470d0a1a0a', 'hex'),
@@ -167,6 +233,9 @@ await page.setInputFiles('#f-image', {
 await page.waitForTimeout(400);
 check('上傳後加回一張', await page.locator('.thumb').count(), 1);
 check('確實呼叫了上傳端點', uploads.length > 0, true);
+check('預覽跟著放上主圖',
+  (await page.locator('.preview-frame').getAttribute('srcdoc'))
+    ?.includes('/images/products/uploaded-test.png'), true);
 
 console.log('\n儲存：');
 await page.locator('#save').click();
@@ -260,6 +329,11 @@ check('有預覽框', await preview.count(), 1);
 // sandbox 為空字串＝最嚴格：內文就算貼進 <script> 也不會執行、碰不到後台
 check('預覽是完全沙箱化的', await preview.getAttribute('sandbox'), '');
 check('未填內容時有提示', (await preview.getAttribute('srcdoc'))?.includes('（尚未填內容）'), true);
+
+// 訊息頁的 h1 是標題欄位，所以內文的小標題從 h2 開始
+await page.locator('#n-body-0').fill('');
+await page.locator('.html-toolbar .tool', { hasText: '小標題' }).first().click();
+check('最新訊息的小標題是 h2', await page.inputValue('#n-body-0'), '<h2></h2>');
 
 await page.locator('#n-title-0').fill('測試訊息');
 await page.locator('#n-body-0').fill('<p>第一段</p><h2>小標題</h2>');
