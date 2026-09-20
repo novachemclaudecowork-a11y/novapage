@@ -93,6 +93,21 @@ def main() -> int:
         for s in c["children"]
     }
 
+    # m2 → 該產品線底下唯一那項產品的新網址。
+    #
+    # 舊站多數子分類底下只有一項產品（子分類名稱與產品名稱是對應的），
+    # 這類舊網址導到產品頁比導到只有一項產品的列表頁更貼近原本的內容。
+    products_in_sub: dict[str, list[str]] = {}
+    for prod in catalog["products"]:
+        if prod["subcategory"]:
+            products_in_sub.setdefault(prod["subcategory"], []).append(prod["slug"])
+    sub_product_map = {}
+    for c in catalog["categories"]:
+        for sub in c["children"]:
+            slugs = products_in_sub.get(sub["slug"], [])
+            if len(slugs) == 1:
+                sub_product_map[sub["legacy_m2"]] = f"/products/{slugs[0]}/"
+
     js = f"""// 舊站網址轉址的對照表與判斷邏輯。
 // 由 scripts/build_redirects.py 產生，請勿手動編輯。
 //
@@ -117,6 +132,9 @@ const CATEGORY_MAP = {json.dumps(category_map, ensure_ascii=False, indent=2)};
 
 const SUBCATEGORY_MAP = {json.dumps(sub_map, ensure_ascii=False, indent=2)};
 
+// m2 → 該產品線底下唯一那項產品
+const SUBCATEGORY_PRODUCT_MAP = {json.dumps(sub_product_map, ensure_ascii=False, indent=2)};
+
 const PRODUCT_PATHS = new Set({json.dumps(PRODUCT_PATHS)});
 const LISTING_PATHS = new Set({json.dumps(LISTING_PATHS)});
 
@@ -137,11 +155,19 @@ export function resolveLegacy(pathname, params) {{
     const m = params.get("m") ?? "";
     const m2 = params.get("m2") ?? "";
     const pg = params.get("pg") ?? "";
-    const hit = PRODUCT_MAP[`${{m}}|${{m2}}|${{pg}}`] ?? PRODUCT_MAP[`${{m}}||${{pg}}`];
-    if (hit) return hit;
-    // 沒有 pg 或對不到時，退而導向所屬分類或產品線，避免變成 404
-    if (m2 && SUBCATEGORY_MAP[m2]) return SUBCATEGORY_MAP[m2];
-    return CATEGORY_MAP[m] ?? "/products/";
+
+    // 帶 m2 時，pg 是該產品線內部的序號，與主分類的 pg 各自獨立。
+    // 因此這裡**絕不可**退回用 `m|pg` 去查，否則會導到完全不相干的產品。
+    if (m2) {{
+      return (
+        PRODUCT_MAP[`${{m}}|${{m2}}|${{pg}}`] ??
+        SUBCATEGORY_PRODUCT_MAP[m2] ??
+        SUBCATEGORY_MAP[m2] ??
+        CATEGORY_MAP[m] ??
+        "/products/"
+      );
+    }}
+    return PRODUCT_MAP[`${{m}}||${{pg}}`] ?? CATEGORY_MAP[m] ?? "/products/";
   }}
 
   if (LISTING_PATHS.has(path)) {{
@@ -181,6 +207,7 @@ export function legacyRedirectResponse(request) {{
     if unmapped:
         print(f"  ⚠️  有 {len(unmapped)} 個舊產品名稱找不到對應：{', '.join(sorted(unmapped))}")
     print(f"  主分類：{len(category_map)} 筆   產品線：{len(sub_map)} 筆")
+    print(f"  產品線 → 單一產品：{len(sub_product_map)} 筆")
     print(f"  靜態頁：{len(PATH_MAP)} 筆路徑 + {len(PAGE_ID_MAP)} 筆 p.asp?id=")
     print(f"寫入 {REDIRECTS.relative_to(ROOT)}（{len(PATH_MAP)} 筆備援）")
     return 0

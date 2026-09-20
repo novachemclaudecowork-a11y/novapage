@@ -1,0 +1,19 @@
+{
+  // Cloudflare Workers 專案設定。
+  //
+  // 若本專案是以 Cloudflare **Pages** 部署，這個檔案不會被使用，
+  // 轉址走的是 functions/_middleware.js。
+  //
+  // 以 **Workers** 部署時，才會由 worker/index.js 處理轉址，
+  // 再把其餘請求交給 dist/ 的靜態檔案。
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "novapage",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // 找不到對應檔案時回傳 Astro 產生的 404 頁面
+    "not_found_handling": "404-page"
+  }
+}

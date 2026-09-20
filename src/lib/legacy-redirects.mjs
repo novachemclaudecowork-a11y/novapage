@@ -134,6 +134,40 @@ const SUBCATEGORY_MAP = {
   "159": "/category/platemaking/other-supplies/"
 };
 
+// m2 → 該產品線底下唯一那項產品
+const SUBCATEGORY_PRODUCT_MAP = {
+  "129": "/products/mpv/",
+  "130": "/products/pet-label/",
+  "131": "/products/pet-water-transfer/",
+  "132": "/products/410-scratch/",
+  "133": "/products/pd-metal-glass/",
+  "134": "/products/cp-color-paste/",
+  "135": "/products/pu-elastic/",
+  "136": "/products/cw-waterbased/",
+  "137": "/products/ti-heat-transfer/",
+  "138": "/products/ri-rub-transfer/",
+  "139": "/products/pp/",
+  "140": "/products/ot-sandblast/",
+  "142": "/products/bs-thinner/",
+  "143": "/products/sw-cleaner/",
+  "144": "/products/pp-primer/",
+  "145": "/products/anti-clog/",
+  "146": "/products/wiping-agent/",
+  "147": "/products/defoamer/",
+  "148": "/products/thickener/",
+  "149": "/products/matting-paste/",
+  "168": "/products/rubber-primer/",
+  "150": "/products/emulsion/",
+  "151": "/products/ink-remover/",
+  "152": "/products/ghost-remover/",
+  "153": "/products/stencil-remover/",
+  "154": "/products/degreaser/",
+  "155": "/products/block-out/",
+  "156": "/products/edge-sealer/",
+  "157": "/products/hardener/",
+  "158": "/products/frame-adhesive/"
+};
+
 const PRODUCT_PATHS = new Set(["/view.asp", "/view.html", "/view.aspx"]);
 const LISTING_PATHS = new Set(["/product.asp", "/product.html", "/product.aspx"]);
 
@@ -154,11 +188,19 @@ export function resolveLegacy(pathname, params) {
     const m = params.get("m") ?? "";
     const m2 = params.get("m2") ?? "";
     const pg = params.get("pg") ?? "";
-    const hit = PRODUCT_MAP[`${m}|${m2}|${pg}`] ?? PRODUCT_MAP[`${m}||${pg}`];
-    if (hit) return hit;
-    // 沒有 pg 或對不到時，退而導向所屬分類或產品線，避免變成 404
-    if (m2 && SUBCATEGORY_MAP[m2]) return SUBCATEGORY_MAP[m2];
-    return CATEGORY_MAP[m] ?? "/products/";
+
+    // 帶 m2 時，pg 是該產品線內部的序號，與主分類的 pg 各自獨立。
+    // 因此這裡**絕不可**退回用 `m|pg` 去查，否則會導到完全不相干的產品。
+    if (m2) {
+      return (
+        PRODUCT_MAP[`${m}|${m2}|${pg}`] ??
+        SUBCATEGORY_PRODUCT_MAP[m2] ??
+        SUBCATEGORY_MAP[m2] ??
+        CATEGORY_MAP[m] ??
+        "/products/"
+      );
+    }
+    return PRODUCT_MAP[`${m}||${pg}`] ?? CATEGORY_MAP[m] ?? "/products/";
   }
 
   if (LISTING_PATHS.has(path)) {
