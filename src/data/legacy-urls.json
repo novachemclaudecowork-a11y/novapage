@@ -1,163 +1,962 @@
 {
-  "/view.asp?id=154&pd_type=5&m=5&pg=1": "154",
-  "/view.aspx?id=120&pd_type=129&pdid=home&pg=10&kwd=&m=1": "120",
-  "/view.aspx?id=121&pd_type=130&pdid=home&pg=11&kwd=&m=1": "121",
-  "/view.aspx?id=122&pd_type=131&pdid=home&pg=1&kwd=&m=1": "122",
-  "/view.aspx?id=123&pd_type=132&pdid=home&pg=2&kwd=&m=1": "123",
-  "/view.aspx?id=124&pd_type=133&pdid=home&pg=3&kwd=&m=1": "124",
-  "/view.aspx?id=125&pd_type=134&pdid=home&pg=4&kwd=&m=1": "125",
-  "/view.aspx?id=126&pd_type=135&pdid=home&pg=5&kwd=&m=1": "126",
-  "/view.aspx?id=127&pd_type=136&pdid=home&pg=6&kwd=&m=1": "127",
-  "/view.aspx?id=128&pd_type=137&pdid=home&pg=7&kwd=&m=1": "128",
-  "/view.aspx?id=129&pd_type=138&pdid=home&pg=8&kwd=&m=1": "129",
-  "/view.aspx?id=131&pd_type=140&pdid=home&pg=9&kwd=&m=1": "131",
-  "/view.aspx?id=169&pd_type=159&pdid=HomeNew&pg=1&kwd=&m=4": "169",
-  "/view.html?id=120&pd_type=0&pdid=home&m=1&pg=11": "120",
-  "/view.html?id=120&pd_type=0&pdid=home&m=1&pg=9": "120",
-  "/view.html?id=120&pd_type=1&m=1&pg=11": "120",
-  "/view.html?id=120&pd_type=1&m=1&pg=9": "120",
-  "/view.html?id=120&pd_type=1&pdid=&pg=10&kwd=&m=1": "120",
-  "/view.html?id=121&pd_type=0&pdid=home&m=1&pg=10": "121",
-  "/view.html?id=121&pd_type=1&m=1&pg=10": "121",
-  "/view.html?id=121&pd_type=1&m=1&pg=12": "121",
-  "/view.html?id=121&pd_type=1&pdid=&pg=11&kwd=&m=1": "121",
-  "/view.html?id=122&pd_type=0&pdid=home&m=1&pg=2": "122",
-  "/view.html?id=122&pd_type=1&m=1&pg=2": "122",
-  "/view.html?id=122&pd_type=1&pdid=&pg=1&kwd=&m=1": "122",
-  "/view.html?id=123&pd_type=0&pdid=home&m=1&pg=1": "123",
-  "/view.html?id=123&pd_type=0&pdid=home&m=1&pg=3": "123",
-  "/view.html?id=123&pd_type=1&m=1&pg=1": "123",
-  "/view.html?id=123&pd_type=1&m=1&pg=3": "123",
-  "/view.html?id=123&pd_type=1&pdid=&pg=2&kwd=&m=1": "123",
-  "/view.html?id=124&pd_type=0&pdid=home&m=1&pg=2": "124",
-  "/view.html?id=124&pd_type=0&pdid=home&m=1&pg=4": "124",
-  "/view.html?id=124&pd_type=1&m=1&pg=2": "124",
-  "/view.html?id=124&pd_type=1&m=1&pg=4": "124",
-  "/view.html?id=124&pd_type=1&pdid=&pg=3&kwd=&m=1": "124",
-  "/view.html?id=125&pd_type=0&pdid=home&m=1&pg=3": "125",
-  "/view.html?id=125&pd_type=0&pdid=home&m=1&pg=5": "125",
-  "/view.html?id=125&pd_type=1&m=1&pg=3": "125",
-  "/view.html?id=125&pd_type=1&m=1&pg=5": "125",
-  "/view.html?id=125&pd_type=1&pdid=&pg=4&kwd=&m=1": "125",
-  "/view.html?id=126&pd_type=0&pdid=home&m=1&pg=4": "126",
-  "/view.html?id=126&pd_type=0&pdid=home&m=1&pg=6": "126",
-  "/view.html?id=126&pd_type=1&m=1&pg=4": "126",
-  "/view.html?id=126&pd_type=1&m=1&pg=6": "126",
-  "/view.html?id=126&pd_type=1&pdid=&pg=5&kwd=&m=1": "126",
-  "/view.html?id=127&pd_type=0&pdid=home&m=1&pg=5": "127",
-  "/view.html?id=127&pd_type=0&pdid=home&m=1&pg=7": "127",
-  "/view.html?id=127&pd_type=1&m=1&pg=5": "127",
-  "/view.html?id=127&pd_type=1&m=1&pg=7": "127",
-  "/view.html?id=127&pd_type=1&pdid=&pg=6&kwd=&m=1": "127",
-  "/view.html?id=128&pd_type=0&pdid=home&m=1&pg=6": "128",
-  "/view.html?id=128&pd_type=0&pdid=home&m=1&pg=8": "128",
-  "/view.html?id=128&pd_type=1&m=1&pg=6": "128",
-  "/view.html?id=128&pd_type=1&m=1&pg=8": "128",
-  "/view.html?id=128&pd_type=1&pdid=&pg=7&kwd=&m=1": "128",
-  "/view.html?id=129&pd_type=0&pdid=home&m=1&pg=7": "129",
-  "/view.html?id=129&pd_type=0&pdid=home&m=1&pg=9": "129",
-  "/view.html?id=129&pd_type=1&m=1&pg=7": "129",
-  "/view.html?id=129&pd_type=1&m=1&pg=9": "129",
-  "/view.html?id=129&pd_type=1&pdid=&pg=8&kwd=&m=1": "129",
-  "/view.html?id=131&pd_type=0&pdid=home&m=1&pg=10": "131",
-  "/view.html?id=131&pd_type=0&pdid=home&m=1&pg=8": "131",
-  "/view.html?id=131&pd_type=1&m=1&pg=10": "131",
-  "/view.html?id=131&pd_type=1&m=1&pg=8": "131",
-  "/view.html?id=131&pd_type=1&pdid=&pg=9&kwd=&m=1": "131",
-  "/view.html?id=132&pd_type=2&m=2&pg=1": "132",
-  "/view.html?id=132&pd_type=2&m=2&pg=3": "132",
-  "/view.html?id=132&pd_type=2&pdid=&pg=2&kwd=&m=2": "132",
-  "/view.html?id=133&pd_type=2&m=2&pg=8": "133",
-  "/view.html?id=133&pd_type=2&pdid=&pg=9&kwd=&m=2": "133",
-  "/view.html?id=135&pd_type=2&m=2&pg=5": "135",
-  "/view.html?id=135&pd_type=2&m=2&pg=7": "135",
-  "/view.html?id=135&pd_type=2&pdid=&pg=6&kwd=&m=2": "135",
-  "/view.html?id=143&pd_type=2&m=2&pg=3": "143",
-  "/view.html?id=143&pd_type=2&m=2&pg=5": "143",
-  "/view.html?id=143&pd_type=2&pdid=&pg=4&kwd=&m=2": "143",
-  "/view.html?id=144&pd_type=2&m=2&pg=2": "144",
-  "/view.html?id=144&pd_type=2&m=2&pg=4": "144",
-  "/view.html?id=144&pd_type=2&pdid=&pg=3&kwd=&m=2": "144",
-  "/view.html?id=146&pd_type=2&m=2&pg=2": "146",
-  "/view.html?id=146&pd_type=2&pdid=&pg=1&kwd=&m=2": "146",
-  "/view.html?id=155&pd_type=159&pdid=sub2&m=4&m2=159&pg=6": "155",
-  "/view.html?id=155&pd_type=159&pdid=sub2&pg=7&kwd=&m=4&m2=159": "155",
-  "/view.html?id=155&pd_type=4&m=4&pg=15": "155",
-  "/view.html?id=155&pd_type=4&pdid=&pg=16&kwd=&m=4": "155",
-  "/view.html?id=156&pd_type=4&m=4&pg=11": "156",
-  "/view.html?id=156&pd_type=4&m=4&pg=9": "156",
-  "/view.html?id=156&pd_type=4&pdid=&pg=10&kwd=&m=4": "156",
-  "/view.html?id=157&pd_type=4&m=4&pg=6": "157",
-  "/view.html?id=157&pd_type=4&m=4&pg=8": "157",
-  "/view.html?id=157&pd_type=4&pdid=&pg=7&kwd=&m=4": "157",
-  "/view.html?id=158&pd_type=4&m=4&pg=7": "158",
-  "/view.html?id=158&pd_type=4&m=4&pg=9": "158",
-  "/view.html?id=158&pd_type=4&pdid=&pg=8&kwd=&m=4": "158",
-  "/view.html?id=159&pd_type=4&m=4&pg=3": "159",
-  "/view.html?id=159&pd_type=4&m=4&pg=5": "159",
-  "/view.html?id=159&pd_type=4&pdid=&pg=4&kwd=&m=4": "159",
-  "/view.html?id=160&pd_type=4&m=4&pg=10": "160",
-  "/view.html?id=160&pd_type=4&m=4&pg=8": "160",
-  "/view.html?id=160&pd_type=4&pdid=&pg=9&kwd=&m=4": "160",
-  "/view.html?id=161&pd_type=4&m=4&pg=1": "161",
-  "/view.html?id=161&pd_type=4&m=4&pg=3": "161",
-  "/view.html?id=161&pd_type=4&pdid=&pg=2&kwd=&m=4": "161",
-  "/view.html?id=162&pd_type=4&m=4&pg=2": "162",
-  "/view.html?id=162&pd_type=4&pdid=&pg=1&kwd=&m=4": "162",
-  "/view.html?id=163&pd_type=4&m=4&pg=2": "163",
-  "/view.html?id=163&pd_type=4&m=4&pg=4": "163",
-  "/view.html?id=163&pd_type=4&pdid=&pg=3&kwd=&m=4": "163",
-  "/view.html?id=164&pd_type=4&m=4&pg=5": "164",
-  "/view.html?id=164&pd_type=4&m=4&pg=7": "164",
-  "/view.html?id=164&pd_type=4&pdid=&pg=6&kwd=&m=4": "164",
-  "/view.html?id=165&pd_type=159&pdid=sub2&m=4&m2=159&pg=2": "165",
-  "/view.html?id=165&pd_type=159&pdid=sub2&pg=1&kwd=&m=4&m2=159": "165",
-  "/view.html?id=165&pd_type=4&m=4&pg=4": "165",
-  "/view.html?id=165&pd_type=4&m=4&pg=6": "165",
-  "/view.html?id=165&pd_type=4&pdid=&pg=5&kwd=&m=4": "165",
-  "/view.html?id=166&pd_type=159&pdid=sub2&m=4&m2=159&pg=4": "166",
-  "/view.html?id=166&pd_type=159&pdid=sub2&m=4&m2=159&pg=6": "166",
-  "/view.html?id=166&pd_type=159&pdid=sub2&pg=5&kwd=&m=4&m2=159": "166",
-  "/view.html?id=166&pd_type=4&m=4&pg=13": "166",
-  "/view.html?id=166&pd_type=4&m=4&pg=15": "166",
-  "/view.html?id=166&pd_type=4&pdid=&pg=14&kwd=&m=4": "166",
-  "/view.html?id=167&pd_type=159&pdid=sub2&m=4&m2=159&pg=5": "167",
-  "/view.html?id=167&pd_type=159&pdid=sub2&m=4&m2=159&pg=7": "167",
-  "/view.html?id=167&pd_type=159&pdid=sub2&pg=6&kwd=&m=4&m2=159": "167",
-  "/view.html?id=167&pd_type=4&m=4&pg=14": "167",
-  "/view.html?id=167&pd_type=4&m=4&pg=16": "167",
-  "/view.html?id=167&pd_type=4&pdid=&pg=15&kwd=&m=4": "167",
-  "/view.html?id=168&pd_type=159&pdid=sub2&m=4&m2=159&pg=1": "168",
-  "/view.html?id=168&pd_type=159&pdid=sub2&m=4&m2=159&pg=3": "168",
-  "/view.html?id=168&pd_type=159&pdid=sub2&pg=2&kwd=&m=4&m2=159": "168",
-  "/view.html?id=168&pd_type=4&m=4&pg=10": "168",
-  "/view.html?id=168&pd_type=4&m=4&pg=12": "168",
-  "/view.html?id=168&pd_type=4&pdid=&pg=11&kwd=&m=4": "168",
-  "/view.html?id=169&pd_type=159&pdid=sub2&m=4&m2=159&pg=3": "169",
-  "/view.html?id=169&pd_type=159&pdid=sub2&m=4&m2=159&pg=5": "169",
-  "/view.html?id=169&pd_type=159&pdid=sub2&pg=4&kwd=&m=4&m2=159": "169",
-  "/view.html?id=169&pd_type=4&m=4&pg=12": "169",
-  "/view.html?id=169&pd_type=4&m=4&pg=14": "169",
-  "/view.html?id=169&pd_type=4&pdid=&pg=13&kwd=&m=4": "169",
-  "/view.html?id=170&pd_type=159&pdid=sub2&m=4&m2=159&pg=2": "170",
-  "/view.html?id=170&pd_type=159&pdid=sub2&m=4&m2=159&pg=4": "170",
-  "/view.html?id=170&pd_type=159&pdid=sub2&pg=3&kwd=&m=4&m2=159": "170",
-  "/view.html?id=170&pd_type=4&m=4&pg=11": "170",
-  "/view.html?id=170&pd_type=4&m=4&pg=13": "170",
-  "/view.html?id=170&pd_type=4&pdid=&pg=12&kwd=&m=4": "170",
-  "/view.html?id=171&pd_type=1&m=1&pg=12": "171",
-  "/view.html?id=171&pd_type=1&pdid=&pg=13&kwd=&m=1": "171",
-  "/view.html?id=172&pd_type=10&m=10&pg=1": "172",
-  "/view.html?id=173&pd_type=2&m=2&pg=4": "173",
-  "/view.html?id=173&pd_type=2&m=2&pg=6": "173",
-  "/view.html?id=173&pd_type=2&pdid=&pg=5&kwd=&m=2": "173",
-  "/view.html?id=174&pd_type=2&m=2&pg=7": "174",
-  "/view.html?id=174&pd_type=2&m=2&pg=9": "174",
-  "/view.html?id=174&pd_type=2&pdid=&pg=8&kwd=&m=2": "174",
-  "/view.html?id=175&pd_type=2&m=2&pg=6": "175",
-  "/view.html?id=175&pd_type=2&m=2&pg=8": "175",
-  "/view.html?id=175&pd_type=2&pdid=&pg=7&kwd=&m=2": "175",
-  "/view.html?id=176&pd_type=1&m=1&pg=11": "176",
-  "/view.html?id=176&pd_type=1&m=1&pg=13": "176",
-  "/view.html?id=176&pd_type=1&pdid=&pg=12&kwd=&m=1": "176"
+  "/view.asp?id=154&pd_type=5&m=5&pg=1": {
+    "m": "5",
+    "m2": "",
+    "name": "貝星五極中性筆墨水",
+    "pg": 1
+  },
+  "/view.aspx?id=120&pd_type=129&pdid=home&pg=10&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "MPV通用塑膠油墨",
+    "pg": 10
+  },
+  "/view.aspx?id=121&pd_type=130&pdid=home&pg=11&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PET商標貼紙油墨",
+    "pg": 11
+  },
+  "/view.aspx?id=122&pd_type=131&pdid=home&pg=1&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PET水轉自行車標油墨",
+    "pg": 1
+  },
+  "/view.aspx?id=123&pd_type=132&pdid=home&pg=2&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "410 刮刮樂網印油墨",
+    "pg": 2
+  },
+  "/view.aspx?id=124&pd_type=133&pdid=home&pg=3&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PD金屬玻璃網印油墨",
+    "pg": 3
+  },
+  "/view.aspx?id=125&pd_type=134&pdid=home&pg=4&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "CP通用色膏",
+    "pg": 4
+  },
+  "/view.aspx?id=126&pd_type=135&pdid=home&pg=5&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PU彈性網印油墨",
+    "pg": 5
+  },
+  "/view.aspx?id=127&pd_type=136&pdid=home&pg=6&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "CW水性油墨",
+    "pg": 6
+  },
+  "/view.aspx?id=128&pd_type=137&pdid=home&pg=7&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "TI布熱轉往印油墨",
+    "pg": 7
+  },
+  "/view.aspx?id=129&pd_type=138&pdid=home&pg=8&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "RI擦壓轉印油墨",
+    "pg": 8
+  },
+  "/view.aspx?id=131&pd_type=140&pdid=home&pg=9&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "OT-031耐噴砂網印油墨",
+    "pg": 9
+  },
+  "/view.html?id=120&pd_type=0&pdid=home&m=1&pg=11": {
+    "m": "1",
+    "m2": "",
+    "name": "PET商標貼紙油墨",
+    "pg": 11
+  },
+  "/view.html?id=120&pd_type=0&pdid=home&m=1&pg=9": {
+    "m": "1",
+    "m2": "",
+    "name": "OT-031耐噴砂網印油墨",
+    "pg": 9
+  },
+  "/view.html?id=120&pd_type=1&m=1&pg=11": {
+    "m": "1",
+    "m2": "",
+    "name": "PET商標貼紙油墨",
+    "pg": 11
+  },
+  "/view.html?id=120&pd_type=1&m=1&pg=9": {
+    "m": "1",
+    "m2": "",
+    "name": "OT-031耐噴砂網印油墨",
+    "pg": 9
+  },
+  "/view.html?id=120&pd_type=1&pdid=&pg=10&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "MPV通用塑膠油墨",
+    "pg": 10
+  },
+  "/view.html?id=121&pd_type=0&pdid=home&m=1&pg=10": {
+    "m": "1",
+    "m2": "",
+    "name": "MPV通用塑膠油墨",
+    "pg": 10
+  },
+  "/view.html?id=121&pd_type=1&m=1&pg=10": {
+    "m": "1",
+    "m2": "",
+    "name": "MPV通用塑膠油墨",
+    "pg": 10
+  },
+  "/view.html?id=121&pd_type=1&m=1&pg=12": {
+    "m": "1",
+    "m2": "",
+    "name": "PP 油墨",
+    "pg": 12
+  },
+  "/view.html?id=121&pd_type=1&pdid=&pg=11&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PET商標貼紙油墨",
+    "pg": 11
+  },
+  "/view.html?id=122&pd_type=0&pdid=home&m=1&pg=2": {
+    "m": "1",
+    "m2": "",
+    "name": "410 刮刮樂網印油墨",
+    "pg": 2
+  },
+  "/view.html?id=122&pd_type=1&m=1&pg=2": {
+    "m": "1",
+    "m2": "",
+    "name": "410 刮刮樂網印油墨",
+    "pg": 2
+  },
+  "/view.html?id=122&pd_type=1&pdid=&pg=1&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PET水轉自行車標油墨",
+    "pg": 1
+  },
+  "/view.html?id=123&pd_type=0&pdid=home&m=1&pg=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PET水轉自行車標油墨",
+    "pg": 1
+  },
+  "/view.html?id=123&pd_type=0&pdid=home&m=1&pg=3": {
+    "m": "1",
+    "m2": "",
+    "name": "PD金屬玻璃網印油墨",
+    "pg": 3
+  },
+  "/view.html?id=123&pd_type=1&m=1&pg=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PET水轉自行車標油墨",
+    "pg": 1
+  },
+  "/view.html?id=123&pd_type=1&m=1&pg=3": {
+    "m": "1",
+    "m2": "",
+    "name": "PD金屬玻璃網印油墨",
+    "pg": 3
+  },
+  "/view.html?id=123&pd_type=1&pdid=&pg=2&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "410 刮刮樂網印油墨",
+    "pg": 2
+  },
+  "/view.html?id=124&pd_type=0&pdid=home&m=1&pg=2": {
+    "m": "1",
+    "m2": "",
+    "name": "410 刮刮樂網印油墨",
+    "pg": 2
+  },
+  "/view.html?id=124&pd_type=0&pdid=home&m=1&pg=4": {
+    "m": "1",
+    "m2": "",
+    "name": "CP通用色膏",
+    "pg": 4
+  },
+  "/view.html?id=124&pd_type=1&m=1&pg=2": {
+    "m": "1",
+    "m2": "",
+    "name": "410 刮刮樂網印油墨",
+    "pg": 2
+  },
+  "/view.html?id=124&pd_type=1&m=1&pg=4": {
+    "m": "1",
+    "m2": "",
+    "name": "CP通用色膏",
+    "pg": 4
+  },
+  "/view.html?id=124&pd_type=1&pdid=&pg=3&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PD金屬玻璃網印油墨",
+    "pg": 3
+  },
+  "/view.html?id=125&pd_type=0&pdid=home&m=1&pg=3": {
+    "m": "1",
+    "m2": "",
+    "name": "PD金屬玻璃網印油墨",
+    "pg": 3
+  },
+  "/view.html?id=125&pd_type=0&pdid=home&m=1&pg=5": {
+    "m": "1",
+    "m2": "",
+    "name": "PU彈性網印油墨",
+    "pg": 5
+  },
+  "/view.html?id=125&pd_type=1&m=1&pg=3": {
+    "m": "1",
+    "m2": "",
+    "name": "PD金屬玻璃網印油墨",
+    "pg": 3
+  },
+  "/view.html?id=125&pd_type=1&m=1&pg=5": {
+    "m": "1",
+    "m2": "",
+    "name": "PU彈性網印油墨",
+    "pg": 5
+  },
+  "/view.html?id=125&pd_type=1&pdid=&pg=4&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "CP通用色膏",
+    "pg": 4
+  },
+  "/view.html?id=126&pd_type=0&pdid=home&m=1&pg=4": {
+    "m": "1",
+    "m2": "",
+    "name": "CP通用色膏",
+    "pg": 4
+  },
+  "/view.html?id=126&pd_type=0&pdid=home&m=1&pg=6": {
+    "m": "1",
+    "m2": "",
+    "name": "CW水性油墨",
+    "pg": 6
+  },
+  "/view.html?id=126&pd_type=1&m=1&pg=4": {
+    "m": "1",
+    "m2": "",
+    "name": "CP通用色膏",
+    "pg": 4
+  },
+  "/view.html?id=126&pd_type=1&m=1&pg=6": {
+    "m": "1",
+    "m2": "",
+    "name": "CW水性油墨",
+    "pg": 6
+  },
+  "/view.html?id=126&pd_type=1&pdid=&pg=5&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PU彈性網印油墨",
+    "pg": 5
+  },
+  "/view.html?id=127&pd_type=0&pdid=home&m=1&pg=5": {
+    "m": "1",
+    "m2": "",
+    "name": "PU彈性網印油墨",
+    "pg": 5
+  },
+  "/view.html?id=127&pd_type=0&pdid=home&m=1&pg=7": {
+    "m": "1",
+    "m2": "",
+    "name": "TI布熱轉往印油墨",
+    "pg": 7
+  },
+  "/view.html?id=127&pd_type=1&m=1&pg=5": {
+    "m": "1",
+    "m2": "",
+    "name": "PU彈性網印油墨",
+    "pg": 5
+  },
+  "/view.html?id=127&pd_type=1&m=1&pg=7": {
+    "m": "1",
+    "m2": "",
+    "name": "TI布熱轉往印油墨",
+    "pg": 7
+  },
+  "/view.html?id=127&pd_type=1&pdid=&pg=6&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "CW水性油墨",
+    "pg": 6
+  },
+  "/view.html?id=128&pd_type=0&pdid=home&m=1&pg=6": {
+    "m": "1",
+    "m2": "",
+    "name": "CW水性油墨",
+    "pg": 6
+  },
+  "/view.html?id=128&pd_type=0&pdid=home&m=1&pg=8": {
+    "m": "1",
+    "m2": "",
+    "name": "RI擦壓轉印油墨",
+    "pg": 8
+  },
+  "/view.html?id=128&pd_type=1&m=1&pg=6": {
+    "m": "1",
+    "m2": "",
+    "name": "CW水性油墨",
+    "pg": 6
+  },
+  "/view.html?id=128&pd_type=1&m=1&pg=8": {
+    "m": "1",
+    "m2": "",
+    "name": "RI擦壓轉印油墨",
+    "pg": 8
+  },
+  "/view.html?id=128&pd_type=1&pdid=&pg=7&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "TI布熱轉往印油墨",
+    "pg": 7
+  },
+  "/view.html?id=129&pd_type=0&pdid=home&m=1&pg=7": {
+    "m": "1",
+    "m2": "",
+    "name": "TI布熱轉往印油墨",
+    "pg": 7
+  },
+  "/view.html?id=129&pd_type=0&pdid=home&m=1&pg=9": {
+    "m": "1",
+    "m2": "",
+    "name": "OT-031耐噴砂網印油墨",
+    "pg": 9
+  },
+  "/view.html?id=129&pd_type=1&m=1&pg=7": {
+    "m": "1",
+    "m2": "",
+    "name": "TI布熱轉往印油墨",
+    "pg": 7
+  },
+  "/view.html?id=129&pd_type=1&m=1&pg=9": {
+    "m": "1",
+    "m2": "",
+    "name": "OT-031耐噴砂網印油墨",
+    "pg": 9
+  },
+  "/view.html?id=129&pd_type=1&pdid=&pg=8&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "RI擦壓轉印油墨",
+    "pg": 8
+  },
+  "/view.html?id=131&pd_type=0&pdid=home&m=1&pg=10": {
+    "m": "1",
+    "m2": "",
+    "name": "MPV通用塑膠油墨",
+    "pg": 10
+  },
+  "/view.html?id=131&pd_type=0&pdid=home&m=1&pg=8": {
+    "m": "1",
+    "m2": "",
+    "name": "RI擦壓轉印油墨",
+    "pg": 8
+  },
+  "/view.html?id=131&pd_type=1&m=1&pg=10": {
+    "m": "1",
+    "m2": "",
+    "name": "MPV通用塑膠油墨",
+    "pg": 10
+  },
+  "/view.html?id=131&pd_type=1&m=1&pg=8": {
+    "m": "1",
+    "m2": "",
+    "name": "RI擦壓轉印油墨",
+    "pg": 8
+  },
+  "/view.html?id=131&pd_type=1&pdid=&pg=9&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "OT-031耐噴砂網印油墨",
+    "pg": 9
+  },
+  "/view.html?id=132&pd_type=2&m=2&pg=1": {
+    "m": "2",
+    "m2": "",
+    "name": "消泡劑/助劑",
+    "pg": 1
+  },
+  "/view.html?id=132&pd_type=2&m=2&pg=3": {
+    "m": "2",
+    "m2": "",
+    "name": "擦拭劑",
+    "pg": 3
+  },
+  "/view.html?id=132&pd_type=2&pdid=&pg=2&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "油墨專用稀釋劑",
+    "pg": 2
+  },
+  "/view.html?id=133&pd_type=2&m=2&pg=8": {
+    "m": "2",
+    "m2": "",
+    "name": "暫凝膏",
+    "pg": 8
+  },
+  "/view.html?id=133&pd_type=2&pdid=&pg=9&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "SW 洗版劑",
+    "pg": 9
+  },
+  "/view.html?id=135&pd_type=2&m=2&pg=5": {
+    "m": "2",
+    "m2": "",
+    "name": "橡膠處理劑",
+    "pg": 5
+  },
+  "/view.html?id=135&pd_type=2&m=2&pg=7": {
+    "m": "2",
+    "m2": "",
+    "name": "消光膏",
+    "pg": 7
+  },
+  "/view.html?id=135&pd_type=2&pdid=&pg=6&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "PP處理劑",
+    "pg": 6
+  },
+  "/view.html?id=143&pd_type=2&m=2&pg=3": {
+    "m": "2",
+    "m2": "",
+    "name": "擦拭劑",
+    "pg": 3
+  },
+  "/view.html?id=143&pd_type=2&m=2&pg=5": {
+    "m": "2",
+    "m2": "",
+    "name": "橡膠處理劑",
+    "pg": 5
+  },
+  "/view.html?id=143&pd_type=2&pdid=&pg=4&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "防塞劑",
+    "pg": 4
+  },
+  "/view.html?id=144&pd_type=2&m=2&pg=2": {
+    "m": "2",
+    "m2": "",
+    "name": "油墨專用稀釋劑",
+    "pg": 2
+  },
+  "/view.html?id=144&pd_type=2&m=2&pg=4": {
+    "m": "2",
+    "m2": "",
+    "name": "防塞劑",
+    "pg": 4
+  },
+  "/view.html?id=144&pd_type=2&pdid=&pg=3&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "擦拭劑",
+    "pg": 3
+  },
+  "/view.html?id=146&pd_type=2&m=2&pg=2": {
+    "m": "2",
+    "m2": "",
+    "name": "油墨專用稀釋劑",
+    "pg": 2
+  },
+  "/view.html?id=146&pd_type=2&pdid=&pg=1&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "消泡劑/助劑",
+    "pg": 1
+  },
+  "/view.html?id=155&pd_type=159&pdid=sub2&m=4&m2=159&pg=6": {
+    "m": "4",
+    "m2": "159",
+    "name": "離型保護紙/ 黃色全木漿離型紙",
+    "pg": 6
+  },
+  "/view.html?id=155&pd_type=159&pdid=sub2&pg=7&kwd=&m=4&m2=159": {
+    "m": "4",
+    "m2": "159",
+    "name": "其他資材",
+    "pg": 7
+  },
+  "/view.html?id=155&pd_type=4&m=4&pg=15": {
+    "m": "4",
+    "m2": "",
+    "name": "離型保護紙/ 黃色全木漿離型紙",
+    "pg": 15
+  },
+  "/view.html?id=155&pd_type=4&pdid=&pg=16&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "其他資材",
+    "pg": 16
+  },
+  "/view.html?id=156&pd_type=4&m=4&pg=11": {
+    "m": "4",
+    "m2": "",
+    "name": "刮刀/刮膠",
+    "pg": 11
+  },
+  "/view.html?id=156&pd_type=4&m=4&pg=9": {
+    "m": "4",
+    "m2": "",
+    "name": "脫脂劑",
+    "pg": 9
+  },
+  "/view.html?id=156&pd_type=4&pdid=&pg=10&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "高解度感光乳劑",
+    "pg": 10
+  },
+  "/view.html?id=157&pd_type=4&m=4&pg=6": {
+    "m": "4",
+    "m2": "",
+    "name": "鋁框接著膠",
+    "pg": 6
+  },
+  "/view.html?id=157&pd_type=4&m=4&pg=8": {
+    "m": "4",
+    "m2": "",
+    "name": "除鬼影劑",
+    "pg": 8
+  },
+  "/view.html?id=157&pd_type=4&pdid=&pg=7&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "芳香除墨劑",
+    "pg": 7
+  },
+  "/view.html?id=158&pd_type=4&m=4&pg=7": {
+    "m": "4",
+    "m2": "",
+    "name": "芳香除墨劑",
+    "pg": 7
+  },
+  "/view.html?id=158&pd_type=4&m=4&pg=9": {
+    "m": "4",
+    "m2": "",
+    "name": "脫脂劑",
+    "pg": 9
+  },
+  "/view.html?id=158&pd_type=4&pdid=&pg=8&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "除鬼影劑",
+    "pg": 8
+  },
+  "/view.html?id=159&pd_type=4&m=4&pg=3": {
+    "m": "4",
+    "m2": "",
+    "name": "單液型補強液",
+    "pg": 3
+  },
+  "/view.html?id=159&pd_type=4&m=4&pg=5": {
+    "m": "4",
+    "m2": "",
+    "name": "油墨專用手膏洗手膏",
+    "pg": 5
+  },
+  "/view.html?id=159&pd_type=4&pdid=&pg=4&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "剝膜粉/膏",
+    "pg": 4
+  },
+  "/view.html?id=160&pd_type=4&m=4&pg=10": {
+    "m": "4",
+    "m2": "",
+    "name": "高解度感光乳劑",
+    "pg": 10
+  },
+  "/view.html?id=160&pd_type=4&m=4&pg=8": {
+    "m": "4",
+    "m2": "",
+    "name": "除鬼影劑",
+    "pg": 8
+  },
+  "/view.html?id=160&pd_type=4&pdid=&pg=9&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "脫脂劑",
+    "pg": 9
+  },
+  "/view.html?id=161&pd_type=4&m=4&pg=1": {
+    "m": "4",
+    "m2": "",
+    "name": "補邊劑",
+    "pg": 1
+  },
+  "/view.html?id=161&pd_type=4&m=4&pg=3": {
+    "m": "4",
+    "m2": "",
+    "name": "單液型補強液",
+    "pg": 3
+  },
+  "/view.html?id=161&pd_type=4&pdid=&pg=2&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "補版膠",
+    "pg": 2
+  },
+  "/view.html?id=162&pd_type=4&m=4&pg=2": {
+    "m": "4",
+    "m2": "",
+    "name": "補版膠",
+    "pg": 2
+  },
+  "/view.html?id=162&pd_type=4&pdid=&pg=1&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "補邊劑",
+    "pg": 1
+  },
+  "/view.html?id=163&pd_type=4&m=4&pg=2": {
+    "m": "4",
+    "m2": "",
+    "name": "補版膠",
+    "pg": 2
+  },
+  "/view.html?id=163&pd_type=4&m=4&pg=4": {
+    "m": "4",
+    "m2": "",
+    "name": "剝膜粉/膏",
+    "pg": 4
+  },
+  "/view.html?id=163&pd_type=4&pdid=&pg=3&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "單液型補強液",
+    "pg": 3
+  },
+  "/view.html?id=164&pd_type=4&m=4&pg=5": {
+    "m": "4",
+    "m2": "",
+    "name": "油墨專用手膏洗手膏",
+    "pg": 5
+  },
+  "/view.html?id=164&pd_type=4&m=4&pg=7": {
+    "m": "4",
+    "m2": "",
+    "name": "芳香除墨劑",
+    "pg": 7
+  },
+  "/view.html?id=164&pd_type=4&pdid=&pg=6&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "鋁框接著膠",
+    "pg": 6
+  },
+  "/view.html?id=165&pd_type=159&pdid=sub2&m=4&m2=159&pg=2": {
+    "m": "4",
+    "m2": "159",
+    "name": "刮刀/刮膠",
+    "pg": 2
+  },
+  "/view.html?id=165&pd_type=159&pdid=sub2&pg=1&kwd=&m=4&m2=159": {
+    "m": "4",
+    "m2": "159",
+    "name": "油墨專用手膏洗手膏",
+    "pg": 1
+  },
+  "/view.html?id=165&pd_type=4&m=4&pg=4": {
+    "m": "4",
+    "m2": "",
+    "name": "剝膜粉/膏",
+    "pg": 4
+  },
+  "/view.html?id=165&pd_type=4&m=4&pg=6": {
+    "m": "4",
+    "m2": "",
+    "name": "鋁框接著膠",
+    "pg": 6
+  },
+  "/view.html?id=165&pd_type=4&pdid=&pg=5&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "油墨專用手膏洗手膏",
+    "pg": 5
+  },
+  "/view.html?id=166&pd_type=159&pdid=sub2&m=4&m2=159&pg=4": {
+    "m": "4",
+    "m2": "159",
+    "name": "調墨刀/調油刀/油墨攪拌刀/抹刀",
+    "pg": 4
+  },
+  "/view.html?id=166&pd_type=159&pdid=sub2&m=4&m2=159&pg=6": {
+    "m": "4",
+    "m2": "159",
+    "name": "離型保護紙/ 黃色全木漿離型紙",
+    "pg": 6
+  },
+  "/view.html?id=166&pd_type=159&pdid=sub2&pg=5&kwd=&m=4&m2=159": {
+    "m": "4",
+    "m2": "159",
+    "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
+    "pg": 5
+  },
+  "/view.html?id=166&pd_type=4&m=4&pg=13": {
+    "m": "4",
+    "m2": "",
+    "name": "調墨刀/調油刀/油墨攪拌刀/抹刀",
+    "pg": 13
+  },
+  "/view.html?id=166&pd_type=4&m=4&pg=15": {
+    "m": "4",
+    "m2": "",
+    "name": "離型保護紙/ 黃色全木漿離型紙",
+    "pg": 15
+  },
+  "/view.html?id=166&pd_type=4&pdid=&pg=14&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
+    "pg": 14
+  },
+  "/view.html?id=167&pd_type=159&pdid=sub2&m=4&m2=159&pg=5": {
+    "m": "4",
+    "m2": "159",
+    "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
+    "pg": 5
+  },
+  "/view.html?id=167&pd_type=159&pdid=sub2&m=4&m2=159&pg=7": {
+    "m": "4",
+    "m2": "159",
+    "name": "其他資材",
+    "pg": 7
+  },
+  "/view.html?id=167&pd_type=159&pdid=sub2&pg=6&kwd=&m=4&m2=159": {
+    "m": "4",
+    "m2": "159",
+    "name": "離型保護紙/ 黃色全木漿離型紙",
+    "pg": 6
+  },
+  "/view.html?id=167&pd_type=4&m=4&pg=14": {
+    "m": "4",
+    "m2": "",
+    "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
+    "pg": 14
+  },
+  "/view.html?id=167&pd_type=4&m=4&pg=16": {
+    "m": "4",
+    "m2": "",
+    "name": "其他資材",
+    "pg": 16
+  },
+  "/view.html?id=167&pd_type=4&pdid=&pg=15&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "離型保護紙/ 黃色全木漿離型紙",
+    "pg": 15
+  },
+  "/view.html?id=168&pd_type=159&pdid=sub2&m=4&m2=159&pg=1": {
+    "m": "4",
+    "m2": "159",
+    "name": "油墨專用手膏洗手膏",
+    "pg": 1
+  },
+  "/view.html?id=168&pd_type=159&pdid=sub2&m=4&m2=159&pg=3": {
+    "m": "4",
+    "m2": "159",
+    "name": "模造纸",
+    "pg": 3
+  },
+  "/view.html?id=168&pd_type=159&pdid=sub2&pg=2&kwd=&m=4&m2=159": {
+    "m": "4",
+    "m2": "159",
+    "name": "刮刀/刮膠",
+    "pg": 2
+  },
+  "/view.html?id=168&pd_type=4&m=4&pg=10": {
+    "m": "4",
+    "m2": "",
+    "name": "高解度感光乳劑",
+    "pg": 10
+  },
+  "/view.html?id=168&pd_type=4&m=4&pg=12": {
+    "m": "4",
+    "m2": "",
+    "name": "模造纸",
+    "pg": 12
+  },
+  "/view.html?id=168&pd_type=4&pdid=&pg=11&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "刮刀/刮膠",
+    "pg": 11
+  },
+  "/view.html?id=169&pd_type=159&pdid=sub2&m=4&m2=159&pg=3": {
+    "m": "4",
+    "m2": "159",
+    "name": "模造纸",
+    "pg": 3
+  },
+  "/view.html?id=169&pd_type=159&pdid=sub2&m=4&m2=159&pg=5": {
+    "m": "4",
+    "m2": "159",
+    "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
+    "pg": 5
+  },
+  "/view.html?id=169&pd_type=159&pdid=sub2&pg=4&kwd=&m=4&m2=159": {
+    "m": "4",
+    "m2": "159",
+    "name": "調墨刀/調油刀/油墨攪拌刀/抹刀",
+    "pg": 4
+  },
+  "/view.html?id=169&pd_type=4&m=4&pg=12": {
+    "m": "4",
+    "m2": "",
+    "name": "模造纸",
+    "pg": 12
+  },
+  "/view.html?id=169&pd_type=4&m=4&pg=14": {
+    "m": "4",
+    "m2": "",
+    "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
+    "pg": 14
+  },
+  "/view.html?id=169&pd_type=4&pdid=&pg=13&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "調墨刀/調油刀/油墨攪拌刀/抹刀",
+    "pg": 13
+  },
+  "/view.html?id=170&pd_type=159&pdid=sub2&m=4&m2=159&pg=2": {
+    "m": "4",
+    "m2": "159",
+    "name": "刮刀/刮膠",
+    "pg": 2
+  },
+  "/view.html?id=170&pd_type=159&pdid=sub2&m=4&m2=159&pg=4": {
+    "m": "4",
+    "m2": "159",
+    "name": "調墨刀/調油刀/油墨攪拌刀/抹刀",
+    "pg": 4
+  },
+  "/view.html?id=170&pd_type=159&pdid=sub2&pg=3&kwd=&m=4&m2=159": {
+    "m": "4",
+    "m2": "159",
+    "name": "模造纸",
+    "pg": 3
+  },
+  "/view.html?id=170&pd_type=4&m=4&pg=11": {
+    "m": "4",
+    "m2": "",
+    "name": "刮刀/刮膠",
+    "pg": 11
+  },
+  "/view.html?id=170&pd_type=4&m=4&pg=13": {
+    "m": "4",
+    "m2": "",
+    "name": "調墨刀/調油刀/油墨攪拌刀/抹刀",
+    "pg": 13
+  },
+  "/view.html?id=170&pd_type=4&pdid=&pg=12&kwd=&m=4": {
+    "m": "4",
+    "m2": "",
+    "name": "模造纸",
+    "pg": 12
+  },
+  "/view.html?id=171&pd_type=1&m=1&pg=12": {
+    "m": "1",
+    "m2": "",
+    "name": "PP 油墨",
+    "pg": 12
+  },
+  "/view.html?id=171&pd_type=1&pdid=&pg=13&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "矽膠油墨",
+    "pg": 13
+  },
+  "/view.html?id=172&pd_type=10&m=10&pg=1": {
+    "m": "10",
+    "m2": "",
+    "name": "醋酸丁酸纖維素 CAB-381-0.5",
+    "pg": 1
+  },
+  "/view.html?id=173&pd_type=2&m=2&pg=4": {
+    "m": "2",
+    "m2": "",
+    "name": "防塞劑",
+    "pg": 4
+  },
+  "/view.html?id=173&pd_type=2&m=2&pg=6": {
+    "m": "2",
+    "m2": "",
+    "name": "PP處理劑",
+    "pg": 6
+  },
+  "/view.html?id=173&pd_type=2&pdid=&pg=5&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "橡膠處理劑",
+    "pg": 5
+  },
+  "/view.html?id=174&pd_type=2&m=2&pg=7": {
+    "m": "2",
+    "m2": "",
+    "name": "消光膏",
+    "pg": 7
+  },
+  "/view.html?id=174&pd_type=2&m=2&pg=9": {
+    "m": "2",
+    "m2": "",
+    "name": "SW 洗版劑",
+    "pg": 9
+  },
+  "/view.html?id=174&pd_type=2&pdid=&pg=8&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "暫凝膏",
+    "pg": 8
+  },
+  "/view.html?id=175&pd_type=2&m=2&pg=6": {
+    "m": "2",
+    "m2": "",
+    "name": "PP處理劑",
+    "pg": 6
+  },
+  "/view.html?id=175&pd_type=2&m=2&pg=8": {
+    "m": "2",
+    "m2": "",
+    "name": "暫凝膏",
+    "pg": 8
+  },
+  "/view.html?id=175&pd_type=2&pdid=&pg=7&kwd=&m=2": {
+    "m": "2",
+    "m2": "",
+    "name": "消光膏",
+    "pg": 7
+  },
+  "/view.html?id=176&pd_type=1&m=1&pg=11": {
+    "m": "1",
+    "m2": "",
+    "name": "PET商標貼紙油墨",
+    "pg": 11
+  },
+  "/view.html?id=176&pd_type=1&m=1&pg=13": {
+    "m": "1",
+    "m2": "",
+    "name": "矽膠油墨",
+    "pg": 13
+  },
+  "/view.html?id=176&pd_type=1&pdid=&pg=12&kwd=&m=1": {
+    "m": "1",
+    "m2": "",
+    "name": "PP 油墨",
+    "pg": 12
+  }
 }
