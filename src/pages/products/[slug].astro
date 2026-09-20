@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CategoryNav from '../../components/CategoryNav.astro';
+import {
+  categoryOf,
+  imageUrl,
+  products,
+  productsOf,
+  subcategoryOf,
+  type Product,
+} from '../../data/site';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props { product: Product }
+const { product } = Astro.props;
+
+const category = categoryOf(product);
+const subcategory = subcategoryOf(product);
+const siblings = category ? productsOf(category.slug).filter((p) => p.slug !== product.slug) : [];
+const photo = product.images[0];
+
+const crumbs = [{ label: '產品介紹', href: '/products/' }];
+if (category) crumbs.push({ label: category.name, href: `/category/${category.slug}/` });
+crumbs.push({ label: product.name });
+
+const summary = product.spec_text
+  ? product.spec_text.replace(/\s+/g, ' ').slice(0, 150)
+  : `${product.name}｜貝星貿易`;
+---
+
+<BaseLayout title={product.name} description={summary} sidebar>
+  <CategoryNav
+    slot="sidebar"
+    activeCategory={category?.slug}
+    activeSubcategory={subcategory?.slug ?? null}
+  />
+
+  <Breadcrumb items={crumbs} />
+
+  <article class="product">
+    <div class="product-photo">
+      {photo
+        ? <img src={imageUrl(photo)} alt={product.name} width="420" height="315" />
+        : <div class="placeholder">尚無產品照</div>}
+    </div>
+
+    <div>
+      <h1>{product.name}</h1>
+
+      <dl class="product-meta">
+        {product.code && (<><dt>產品編號</dt><dd>{product.code}</dd></>)}
+        {category && (<><dt>分類</dt><dd><a href={`/category/${category.slug}/`}>{category.name}</a></dd></>)}
+      </dl>
+
+      <button
+        class="btn"
+        type="button"
+        id="add-to-inquiry"
+        data-slug={product.slug}
+        data-name={product.name}
+        data-code={product.code}
+      >加入詢價清單</button>
+
+      {product.spec_html ? (
+        <div class="spec">
+          <h2 style="margin-top: 1.5rem;">產品說明</h2>
+          <Fragment set:html={product.spec_html} />
+        </div>
+      ) : (
+        <div class="spec">
+          <p class="notice warn">此產品尚無說明資料，歡迎來電洽詢。</p>
+        </div>
+      )}
+    </div>
+  </article>
+
+  {siblings.length > 0 && (
+    <>
+      <h2>同分類其他產品</h2>
+      <ul style="columns: 2; font-size: .9375rem;">
+        {siblings.map((p) => (
+          <li><a href={`/products/${p.slug}/`}>{p.name}</a></li>
+        ))}
+      </ul>
+    </>
+  )}
+</BaseLayout>
+
+<script>
+  import { addItem, hasItem, removeItem } from '../../scripts/inquiry';
+
+  const button = document.getElementById('add-to-inquiry') as HTMLButtonElement | null;
+  if (button) {
+    const item = {
+      slug: button.dataset.slug!,
+      name: button.dataset.name!,
+      code: button.dataset.code ?? '',
+    };
+
+    const render = () => {
+      const added = hasItem(item.slug);
+      button.textContent = added ? '✓ 已在詢價清單中（點擊移除）' : '加入詢價清單';
+      button.classList.toggle('btn-outline', added);
+    };
+
+    button.addEventListener('click', () => {
+      hasItem(item.slug) ? removeItem(item.slug) : addItem(item);
+      render();
+    });
+
+    render();
+  }
+</script>

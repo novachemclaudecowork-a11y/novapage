@@ -1,0 +1,66 @@
+---
+import { company, mainNav } from '../data/site';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="container">
+      <span>{company.tagline}</span>
+      <span class="spacer">
+        <a href={`tel:${company.telHref}`}>電話 {company.tel}</a>
+      </span>
+      <a href={`mailto:${company.email}`}>{company.email}</a>
+    </div>
+  </div>
+
+  <div class="header-main">
+    <div class="container">
+      <a class="brand-link" href="/">
+        <img src="/images/brand/logo_s.png" alt="" width="140" height="46" />
+        <span class="brand-name">
+          {company.nameZh}
+          <small>{company.nameEn}</small>
+        </span>
+      </a>
+
+      <nav class="site-nav" aria-label="主導覽">
+        <ul>
+          {mainNav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <a class="inquiry-chip" href="/inquiry/" id="inquiry-chip" hidden>
+        詢價清單 <span id="inquiry-count">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  // 詢價清單存在瀏覽器本機，靜態站不需要後端伺服器
+  import { countItems } from '../scripts/inquiry';
+
+  const chip = document.getElementById('inquiry-chip');
+  const count = document.getElementById('inquiry-count');
+
+  function refresh() {
+    if (!chip || !count) return;
+    const n = countItems();
+    count.textContent = String(n);
+    chip.hidden = n === 0;
+  }
+
+  refresh();
+  window.addEventListener('inquiry:change', refresh);
+  window.addEventListener('storage', refresh);
+</script>

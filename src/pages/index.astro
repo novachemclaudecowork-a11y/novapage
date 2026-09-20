@@ -1,24 +1,47 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { company, categories } from '../data/company';
+import ProductCard from '../components/ProductCard.astro';
+import { categories, company, products, productsOf } from '../data/site';
+
+// 首頁精選：每個主分類各取第一項有照片的產品
+const featured = categories
+  .map((cat) => productsOf(cat.slug).find((p) => p.images.length > 0))
+  .filter((p) => p !== undefined)
+  .slice(0, 8);
 ---
 
-<BaseLayout title="首頁">
-  <h1>{company.nameZh}</h1>
-  <p>{company.tagline}</p>
+<BaseLayout title="首頁" description={company.description}>
+  <section class="hero" slot="hero">
+    <div class="container">
+      <h1>{company.tagline}</h1>
+      <p>{company.description}</p>
+    </div>
+  </section>
 
-  <h2>產品線</h2>
-  <ul>
-    {categories.map((c) => (
-      <li><a href={`/products/${c.slug}/`}>{c.nameZh}</a></li>
+  <h2 style="margin-top: 0;">產品分類</h2>
+  <div class="cat-tiles">
+    {categories.map((cat) => (
+      <a class="tile" href={`/category/${cat.slug}/`}>
+        <strong>{cat.name}</strong>
+        <span>{productsOf(cat.slug).length} 項產品</span>
+      </a>
     ))}
-  </ul>
+  </div>
 
-  <hr />
+  {featured.length > 0 && (
+    <>
+      <h2>精選產品</h2>
+      <div class="grid">
+        {featured.map((product) => <ProductCard product={product!} />)}
+      </div>
+    </>
+  )}
 
+  <h2>關於貝星</h2>
   <p>
-    <strong>施工中：</strong>這是新網站的基礎骨架。
-    實際版面、文案與產品資料待現行網站鏡像檔取得後建置，
-    步驟請見 <code>docs/鏡像操作指南.md</code>。
+    貝星公司成立於 {company.founded} 年，從創立初期的代理商模式，
+    逐步轉型為自有品牌的油墨、稀釋劑及洗版劑生產商。
+    秉持三十餘年的油墨生產經驗，針對客戶的需求特性研製最適合的配方。
   </p>
+  <p><a class="btn btn-outline" href="/about/">了解更多</a></p>
 </BaseLayout>

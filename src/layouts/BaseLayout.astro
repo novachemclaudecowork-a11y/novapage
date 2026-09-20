@@ -1,14 +1,21 @@
 ---
 import '../styles/global.css';
-import { company, categories } from '../data/company';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { company } from '../data/site';
 
 interface Props {
   title: string;
   description?: string;
+  /** 產品頁等需要側邊分類選單的頁面設為 true */
+  sidebar?: boolean;
 }
 
-const { title, description = company.tagline } = Astro.props;
-const fullTitle = `${title} - ${company.nameZh}`;
+const { title, description = company.tagline, sidebar = false } = Astro.props;
+const fullTitle = title === '首頁'
+  ? `${company.nameZh}－${company.tagline}`
+  : `${title}｜${company.nameZh}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 ---
 
 <!doctype html>
@@ -18,35 +25,31 @@ const fullTitle = `${title} - ${company.nameZh}`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={Astro.url.href} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" href="/favicon.ico" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={company.nameZh} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
   </head>
   <body>
-    <header class="site-header">
+    <a class="skip-link" href="#main">跳至主要內容</a>
+    <Header />
+    <main id="main">
+      <slot name="hero" />
       <div class="container">
-        <a class="brand" href="/">{company.nameZh}</a>
-        <nav class="site-nav" aria-label="主導覽">
-          <a href="/about/">關於我們</a>
-          {categories.map((c) => <a href={`/products/${c.slug}/`}>{c.nameZh}</a>)}
-          <a href="/inquiry/">詢價車</a>
-          <a href="/contact/">聯絡我們</a>
-        </nav>
+        <slot name="full" />
+        {sidebar ? (
+          <div class="layout">
+            <slot name="sidebar" />
+            <div><slot /></div>
+          </div>
+        ) : (
+          <div style="padding-block: 28px 48px;"><slot /></div>
+        )}
       </div>
-    </header>
-
-    <main class="container">
-      <slot />
     </main>
-
-    <footer class="site-footer">
-      <div class="container">
-        <dl>
-          <dt>公司</dt><dd>{company.nameZh}（{company.nameEn}）</dd>
-          <dt>地址</dt><dd>{company.address}</dd>
-          <dt>電話</dt><dd><a href={`tel:${company.tel.replace(/-/g, '')}`}>{company.tel}</a></dd>
-          <dt>傳真</dt><dd>{company.fax}</dd>
-          <dt>信箱</dt><dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
-        </dl>
-      </div>
-    </footer>
+    <Footer />
   </body>
 </html>

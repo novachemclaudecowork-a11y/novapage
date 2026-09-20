@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { company } from '../data/site';
+---
+
+<BaseLayout title="詢價清單" description="檢視已選取的產品並送出詢價。">
+  <Breadcrumb items={[{ label: '詢價清單' }]} />
+  <h1>詢價清單</h1>
+
+  <p id="empty-state" class="notice" hidden>
+    詢價清單目前是空的。請先到<a href="/products/">產品介紹</a>挑選需要詢價的品項。
+  </p>
+
+  <div id="cart" hidden>
+    <ul class="inquiry-list" id="items"></ul>
+    <p>
+      <button type="button" class="btn btn-outline" id="clear">清空清單</button>
+    </p>
+
+    <h2>聯絡資料</h2>
+    <form class="form-grid" id="inquiry-form">
+      <div class="two">
+        <div class="field">
+          <label for="company-name">公司名稱 <span aria-hidden="true">*</span></label>
+          <input id="company-name" name="company" required autocomplete="organization" />
+        </div>
+        <div class="field">
+          <label for="contact-name">聯絡人 <span aria-hidden="true">*</span></label>
+          <input id="contact-name" name="name" required autocomplete="name" />
+        </div>
+      </div>
+      <div class="two">
+        <div class="field">
+          <label for="phone">電話 <span aria-hidden="true">*</span></label>
+          <input id="phone" name="phone" type="tel" required autocomplete="tel" />
+        </div>
+        <div class="field">
+          <label for="email">電子信箱</label>
+          <input id="email" name="email" type="email" autocomplete="email" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="message">需求說明（用量、規格、交期等）</label>
+        <textarea id="message" name="message" rows="5"></textarea>
+      </div>
+      <p><button class="btn" type="submit">送出詢價</button></p>
+    </form>
+
+    <p class="notice">
+      送出後會開啟您的郵件軟體，並自動帶入詢價內容，確認後寄出即可。
+      若無法使用郵件軟體，歡迎直接來電
+      <a href={`tel:${company.telHref}`}>{company.tel}</a>。
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  import { clearItems, getItems, removeItem } from '../scripts/inquiry';
+
+  const cart = document.getElementById('cart')!;
+  const emptyState = document.getElementById('empty-state')!;
+  const list = document.getElementById('items')!;
+  const form = document.getElementById('inquiry-form') as HTMLFormElement;
+
+  function render() {
+    const items = getItems();
+    cart.hidden = items.length === 0;
+    emptyState.hidden = items.length > 0;
+
+    list.replaceChildren(
+      ...items.map((item) => {
+        const li = document.createElement('li');
+
+        const name = document.createElement('span');
+        name.className = 'name';
+        name.textContent = item.name;
+
+        const code = document.createElement('span');
+        code.className = 'code';
+        code.textContent = item.code ? `編號 ${item.code}` : '';
+
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = '移除';
+        remove.setAttribute('aria-label', `從詢價清單移除 ${item.name}`);
+        remove.addEventListener('click', () => {
+          removeItem(item.slug);
+          render();
+        });
+
+        li.append(name, code, remove);
+        return li;
+      }),
+    );
+  }
+
+  document.getElementById('clear')!.addEventListener('click', () => {
+    clearItems();
+    render();
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const items = getItems();
+
+    const lines = [
+      '【詢價品項】',
+      ...items.map((item, i) => `${i + 1}. ${item.name}${item.code ? `（編號 ${item.code}）` : ''}`),
+      '',
+      '【聯絡資料】',
+      `公司名稱：${data.get('company') ?? ''}`,
+      `聯 絡 人：${data.get('name') ?? ''}`,
+      `電　　話：${data.get('phone') ?? ''}`,
+      `電子信箱：${data.get('email') ?? ''}`,
+      '',
+      '【需求說明】',
+      String(data.get('message') ?? ''),
+    ];
+
+    const subject = `網站詢價單（${items.length} 項品項）`;
+    const href =
+      `mailto:novachem@ms24.hinet.net` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(lines.join('\n'))}`;
+    window.location.href = href;
+  });
+
+  render();
+  window.addEventListener('inquiry:change', render);
+</script>

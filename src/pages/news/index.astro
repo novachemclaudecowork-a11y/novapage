@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+// 舊站的最新訊息頁沒有任何訊息內容，故此頁暫為空狀態。
+// 日後要發布消息時，在此接上 Astro 的內容集合（content collections）即可。
+const posts: { title: string; date: string; href: string }[] = [];
+---
+
+<BaseLayout title="最新訊息" description="貝星貿易最新消息與產品公告。">
+  <Breadcrumb items={[{ label: '最新訊息' }]} />
+  <h1>最新訊息</h1>
+
+  {posts.length > 0 ? (
+    <ul>
+      {posts.map((post) => (
+        <li><a href={post.href}>{post.title}</a> <small>{post.date}</small></li>
+      ))}
+    </ul>
+  ) : (
+    <p class="notice">目前沒有最新訊息。</p>
+  )}
+</BaseLayout>

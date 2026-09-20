@@ -1,0 +1,22 @@
+---
+import { company } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <dl>
+      <dt>公司</dt>
+      <dd>{company.nameZh}（{company.nameEn}）</dd>
+      <dt>地址</dt>
+      <dd>{company.address}</dd>
+      <dt>電話</dt>
+      <dd><a href={`tel:${company.telHref}`}>{company.tel}</a></dd>
+      <dt>傳真</dt>
+      <dd>{company.fax}</dd>
+      <dt>信箱</dt>
+      <dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
+    </dl>
+    <p class="copyright">© {year} {company.nameZh}．版權所有</p>
+  </div>
+</footer>

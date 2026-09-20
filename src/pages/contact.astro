@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { company } from '../data/site';
+---
+
+<BaseLayout title="聯絡我們" description={`${company.nameZh}聯絡方式：電話 ${company.tel}，${company.address}`}>
+  <Breadcrumb items={[{ label: '聯絡我們' }]} />
+  <h1>聯絡我們</h1>
+
+  <dl class="product-meta">
+    <dt>公司名稱</dt><dd>{company.nameZh}</dd>
+    <dt>英文名稱</dt><dd>{company.nameEn}</dd>
+    <dt>地址</dt><dd>{company.address}</dd>
+    <dt>電話</dt><dd><a href={`tel:${company.telHref}`}>{company.tel}</a></dd>
+    <dt>傳真</dt><dd>{company.fax}</dd>
+    <dt>信箱</dt><dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
+  </dl>
+
+  <h2>諮詢與詢價</h2>
+  <p>
+    歡迎來電諮詢，或於產品頁面將需要的品項加入詢價清單後一併送出，
+    我們會盡快與您聯繫。
+  </p>
+  <p><a class="btn" href="/products/">瀏覽產品</a></p>
+</BaseLayout>

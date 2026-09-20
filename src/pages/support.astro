@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { company } from '../data/site';
+---
+
+<BaseLayout title="技術支援" description="安全資料表（SDS）、產品說明書與技術諮詢。">
+  <Breadcrumb items={[{ label: '技術支援' }]} />
+  <h1>技術支援</h1>
+
+  <p>
+    若需要產品的<strong>安全資料表（SDS／MSDS）</strong>、<strong>產品說明書</strong>，
+    或有配方、施作條件上的問題，歡迎與我們聯繫。
+  </p>
+
+  <dl class="product-meta">
+    <dt>諮詢專線</dt><dd><a href={`tel:${company.telHref}`}>{company.tel}</a></dd>
+    <dt>傳真</dt><dd>{company.fax}</dd>
+    <dt>信箱</dt><dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
+  </dl>
+
+  <!--
+    待辦：舊站的「安全資料表」(p.asp?id=9) 與「說明書」(p.asp?id=14) 兩頁
+    需登入才能下載，鏡像未取得。取得原始 PDF 後在此建立下載清單。
+    詳見 docs/鏡像分析報告.md 第三節。
+  -->
+  <h2>文件下載</h2>
+  <p class="notice warn">
+    安全資料表與說明書的電子檔正在整理中，目前請來電或來信索取，我們會盡快提供。
+  </p>
+</BaseLayout>

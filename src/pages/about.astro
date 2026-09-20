@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { company, staticPages } from '../data/site';
+
+const page = staticPages.about;
+const paragraphs = (page.text ?? '').split('\n').filter((l) => l.trim());
+---
+
+<BaseLayout title="公司簡介" description={company.description}>
+  <Breadcrumb items={[{ label: '公司簡介' }]} />
+  <h1>公司簡介</h1>
+
+  {paragraphs.map((text) => <p>{text}</p>)}
+
+  <h2>聯絡資訊</h2>
+  <dl class="product-meta">
+    <dt>公司名稱</dt><dd>{company.nameZh}</dd>
+    <dt>英文名稱</dt><dd>{company.nameEn}</dd>
+    <dt>地址</dt><dd>{company.address}</dd>
+    <dt>電話</dt><dd><a href={`tel:${company.telHref}`}>{company.tel}</a></dd>
+    <dt>傳真</dt><dd>{company.fax}</dd>
+    <dt>信箱</dt><dd><a href={`mailto:${company.email}`}>{company.email}</a></dd>
+  </dl>
+</BaseLayout>

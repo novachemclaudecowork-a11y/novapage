@@ -1,0 +1,41 @@
+---
+import { categories } from '../data/site';
+
+interface Props {
+  activeCategory?: string;
+  activeSubcategory?: string | null;
+}
+const { activeCategory, activeSubcategory } = Astro.props;
+---
+
+<nav class="cat-nav" aria-label="產品分類">
+  <h2>產品分類</h2>
+  <ul>
+    {categories.map((cat) => (
+      <li>
+        <a
+          href={`/category/${cat.slug}/`}
+          aria-current={cat.slug === activeCategory ? 'true' : undefined}
+        >
+          {cat.name}
+        </a>
+        {cat.children.length > 0 && (
+          <ul>
+            {cat.children.map((sub) => (
+              <li>
+                <a
+                  href={`/category/${cat.slug}/${sub.slug}/`}
+                  class={sub.product_count === 0 ? 'empty' : undefined}
+                  aria-current={sub.slug === activeSubcategory ? 'true' : undefined}
+                  title={sub.product_count === 0 ? '此產品線尚未上架內容' : undefined}
+                >
+                  {sub.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>

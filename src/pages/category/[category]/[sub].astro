@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import CategoryNav from '../../../components/CategoryNav.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { categories, products, type Category, type Subcategory } from '../../../data/site';
+
+export function getStaticPaths() {
+  return categories.flatMap((category) =>
+    category.children.map((sub) => ({
+      params: { category: category.slug, sub: sub.slug },
+      props: { category, sub },
+    })),
+  );
+}
+
+interface Props { category: Category; sub: Subcategory }
+const { category, sub } = Astro.props;
+const items = products.filter((p) => p.subcategory === sub.slug);
+---
+
+<BaseLayout
+  title={sub.name}
+  description={`貝星貿易 ${category.name} － ${sub.name}。`}
+  sidebar
+>
+  <CategoryNav slot="sidebar" activeCategory={category.slug} activeSubcategory={sub.slug} />
+
+  <Breadcrumb
+    items={[
+      { label: '產品介紹', href: '/products/' },
+      { label: category.name, href: `/category/${category.slug}/` },
+      { label: sub.name },
+    ]}
+  />
+  <h1>{sub.name}</h1>
+
+  {items.length > 0 ? (
+    <div class="grid">{items.map((product) => <ProductCard product={product} />)}</div>
+  ) : (
+    <p class="notice warn">
+      此產品線尚未上架內容。歡迎來電洽詢：
+      <a href="tel:+886222994000">02-2299-4000</a>
+    </p>
+  )}
+</BaseLayout>

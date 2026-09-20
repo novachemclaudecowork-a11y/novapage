@@ -771,7 +771,7 @@
       }
     },
     {
-      "slug": "item-4-12",
+      "slug": "woodfree-paper",
       "name": "模造纸",
       "code": "ME-模造纸",
       "spec_html": "<p>優質模造紙</p>",
@@ -799,7 +799,7 @@
       }
     },
     {
-      "slug": "opp-opp-opp",
+      "slug": "opp-release-film",
       "name": "OPP離型纸/OPP離型膜/OPP轉印纸",
       "code": "RI-OPP",
       "spec_html": "<p>OPP薄膜經過電暈處理，具有良好的印刷適用性，可套色印刷以呈現精美的外觀</p>\n<p>單面 ，左上切角為印刷面</p>\n<p>離型時可達到極輕且穩定的離型力</p>",
@@ -813,7 +813,7 @@
       }
     },
     {
-      "slug": "item-4-15",
+      "slug": "release-paper",
       "name": "離型保護紙/ 黃色全木漿離型紙",
       "code": "RI-離型紙/保護紙",
       "spec_html": "<p>單塑單硅黃色全木漿離型紙</p>\n<p>表面平整光潔，無折皺，無劃痕，氣泡。涂布均勻，離型力穩定性好</p>\n<p>防潮，防油，離型起到產品的隔離作用，運用廣泛</p>\n<p> </p>\n<p> </p>",

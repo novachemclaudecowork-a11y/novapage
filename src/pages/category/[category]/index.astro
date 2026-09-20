@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import CategoryNav from '../../../components/CategoryNav.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { categories, productsOf, type Category } from '../../../data/site';
+
+export function getStaticPaths() {
+  return categories.map((category) => ({
+    params: { category: category.slug },
+    props: { category },
+  }));
+}
+
+interface Props { category: Category }
+const { category } = Astro.props;
+const items = productsOf(category.slug);
+---
+
+<BaseLayout
+  title={category.name}
+  description={`貝星貿易${category.name}系列，共 ${items.length} 項產品。`}
+  sidebar
+>
+  <CategoryNav slot="sidebar" activeCategory={category.slug} />
+
+  <Breadcrumb items={[{ label: '產品介紹', href: '/products/' }, { label: category.name }]} />
+  <h1>{category.name}</h1>
+  <p>共 {items.length} 項產品。</p>
+
+  {items.length > 0
+    ? <div class="grid">{items.map((product) => <ProductCard product={product} />)}</div>
+    : <p class="notice warn">此分類尚未上架產品內容。</p>}
+</BaseLayout>

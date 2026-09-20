@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CategoryNav from '../../components/CategoryNav.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { categories, products, productsOf } from '../../data/site';
+---
+
+<BaseLayout
+  title="產品介紹"
+  description={`貝星貿易全系列產品共 ${products.length} 項，涵蓋網印油墨、稀釋劑與洗版劑、製版資材等。`}
+  sidebar
+>
+  <CategoryNav slot="sidebar" />
+
+  <Breadcrumb items={[{ label: '產品介紹' }]} />
+  <h1>產品介紹</h1>
+  <p>全系列共 {products.length} 項產品，依下列分類瀏覽。</p>
+
+  {categories.map((cat) => {
+    const items = productsOf(cat.slug);
+    return (
+      <section>
+        <h2>
+          <a href={`/category/${cat.slug}/`}>{cat.name}</a>
+          <span style="font-weight: 400; font-size: .8125rem; color: var(--text-muted);">
+            （{items.length} 項）
+          </span>
+        </h2>
+        <div class="grid">
+          {items.map((product) => <ProductCard product={product} />)}
+        </div>
+      </section>
+    );
+  })}
+</BaseLayout>
