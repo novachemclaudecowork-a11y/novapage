@@ -27,6 +27,7 @@
 | [`docs/現況評估.md`](docs/現況評估.md) | 現行網站技術判讀、可取得與不可取得的項目、法律分析、技術方案建議 | 決策者 + 技術 |
 | [`docs/接管檢查清單.md`](docs/接管檢查清單.md) | **網域／DNS／信箱／Google 服務的所有權確認與取回步驟** | 管理層 |
 | [`docs/鏡像操作指南.md`](docs/鏡像操作指南.md) | 如何把現行網站完整抓下來 | 執行者 |
+| [`docs/上傳方式.md`](docs/上傳方式.md) | 抓完之後怎麼把檔案交回來（含 GitHub 驗證問題排除） | 執行者 |
 
 > 💡 `docs/接管檢查清單.md` 裡的事情**與新網站進度無關，可以現在就做**，
 > 而且比寫程式重要。
@@ -50,27 +51,35 @@
 
 ## 下一步（需要你做的事）
 
-在**有對外網路的電腦**上執行整站鏡像，再把檔案推回本分支。
+在**有對外網路的電腦**上把現行網站抓下來，再把檔案交回來。
+
+### 第 1 步：取得鏡像腳本
+
+不需要安裝 git —— 直接到 GitHub 網頁按 **Code → Download ZIP** 下載本儲存庫即可。
+（或 `git clone https://github.com/novachemclaudecowork-a11y/novapage`，
+本儲存庫是公開的，**下載不需要驗證**。）
+
+### 第 2 步：執行鏡像
 
 ```bash
-git clone <本儲存庫網址>
-cd novapage
-git checkout claude/website-clone-assessment-x09jd5
-
 bash scripts/mirror-site.sh        # Mac / Linux
 # Windows 使用者請改用 WinHTTrack，見 docs/鏡像操作指南.md
-
-git add site-mirror
-git commit -m "加入現行網站完整鏡像檔"
-git push
 ```
 
-完成後通知我，即可開始逐頁分析與重建。
+### 第 3 步：把檔案交回來
+
+**最省事的做法：把圖片剔除後壓成 ZIP，直接拖進對話視窗上傳。**
+剩下的 HTML/CSS/JS 通常只有幾 MB，足夠分析整站結構，而且完全不必處理 git 驗證。
+
+完整步驟（含 Windows 做法）與其他三種上傳方式，見 [`docs/上傳方式.md`](docs/上傳方式.md)。
+
+> ⚠️ 若你打算用 `git push`，請注意 **GitHub 網頁登入（包含 Google 登入）
+> 不等於 git 指令列的驗證**。GitHub 自 2021 年起不接受密碼做 git 操作，
+> 直接 push 會出現 `Password authentication is not supported`。
+> 解法見 [`docs/上傳方式.md`](docs/上傳方式.md)。
 
 > 為什麼要你自己做？因為這個雲端工作環境的網路政策封鎖了所有對外連線，
 > 我無法直接存取 `novananoinks.com.tw`。
-
----
 
 ## 開發
 
