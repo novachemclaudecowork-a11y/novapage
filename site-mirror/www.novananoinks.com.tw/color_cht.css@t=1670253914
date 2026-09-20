@@ -1,0 +1,2 @@
+body,div,td,.word_list{word-break:normal;}
+//break-all

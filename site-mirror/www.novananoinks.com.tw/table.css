@@ -1,0 +1,38 @@
+﻿table.table0 {border:0;background-color:#FFFFFF}
+table.table0 th{padding:2px;border:0;background-color:#DBDBDB;color:#333333;font-size:12pt;font-weight:normal;vertical-align:middle;}
+table.table0 th p{margin-top:3px;}
+table.table0 td{padding:2px;border:0}
+table.table0 .work{padding:2px;border:1px #A3A3A3 solid;background-color:#DBDBDB;min-height:40px}
+table.table0 a:link, 
+table.table0 a:active, 
+table.table0 a:visited {color:#333333;text-decoration: none;} 
+table.table0 a:hover {color:#FF0000;text-decoration: none;} 
+table.table0 .tb1{border:1px #A3A3A3 solid;color:#333333;background-color:#FFFFFF;vertical-align:middle;}
+table.table0 .tb1 th{padding:2px;border:1px #A3A3A3 solid;background-color:#DBDBDB;color:#333333;font-size:12pt;font-weight:normal;vertical-align:middle;;}
+table.table0 .tb1 th p{margin-top:3px;}
+table.table0 .tb1 td{padding:2px;border:1px #A3A3A3 solid;color:#333333;font-size:12pt;font-weight:normal;}
+table.table1 {border:1px #A3A3A3 solid;color:#333333;background-color:#FFFFFF;vertical-align:middle;}
+table.table1 th{padding:2px;border:1px #A3A3A3 solid;background-color:#DBDBDB;color:#333333;font-size:12pt;font-weight:normal;vertical-align:middle;}
+table.table1 th p{margin-top:3px;}
+table.table1 td{padding:2px;border:1px #A3A3A3 solid;color:#333333;font-size:12pt;font-weight:normal;}
+table.table1 .work{padding:2px;background-color:#DBDBDB;min-height:40px}
+table.table1 a:link, 
+table.table1 a:active, 
+table.table1 a:visited {color:#333333;text-decoration: none;} 
+table.table1 a:hover {color:#FF0000;text-decoration: none;} 
+table.table1 .tb0 {border:0;background-color:#FFFFFF}
+table.table1 .tb0 th{padding:2px;border:0;background-color:#DBDBDB;color:#333333;font-size:12pt;font-weight:normal;vertical-align:middle;}
+table.table1 .tb0 th p{margin-top:3px;}
+table.table1 .tb0 td{padding:2px;border:0}
+#paging {width:100%;display:inline-block;margin:10px 0 20px 0}
+.pages_btns{padding:5px 0 1em;line-height:30px;}
+.pages {display:inline-block;margin:0 auto;}
+.pageback{float:right;padding:2px 0;}
+.pages a,.pages strong,.pageback a{float:left;padding:0 6px;margin-right:2px;height:26px;border:1px solid;line-height:26px;overflow:hidden;}
+.pages a,.pageback a{border-color:#333333;background-color:#333333;color:#FFFFFF;}
+.pages a:hover,.pageback a:hover{text-decoration:none;}
+.pages strong{border-color:#333333;background-color:#FFFFFF;color:#333333;font-weight:700;}
+.pages a.prev{padding:0;width:22px;overflow:hidden;text-indent:-9999px;}
+.pages a.next{padding-right:16px;}
+.pageback a{padding-left:16px;}
+.pages a:hover,.pageback a,.pages a.next{border-color:#333333;}

@@ -1,0 +1,64 @@
+
+.navbar-header {width:100%;background:url(/gif/top_bg.jpg);}
+
+
+@media (min-width:1002px) {
+
+	.swiper-slide img {width:100%}
+}
+
+@media screen and (min-width: 640px) and (max-width: 1001px) {
+	.swiper-slide img {width:100%}
+	.ItemStyle {text-align:center;}
+	.ItemStyle div{min-height:0px;}
+
+}
+
+@media (max-width: 640px) {
+	.head-section .navbar-default { background-color: #fff; }
+
+    .head-section .navbar {
+        min-height: 60px;
+    }
+
+    .navbar-toggle {
+    }
+
+    .head-section .nav li .dropdown-menu li a:hover {
+        color: #48C9B0 !important;
+    }
+
+    .navbar-brand {
+        float: left !important;
+        padding:0;font-size: none;line-height:none;
+    }
+
+    .navbar-header {
+        float: none;
+        text-align: left;
+        width: 100%;
+    }
+
+	.logo { max-width:90%;}
+
+    .col-4 .item {
+        width: 100%;
+        margin-right: 0%;
+        margin-bottom: 2%;
+    }
+
+    .breadcrumb.pull-right{
+        float: left !important;
+        margin-top: 10px;
+        padding: 0;
+    }
+
+    .carousel-control {
+        font-size: 23px;
+        line-height: 38px;
+    }
+
+	.swiper-slide img {width:100%}
+	.ItemStyle {text-align:center;}
+	.ItemStyle div{min-height:0px;display:inline-block;}
+}

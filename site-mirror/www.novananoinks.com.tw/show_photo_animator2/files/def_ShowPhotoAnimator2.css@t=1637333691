@@ -1,0 +1,6 @@
+﻿.slider2_1_container {width:1920px;height:600px;margin:0px auto 0px auto;}
+#ShowPhotoAnimator2_1 span * {margin:0;padding:0;}
+#ShowPhotoAnimator2_1 {width:1920px;height:600px;margin:0 auto;left:0;right:0;top:0;background-position:top center;display:none;}
+.slider2_1_container .caption {width:1920px;height:600px;position:relative;margin:0 auto;left:0;right:0;}
+.slider2_1_container .jssorb05 {bottom: 16px;}
+

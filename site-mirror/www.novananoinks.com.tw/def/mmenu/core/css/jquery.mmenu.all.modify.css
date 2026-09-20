@@ -1,0 +1,22 @@
+﻿.mm-navbar {height:42px;}
+.mm-navbar.mm-hasbtns {background-color:#FFFFFF;}
+.mm-listview {font-size: 16px;line-height: 20px; }
+.mm-listview .mm-divider {font-size: 16px;text-indent: 20px;line-height: 25px; }
+em.mm-counter {font-size: 16px;line-height: 20px;}
+.mm-search input {font-size: 16px;line-height: 26px;}
+.mm-noresultsmsg {font-size: 21px;}
+.mm-indexer {font-size: 16px;}
+.mm-menu.mm-theme-black {background:#111;border-color:#555;color:#fff; }
+.mm-menu .mm-navbar .mm-btn:before, .mm-menu .mm-navbar .mm-btn:after{border-color:#fff;}
+.mm-menu .mm-navbar > *, .mm-menu .mm-navbar a {font-size:16px;color:#FFFFFF;}
+.mm-hasnavbar-bottom-1 .mm-panels {bottom: 40px; }
+.mm-navbar-bottom {height:40px;}
+.mm-panels > .mm-panel.mm-hasnavbar {padding-top: 82px; }
+.mm-listview .mm-spacer {padding-top: 82px; }
+.mm-listview .mm-spacer > .mm-next {top: 82px; }
+.mm-vertical.mm-spacer > .mm-counter {margin-top: 82px; }
+.mm-hasnavbar-top-1 .mm-panels {top: 42px; }
+.mm-navbar-top-2 {top: 82px; }
+.mm-panel.mm-hassearch {padding-top: 82px; }
+.mm-panel.mm-hassearch.mm-hasnavbar .mm-search {top: 82px; }
+.mm-panels > .mm-panel > .mm-listview:first-child,.mm-panels > .mm-panel > .mm-navbar + .mm-listview {margin-top: -62px; }

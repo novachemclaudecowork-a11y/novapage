@@ -1,0 +1,16 @@
+﻿@media (min-width: 1202px){	.containerBox_1 .container {max-width:1200;}}
+@media screen and (min-width:640px) {
+.ItemStyle18 {min-height:200px;margin:0;padding:0;}
+.ItemStyle19 {min-height:200px;margin:0;padding:0;}
+.ItemStyle20 {min-height:200px;margin:0;padding:0;}
+.ItemStyle22 {min-height:200px;margin:0;padding:0;}
+.ItemStyle24 {min-height:200px;margin:0;padding:0;}
+.ItemStyle12 {min-height:307px;margin:0;padding:2px;}
+.ItemStyle13 {min-height:307px;margin:0;padding:2px;}
+.ItemStyle14 {min-height:307px;margin:0;padding:2px;}
+.ItemStyle15 {min-height:307px;margin:30px 0 0 0;padding:0;}
+.ItemStyle16 {min-height:307px;margin:30px 0 0 0;padding:0;}
+.ItemStyle17 {min-height:307px;margin:30px 0 0 0;padding:0;}
+}
+@media screen and (max-width:640px) {
+}

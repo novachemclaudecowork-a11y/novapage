@@ -1,0 +1,6 @@
+.pageRwd {display:inline-block;}
+
+.pageRwdA {display:inline-block;float:left;border:1px green solid;}
+.pageRwdA div {border:1px red solid;}
+
+.pageRwd img{width:100%;}
