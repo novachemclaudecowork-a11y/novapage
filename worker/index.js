@@ -22,6 +22,28 @@ const REQUIRED_SETTINGS = [
   'GITHUB_REPO',
 ];
 
+// Cloudflare Workers 對 PBKDF2 疊代次數的上限，超過就無法驗證密碼
+const MAX_PBKDF2_ITERATIONS = 100_000;
+
+/**
+ * 描述密碼設定的狀態，供排查使用。
+ * 只看格式與疊代次數這兩個參數，不輸出鹽值或雜湊本身。
+ */
+function describePasswordHash(stored) {
+  if (!stored) return '未設定';
+  const [scheme, iterationsText] = stored.split('$');
+  if (scheme !== 'pbkdf2' || !iterationsText) {
+    return '格式不正確，應為 pbkdf2$次數$鹽值$雜湊。請重新執行 npm run admin:password';
+  }
+  const iterations = Number(iterationsText);
+  if (!Number.isFinite(iterations)) return '疊代次數無法辨識';
+  if (iterations > MAX_PBKDF2_ITERATIONS) {
+    return `疊代次數 ${iterations} 超過平台上限 ${MAX_PBKDF2_ITERATIONS}，` +
+      '無法驗證密碼。請重新執行 npm run admin:password 並更新此設定';
+  }
+  return `格式正確，疊代次數 ${iterations}`;
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -41,6 +63,8 @@ export default {
         missing.length
           ? `缺少設定：${missing.join('、')}`
           : '所需設定齊全',
+        '',
+        `密碼設定：${describePasswordHash(env.ADMIN_PASSWORD_HASH)}`,
         '',
         `Worker 目前讀得到的設定名稱：${seen.length ? seen.join('、') : '（沒有任何設定）'}`,
         '',
