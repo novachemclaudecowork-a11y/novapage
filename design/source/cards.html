@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8"><title>產品圖設計稿</title>
+<!--
+  產品圖的設計原始檔。
+  這裡的內容不會出現在網站上，是供日後製作其他產品圖時參考與延用的樣板。
+
+  修改後執行 `npm run design` 重新產生 design/product-images/ 底下的 PNG。
+  說明見 ../README.md
+-->
+<style>
+@font-face{font-family:'NotoTC';src:url('../../node_modules/@fontsource/noto-sans-tc/files/noto-sans-tc-chinese-traditional-400-normal.woff2')format('woff2'),url('../../node_modules/@fontsource/noto-sans-tc/files/noto-sans-tc-latin-400-normal.woff2')format('woff2');font-weight:400;font-display:block}
+@font-face{font-family:'NotoTC';src:url('../../node_modules/@fontsource/noto-sans-tc/files/noto-sans-tc-chinese-traditional-500-normal.woff2')format('woff2');font-weight:500}
+@font-face{font-family:'NotoTC';src:url('../../node_modules/@fontsource/noto-sans-tc/files/noto-sans-tc-chinese-traditional-700-normal.woff2')format('woff2');font-weight:700}
+@font-face{font-family:'NotoTC';src:url('../../node_modules/@fontsource/noto-sans-tc/files/noto-sans-tc-chinese-traditional-900-normal.woff2')format('woff2');font-weight:900}
+
+:root{
+  --brand:#203c8a; --brand-dark:#16295e; --brand-soft:#eef2fa;
+  --ink:#141922; --muted:#6b7686; --line:#dde2ea; --accent:#c8102e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#9aa3b0;padding:40px;display:flex;flex-direction:column;gap:40px;
+     font-family:'NotoTC',sans-serif;-webkit-font-smoothing:antialiased}
+
+.card{width:1200px;height:900px;background:#fff;position:relative;overflow:hidden;
+      display:flex;flex-direction:column}
+
+/* 頁首：一條窄的品牌色帶，只放系列代號與品名 */
+.head{padding:44px 60px 0;display:flex;align-items:flex-start;gap:20px}
+.series{flex:none;background:var(--brand);color:#fff;border-radius:6px;
+        padding:10px 18px;font-weight:900;font-size:30px;letter-spacing:.06em;line-height:1}
+.titles h1{font-size:46px;font-weight:900;color:var(--ink);letter-spacing:-.01em;line-height:1.15}
+.titles p{font-size:21px;color:var(--muted);margin-top:8px;font-weight:500}
+.code{margin-left:auto;text-align:right;flex:none}
+.code b{display:block;font-size:13px;letter-spacing:.22em;color:var(--muted);font-weight:700}
+.code span{font-size:34px;font-weight:900;color:var(--brand);line-height:1.1}
+
+.body{flex:1;padding:32px 60px 0;display:flex;flex-direction:column;justify-content:center}
+.foot{padding:0 60px 40px;margin-top:auto}
+.foot .rule{height:4px;background:var(--brand);width:92px;border-radius:2px;margin-bottom:16px}
+.foot p{font-size:22px;color:var(--ink);font-weight:500;line-height:1.5}
+.foot small{display:block;font-size:17px;color:var(--muted);margin-top:6px;font-weight:400}
+
+/* ---------- 應用情境：布料 ---------- */
+.stage{display:flex;align-items:center;gap:30px;justify-content:center}
+.swatch{height:452px;border-radius:10px;position:relative;
+        box-shadow:0 14px 34px rgb(20 25 34/.16);overflow:hidden}
+.swatch .tag{position:absolute;left:0;bottom:0;background:rgb(20 25 34/.78);color:#fff;
+             font-size:18px;font-weight:700;padding:7px 16px;border-top-right-radius:8px;letter-spacing:.04em}
+/* 織紋：兩個方向的細條紋交織，加上斜向打光做出布面起伏 */
+.nylon{background:
+  repeating-linear-gradient(0deg,rgb(255 255 255/.10) 0 1px,transparent 1px 4px),
+  repeating-linear-gradient(90deg,rgb(0 0 0/.16) 0 1px,transparent 1px 4px),
+  linear-gradient(148deg,#33414f 0%,#1f2a35 42%,#3b4a59 100%)}
+.print{position:absolute;inset:0;display:grid;place-items:center}
+.mark{font-weight:900;color:#f2c200;font-size:78px;letter-spacing:.02em;
+      text-shadow:0 2px 0 rgb(0 0 0/.18)}
+.mark small{display:block;font-size:20px;letter-spacing:.4em;color:rgb(255 255 255/.92);
+            font-weight:700;margin-top:10px;text-align:center;text-shadow:0 1px 3px rgb(0 0 0/.5)}
+/* 右側整塊布變寬，印膜跟著橫向延展 */
+.swatch.relaxed{width:340px}
+.swatch.stretched{width:476px}
+.stretched .mark{transform:scaleX(1.4)}
+.stretched .mark small{transform:scaleX(.72);display:block}
+.arrows{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none;width:112px}
+.arrows .bar{color:var(--brand);font-size:52px;font-weight:900;line-height:1}
+.arrows span{font-size:16px;color:var(--muted);font-weight:700;text-align:center;line-height:1.4}
+
+/* ---------- 應用情境：金屬與玻璃 ---------- */
+.panels{display:flex;gap:26px;justify-content:center;align-items:center}
+.panel{width:302px;height:342px;border-radius:10px;position:relative;overflow:hidden;
+       box-shadow:0 14px 34px rgb(20 25 34/.18)}
+.metal{background:
+  repeating-linear-gradient(97deg,rgb(255 255 255/.5) 0 1px,transparent 1px 4px),
+  linear-gradient(115deg,#f2f4f7 0%,#b9c0ca 28%,#eef1f5 46%,#9aa4b1 70%,#dfe4ea 100%)}
+.glass{background:linear-gradient(150deg,rgb(214 234 240/.95),rgb(160 198 210/.85) 50%,rgb(224 240 244/.95));
+       border:1px solid rgb(255 255 255/.7)}
+.glass::after{content:'';position:absolute;top:-40%;left:-15%;width:55%;height:190%;
+              background:linear-gradient(90deg,transparent,rgb(255 255 255/.55),transparent);
+              transform:rotate(18deg)}
+.wood{background:
+  repeating-linear-gradient(88deg,rgb(120 78 40/.14) 0 3px,transparent 3px 11px),
+  linear-gradient(120deg,#c08a52,#a06f3c)}
+.pmark{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
+.pmark b{font-size:60px;font-weight:900;color:var(--brand-dark);letter-spacing:.02em;line-height:1}
+.pmark i{display:block;font-style:normal;font-size:17px;letter-spacing:.34em;font-weight:700;
+         color:var(--brand);margin-top:9px;text-align:center}
+.panel .tag{position:absolute;left:0;bottom:0;z-index:3;background:rgb(20 25 34/.78);color:#fff;
+            font-size:17px;font-weight:700;padding:7px 15px;border-top-right-radius:8px;letter-spacing:.04em}
+
+/* 兩液型比例 */
+.ratio{margin-top:30px;display:flex;align-items:center;gap:18px;justify-content:center}
+.ratio .box{background:var(--brand-soft);border:2px solid #cdd8ee;border-radius:10px;
+            padding:14px 26px;text-align:center;min-width:176px}
+.ratio .box b{display:block;font-size:40px;font-weight:900;color:var(--brand);line-height:1}
+.ratio .box span{font-size:17px;color:var(--muted);font-weight:700;margin-top:5px;display:block}
+.ratio .op{font-size:34px;font-weight:900;color:var(--muted)}
+
+/* ---------- 規格卡 ---------- */
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:18px 26px;align-content:center}
+.spec{border:2px solid var(--line);border-radius:12px;padding:24px 26px;display:flex;gap:20px;align-items:flex-start}
+.spec.wide{grid-column:1/-1}
+.spec .ico{flex:none;width:52px;height:52px;border-radius:10px;background:var(--brand-soft);
+           display:grid;place-items:center}
+.spec .ico svg{width:28px;height:28px;stroke:var(--brand);fill:none;stroke-width:2;
+               stroke-linecap:round;stroke-linejoin:round}
+.spec .txt b{display:block;font-size:15px;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:5px}
+.spec .txt p{font-size:26px;font-weight:700;color:var(--ink);line-height:1.35}
+.spec .txt p em{font-style:normal;font-size:19px;color:var(--muted);font-weight:500}
+.spec.hl{border-color:var(--brand);background:var(--brand-soft)}
+.spec.hl .ico{background:#fff}
+</style></head><body>
+
+<!-- 1. PU 應用情境 -->
+<div class="card" id="pu-app">
+  <div class="head">
+    <div class="series">PU</div>
+    <div class="titles"><h1>PU彈性網印油墨</h1><p>尼龍布專用．高延展性</p></div>
+    <div class="code"><b>產品編號</b><span>07</span></div>
+  </div>
+  <div class="body">
+    <div class="stage">
+      <div class="swatch nylon relaxed">
+        <div class="print"><div class="mark">織<small>NYLON</small></div></div>
+        <div class="tag">原狀</div>
+      </div>
+      <div class="arrows">
+        <div class="bar">→</div>
+        <span>橫向<br>延展 40%</span>
+      </div>
+      <div class="swatch nylon stretched">
+        <div class="print"><div class="mark">織<small>NYLON</small></div></div>
+        <div class="tag">延展後</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="rule"></div>
+    <p>印膜隨布料延展而不龜裂、不剝落</p>
+    <small>適用素材：尼龍布．特多龍　｜　特性：優良柔軟性・優良附著力</small>
+  </div>
+</div>
+
+<!-- 2. PU 規格 -->
+<div class="card" id="pu-spec">
+  <div class="head">
+    <div class="series">PU</div>
+    <div class="titles"><h1>PU彈性網印油墨</h1><p>規格一覽</p></div>
+    <div class="code"><b>產品編號</b><span>07</span></div>
+  </div>
+  <div class="body">
+    <div class="specs">
+      <div class="spec hl">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16M7 4v16M12 4v16M17 4v16"/></svg></div>
+        <div class="txt"><b>網　目</b><p>200～350 目<em><br>特多龍或尼龍網</em></p></div>
+      </div>
+      <div class="spec hl">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.4"/></svg></div>
+        <div class="txt"><b>乾燥方式</b><p>自然 20～30 分<em><br>烘乾 50～60°C 約 6 分</em></p></div>
+      </div>
+      <div class="spec">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v5.5L5.5 18a2.5 2.5 0 0 0 2.2 3.5h8.6a2.5 2.5 0 0 0 2.2-3.5L14 8.5V3"/></svg></div>
+        <div class="txt"><b>稀 釋 劑</b><p>BS-007<em> 中乾</em>　BS-017<em> 特慢乾</em></p></div>
+      </div>
+      <div class="spec">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h18M6 12V6a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v6M8 16v4M12 16v4M16 16v4"/></svg></div>
+        <div class="txt"><b>洗 版 劑</b><p>SW-002<em> #2 洗版劑</em></p></div>
+      </div>
+      <div class="spec wide">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.5 6 .9-4.3 4.3 1 6-5.3-2.9L6.7 19.7l1-6L3.4 9.4l6-.9z"/></svg></div>
+        <div class="txt"><b>特　　性</b><p>優良柔軟性・優良附著力<em>　｜　適合印刷於尼龍布上</em></p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="rule"></div>
+    <p>PU 系列為專為尼龍布等素材而製的網版印刷油墨</p>
+  </div>
+</div>
+
+<!-- 3. PD 應用情境 -->
+<div class="card" id="pd-app">
+  <div class="head">
+    <div class="series">PD</div>
+    <div class="titles"><h1>PD金屬玻璃網印油墨</h1><p>兩液型．硬質素材專用</p></div>
+    <div class="code"><b>產品編號</b><span>05</span></div>
+  </div>
+  <div class="body">
+    <div class="panels">
+      <div class="panel metal"><div class="pmark"><b>金屬</b><i>ALUMINIUM</i></div><div class="tag">金屬・鋁箔</div></div>
+      <div class="panel glass"><div class="pmark"><b>玻璃</b><i>GLASS</i></div><div class="tag">玻璃</div></div>
+      <div class="panel wood"><div class="pmark"><b>烤漆</b><i>COATED</i></div><div class="tag">木材・烤漆</div></div>
+    </div>
+    <div class="ratio">
+      <div class="box"><b>8</b><span>PD 油　墨</span></div>
+      <div class="op">：</div>
+      <div class="box"><b>2</b><span>硬 化 劑</span></div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="rule"></div>
+    <p>兩液型配方，須配合硬化劑使用</p>
+    <small>適用素材：金屬鋁箔．玻璃．木材．烤漆　｜　特性：附著度佳・印刷性好</small>
+  </div>
+</div>
+
+<!-- 4. PD 規格 -->
+<div class="card" id="pd-spec">
+  <div class="head">
+    <div class="series">PD</div>
+    <div class="titles"><h1>PD金屬玻璃網印油墨</h1><p>規格一覽</p></div>
+    <div class="code"><b>產品編號</b><span>05</span></div>
+  </div>
+  <div class="body">
+    <div class="specs">
+      <div class="spec hl wide">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M5 8h5v12H5zM14 4h5v16h-5z"/><path d="M10 14h4"/></svg></div>
+        <div class="txt"><b>調配比例</b><p>兩液型　PD 油墨 : 硬化劑 = 8 : 2</p></div>
+      </div>
+      <div class="spec">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16M7 4v16M12 4v16M17 4v16"/></svg></div>
+        <div class="txt"><b>網　目</b><p>200～300 目<em><br>張力 15 牛頓以上</em></p></div>
+      </div>
+      <div class="spec">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.4"/></svg></div>
+        <div class="txt"><b>乾燥方式</b><p>自然 4～8 小時<em><br>烘乾 60°C 約 20 分</em></p></div>
+      </div>
+      <div class="spec">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v5.5L5.5 18a2.5 2.5 0 0 0 2.2 3.5h8.6a2.5 2.5 0 0 0 2.2-3.5L14 8.5V3"/></svg></div>
+        <div class="txt"><b>稀 釋 劑</b><p>BS-012<em> 慢乾</em>　BS-010<em> 快乾</em></p></div>
+      </div>
+      <div class="spec">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h18M6 12V6a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v6M8 16v4M12 16v4M16 16v4"/></svg></div>
+        <div class="txt"><b>洗 版 劑</b><p>SW-002<em> #2 洗版劑</em></p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="rule"></div>
+    <p>適用於金屬鋁箔、玻璃、木材、烤漆等硬質素材</p>
+  </div>
+</div>
+
+</body></html>

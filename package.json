@@ -13,7 +13,8 @@
     "check:node": "node scripts/check_node.mjs",
     "check": "astro check",
     "admin:password": "node scripts/make-admin-password.mjs",
-    "test:ui": "node scripts/test_admin_ui.mjs && node scripts/test_search_ui.mjs"
+    "test:ui": "node scripts/test_admin_ui.mjs && node scripts/test_search_ui.mjs",
+    "design": "node design/source/render.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -23,6 +24,8 @@
     "node": ">=22.12.0"
   },
   "devDependencies": {
+    "@fontsource/noto-sans-tc": "^5.3.0",
+    "playwright": "^1.63.0",
     "wrangler": "^4.135.0"
   }
 }
