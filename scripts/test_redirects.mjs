@@ -7,7 +7,7 @@
  * 用法：node scripts/test_redirects.mjs   （需先 npm run build）
  */
 import { readFileSync, existsSync } from 'node:fs';
-import { resolveLegacy } from '../functions/_middleware.js';
+import { resolveLegacy } from '../src/lib/legacy-redirects.mjs';
 
 const legacy = JSON.parse(readFileSync('src/data/legacy-urls.json', 'utf8'));
 const catalog = JSON.parse(readFileSync('src/data/catalog.json', 'utf8'));

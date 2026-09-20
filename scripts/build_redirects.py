@@ -24,7 +24,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "src" / "data" / "catalog.json"
 LEGACY = ROOT / "src" / "data" / "legacy-urls.json"
 CORRECTIONS = ROOT / "src" / "data" / "name-corrections.json"
-FUNCTIONS = ROOT / "functions" / "_middleware.js"
+SHARED = ROOT / "src" / "lib" / "legacy-redirects.mjs"
 REDIRECTS = ROOT / "public" / "_redirects"
 
 # 舊站的純路徑網址（不帶查詢字串）→ 新站頁面
@@ -93,12 +93,17 @@ def main() -> int:
         for s in c["children"]
     }
 
-    js = f"""// 舊站網址轉址。
+    js = f"""// 舊站網址轉址的對照表與判斷邏輯。
 // 由 scripts/build_redirects.py 產生，請勿手動編輯。
 //
-// Cloudflare Pages 的 _redirects 只比對路徑，無法處理舊站
+// Cloudflare 的 _redirects 檔只比對路徑，無法處理舊站
 // /view.html?id=127&m=1&pg=5 這種以查詢字串決定內容的網址，
-// 因此改由本 Function 讀取查詢參數後再導向。
+// 因此必須在程式中讀取查詢參數後再導向。
+//
+// 本模組只放純邏輯，不綁定平台。實際的進入點有兩個：
+//   functions/_middleware.js   Cloudflare Pages 專案使用
+//   worker/index.js            Cloudflare Workers 專案使用
+// 兩者都引用這裡的 resolveLegacy()。
 
 const PATH_MAP = {json.dumps(PATH_MAP, ensure_ascii=False, indent=2)};
 
@@ -117,7 +122,7 @@ const LISTING_PATHS = new Set({json.dumps(LISTING_PATHS)});
 
 /**
  * 依舊網址算出新網址，找不到對應時回傳 null。
- * 抽成獨立函式以便用 scripts/test_redirects.mjs 測試。
+ * 純函式，不依賴執行環境，可直接用 scripts/test_redirects.mjs 測試。
  */
 export function resolveLegacy(pathname, params) {{
   const path = pathname.toLowerCase();
@@ -148,19 +153,17 @@ export function resolveLegacy(pathname, params) {{
   return null;
 }}
 
-export async function onRequest(context) {{
-  const url = new URL(context.request.url);
+/** 將請求轉為 301 回應；沒有對應時回傳 null 交給後續處理。 */
+export function legacyRedirectResponse(request) {{
+  const url = new URL(request.url);
   const target = resolveLegacy(url.pathname, url.searchParams);
-
-  if (target) {{
-    return Response.redirect(new URL(target, url.origin).href, 301);
-  }}
-  return context.next();
+  if (!target) return null;
+  return Response.redirect(new URL(target, url.origin).href, 301);
 }}
 """
 
-    FUNCTIONS.parent.mkdir(parents=True, exist_ok=True)
-    FUNCTIONS.write_text(js, encoding="utf-8")
+    SHARED.parent.mkdir(parents=True, exist_ok=True)
+    SHARED.write_text(js, encoding="utf-8")
 
     # 純路徑轉址另外寫一份 _redirects 作為備援（Function 未啟用時仍有基本轉址）
     lines = [
@@ -173,7 +176,7 @@ export async function onRequest(context) {{
     REDIRECTS.parent.mkdir(parents=True, exist_ok=True)
     REDIRECTS.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    print(f"寫入 {FUNCTIONS.relative_to(ROOT)}")
+    print(f"寫入 {SHARED.relative_to(ROOT)}")
     print(f"  產品轉址：{len(product_map)} 組 (m, m2, pg)")
     if unmapped:
         print(f"  ⚠️  有 {len(unmapped)} 個舊產品名稱找不到對應：{', '.join(sorted(unmapped))}")
