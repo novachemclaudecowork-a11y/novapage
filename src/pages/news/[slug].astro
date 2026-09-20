@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { news, plainText, type NewsPost } from '../../data/site';
+
+export function getStaticPaths() {
+  return news.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+interface Props { post: NewsPost }
+const { post } = Astro.props;
+
+const summary = plainText(post.body).slice(0, 150) || post.title;
+---
+
+<BaseLayout title={post.title} description={summary}>
+  <Breadcrumb items={[{ label: '最新訊息', href: '/news/' }, { label: post.title }]} />
+
+  <article class="news-post">
+    <h1>{post.title}</h1>
+    <time datetime={post.date}>{post.date}</time>
+    <div set:html={post.body} />
+  </article>
+
+  <p class="back"><a href="/news/">← 回最新訊息</a></p>
+</BaseLayout>

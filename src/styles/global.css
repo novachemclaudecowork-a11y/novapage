@@ -247,3 +247,32 @@ h3 { font-size: 1.0625rem; margin: 1.5rem 0 .5rem; }
 .results .meta { font-size: .8125rem; color: var(--text-muted); margin: 0 0 4px; }
 .results .snippet { font-size: .875rem; color: var(--text-muted); margin: 0; }
 .results mark { background: #fff2b8; color: inherit; padding: 0 1px; border-radius: 2px; }
+
+/* ---------- 最新訊息 ---------- */
+.news-list { list-style: none; margin: 0; padding: 0; }
+.news-list li {
+  border-bottom: 1px solid var(--border);
+  padding: 18px 0;
+}
+.news-list li:first-child { padding-top: 0; }
+.news-list time {
+  display: block; font-size: .8125rem; color: var(--text-muted); margin-bottom: 2px;
+}
+.news-list a { font-size: 1.0625rem; font-weight: 600; color: var(--brand-dark); }
+.news-list p { margin: 4px 0 0; font-size: .9375rem; color: var(--text-muted); }
+
+.news-post > time {
+  display: block; font-size: .875rem; color: var(--text-muted);
+  margin: -8px 0 20px;
+}
+.news-post img { margin-block: 16px; }
+
+.back { margin-top: 32px; font-size: .9375rem; }
+
+/* 首頁的最新訊息區塊 */
+.home-news { list-style: none; margin: 0; padding: 0; }
+.home-news li { display: flex; gap: 14px; padding: 8px 0; font-size: .9375rem; }
+.home-news time { color: var(--text-muted); flex: none; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) {
+  .home-news li { flex-direction: column; gap: 2px; }
+}

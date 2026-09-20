@@ -8,6 +8,7 @@
 import categoriesData from '../../content/categories.json';
 import productsData from '../../content/products.json';
 import aboutData from '../../content/about.json';
+import newsData from '../../content/news.json';
 
 export interface Subcategory {
   slug: string;
@@ -49,6 +50,16 @@ export interface Product {
   legacy: { m: string; pg: number };
 }
 
+export interface NewsPost {
+  slug: string;
+  title: string;
+  /** YYYY-MM-DD */
+  date: string;
+  /** 可含 HTML */
+  body: string;
+  published: boolean;
+}
+
 // 所有產品放在同一個檔案裡。
 // 這樣後台只需一次讀取、一次寫入，不會受 Cloudflare 的子請求數量限制，
 // 也不會出現部分產品存檔成功、部分失敗的情況。
@@ -79,6 +90,16 @@ export const categories: Category[] = allCategories
         productCount: products.filter((p) => p.subcategory === s.slug).length,
       })),
   }));
+
+/**
+ * 最新訊息。只有勾選「在網站上顯示」的才會出現在網站上，
+ * 日期新的排前面；沒有標題的草稿一律略過，避免後台按了「＋ 發布新訊息」
+ * 卻還沒寫完就被發出去。
+ */
+export const news: NewsPost[] = (newsData as NewsPost[])
+  .filter((post) => post.published && post.title.trim())
+  .slice()
+  .sort((a, b) => b.date.localeCompare(a.date));
 
 export const about = aboutData as { title: string; body: string };
 

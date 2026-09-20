@@ -160,3 +160,11 @@ input.cat-order { width: 4.5rem; flex: none; text-align: center; padding: 7px 6p
 .cat-count { font-size: .8125rem; color: var(--muted); flex: none; min-width: 5.5rem; }
 .cat-note { font-size: .75rem; color: var(--muted); flex-basis: 100%; line-height: 1.5; }
 .cat-note.warn { color: var(--danger); }
+
+/* 最新訊息：發布狀態要一眼看得到，不能只是底部一個勾選框 */
+.panel.draft { border-inline-start: 4px solid var(--muted); background: #fafafa; }
+.news-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.news-head-note { font-size: .8125rem; color: var(--muted); }

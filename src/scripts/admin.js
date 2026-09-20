@@ -593,7 +593,24 @@ function renderNewsTab(root) {
 
   for (const [index, post] of state.news.entries()) {
     list.append(
-      el('div', { class: 'panel' },
+      el('div', { class: `panel${post.published ? '' : ' draft'}`, dataset: { slug: post.slug } },
+        // 發布狀態放在最上面。先前只有面板底部一個不起眼的勾選框，
+        // 結果是寫完按了儲存、網站上卻什麼也沒出現。
+        el('div', { class: 'news-head' },
+          el('button', {
+            class: `pill ${post.published ? 'on' : 'off'}`, type: 'button',
+            title: post.published ? '點擊改為草稿' : '點擊發布到網站上',
+            onclick: () => {
+              post.published = !post.published;
+              markDirty('news');
+              rerender();
+            },
+          }, post.published ? '已發布' : '草稿'),
+          el('span', { class: 'news-head-note' },
+            post.published
+              ? '儲存後一到兩分鐘會出現在網站上。'
+              : '目前只存在後台，網站上看不到。按左邊的「草稿」即可發布。'),
+        ),
         el('div', { class: 'grid2' },
           el('div', { class: 'field' },
             el('label', { for: `n-title-${index}` }, '標題'),
@@ -620,13 +637,6 @@ function renderNewsTab(root) {
           el('p', { class: 'hint' }, '可使用 HTML。'),
         ),
         el('div', { style: 'margin-top:16px; display:flex; gap:10px; align-items:center' },
-          el('div', { class: 'field check' },
-            el('input', {
-              id: `n-pub-${index}`, type: 'checkbox', checked: post.published,
-              onchange: (e) => { post.published = e.target.checked; markDirty('news'); },
-            }),
-            el('label', { for: `n-pub-${index}` }, '在網站上顯示'),
-          ),
           el('button', {
             class: 'btn danger small', type: 'button',
             onclick: () => {

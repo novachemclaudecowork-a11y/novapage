@@ -1,13 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
-import { categories, company, products, productsOf } from '../data/site';
+import { categories, company, news, products, productsOf } from '../data/site';
 
 // 首頁精選：每個主分類各取第一項有照片的產品
 const featured = categories
   .map((cat) => productsOf(cat.slug).find((p) => p.images.length > 0))
   .filter((p) => p !== undefined)
   .slice(0, 8);
+
+// 首頁只列最新的幾則；沒有訊息時整個區塊不出現
+const latestNews = news.slice(0, 5);
 ---
 
 <BaseLayout title="首頁" description={company.description}>
@@ -34,6 +37,21 @@ const featured = categories
       <div class="grid">
         {featured.map((product) => <ProductCard product={product!} />)}
       </div>
+    </>
+  )}
+
+  {latestNews.length > 0 && (
+    <>
+      <h2>最新訊息</h2>
+      <ul class="home-news">
+        {latestNews.map((post) => (
+          <li>
+            <time datetime={post.date}>{post.date}</time>
+            <a href={`/news/${post.slug}/`}>{post.title}</a>
+          </li>
+        ))}
+      </ul>
+      <p><a class="btn btn-outline" href="/news/">所有訊息</a></p>
     </>
   )}
 

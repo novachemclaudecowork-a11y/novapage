@@ -212,6 +212,30 @@ await page.locator('button[data-tab="news"]').click();
 await page.waitForSelector('button:has-text("發布新訊息")');
 check('最新訊息顯示空狀態', (await page.locator('.empty').textContent()).includes('沒有訊息'), true);
 
+console.log('\n最新訊息的發布狀態：');
+await page.locator('button:has-text("發布新訊息")').click();
+await page.waitForSelector('.panel.draft');
+// 新訊息預設是草稿。狀態必須在面板最上方一眼可見——
+// 先前只有底部一個勾選框，使用者寫完按儲存後網站上什麼也沒出現。
+check('新訊息預設為草稿', await page.locator('.news-head .pill').textContent(), '草稿');
+check('草稿有明顯標示', await page.locator('.panel.draft').count(), 1);
+check('並說明目前網站上看不到',
+  (await page.locator('.news-head-note').textContent())?.includes('網站上看不到'), true);
+
+await page.locator('.news-head .pill').click();
+await page.waitForTimeout(200);
+check('可切換為已發布', await page.locator('.news-head .pill').textContent(), '已發布');
+check('已發布就不再標示為草稿', await page.locator('.panel.draft').count(), 0);
+
+await page.locator('#n-title-0').fill('測試訊息');
+await page.waitForTimeout(150);
+await page.locator('#save').click();
+await page.waitForTimeout(600);
+const newsPayload = saved.filter((s) => s.section === 'news').pop();
+check('送出最新訊息資料', Boolean(newsPayload), true);
+check('發布狀態有一併送出', newsPayload?.body.value[0]?.published, true);
+check('標題有一併送出', newsPayload?.body.value[0]?.title, '測試訊息');
+
 console.log(`\n資源載入失敗：${failedRequests.length === 0 ? '無' : failedRequests.join(' | ')}`);
 if (failedRequests.length) failures.push(`有資源載入失敗：${failedRequests.join(' | ')}`);
 else pass++;
