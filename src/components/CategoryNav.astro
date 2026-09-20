@@ -1,5 +1,5 @@
 ---
-import { categories } from '../data/site';
+import { categories, subcategoryHref } from '../data/site';
 
 interface Props {
   activeCategory?: string;
@@ -24,7 +24,7 @@ const { activeCategory, activeSubcategory } = Astro.props;
             {cat.children.map((sub) => (
               <li>
                 <a
-                  href={`/category/${cat.slug}/${sub.slug}/`}
+                  href={subcategoryHref(cat.slug, sub.slug)}
                   class={sub.productCount === 0 ? 'empty' : undefined}
                   aria-current={sub.slug === activeSubcategory ? 'true' : undefined}
                   title={sub.productCount === 0 ? '此產品線尚未上架內容' : undefined}

@@ -93,38 +93,8 @@ const CATEGORY_MAP = {
 };
 
 const SUBCATEGORY_MAP = {
-  "129": "/category/screen-inks/mpv/",
-  "130": "/category/screen-inks/pet-label/",
-  "131": "/category/screen-inks/pet-water-transfer/",
-  "132": "/category/screen-inks/410-scratch/",
-  "133": "/category/screen-inks/pd-metal-glass/",
-  "134": "/category/screen-inks/cp-color-paste/",
-  "135": "/category/screen-inks/pu-elastic/",
-  "136": "/category/screen-inks/cw-waterbased/",
-  "137": "/category/screen-inks/ti-heat-transfer/",
-  "138": "/category/screen-inks/ri-rub-transfer/",
-  "139": "/category/screen-inks/pp/",
-  "140": "/category/screen-inks/ot-sandblast/",
   "141": "/category/screen-inks/metallic-glitter/",
-  "142": "/category/thinners-cleaners/bs-thinner/",
-  "143": "/category/thinners-cleaners/sw-cleaner/",
-  "144": "/category/thinners-cleaners/pp-primer/",
-  "145": "/category/thinners-cleaners/anti-clog/",
-  "146": "/category/thinners-cleaners/wiping-agent/",
-  "147": "/category/thinners-cleaners/defoamer/",
-  "148": "/category/thinners-cleaners/thickener/",
-  "149": "/category/thinners-cleaners/matting-paste/",
-  "150": "/category/platemaking/emulsion/",
-  "151": "/category/platemaking/ink-remover/",
-  "152": "/category/platemaking/ghost-remover/",
-  "153": "/category/platemaking/stencil-remover/",
-  "154": "/category/platemaking/degreaser/",
-  "155": "/category/platemaking/block-out/",
-  "156": "/category/platemaking/edge-sealer/",
-  "157": "/category/platemaking/hardener/",
-  "158": "/category/platemaking/frame-adhesive/",
-  "159": "/category/platemaking/other-supplies/",
-  "168": "/category/thinners-cleaners/rubber-primer/"
+  "159": "/category/platemaking/other-supplies/"
 };
 
 // m2 → 該產品線底下唯一那項產品
@@ -206,7 +176,15 @@ export function resolveLegacy(pathname, params) {
 
   if (LISTING_PATHS.has(path)) {
     const m2 = params.get("m2");
-    if (m2 && SUBCATEGORY_MAP[m2]) return SUBCATEGORY_MAP[m2];
+    if (m2) {
+      // 只有一項產品的產品線不再有列表頁，導到那項產品才不會少一層內容
+      return (
+        SUBCATEGORY_PRODUCT_MAP[m2] ??
+        SUBCATEGORY_MAP[m2] ??
+        CATEGORY_MAP[params.get("m")] ??
+        "/products/"
+      );
+    }
     return CATEGORY_MAP[params.get("m")] ?? "/products/";
   }
 

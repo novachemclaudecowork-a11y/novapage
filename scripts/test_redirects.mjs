@@ -60,7 +60,12 @@ const extra = [
   ['/page/p.asp?id=9', '/support/'],
   ['/inquiry_list.asp', '/inquiry/'],
   ['/product.html?AB=A&pd_type=1&m=1', '/category/screen-inks/'],
-  ['/product.html?AB=A&pd_type=136&pdid=sub2&m=1&m2=136', '/category/screen-inks/cw-waterbased/'],
+  // 只有一項產品的產品線不再有列表頁，舊的列表頁網址應直接導到該產品
+  ['/product.html?AB=A&pd_type=136&pdid=sub2&m=1&m2=136', '/products/cw-waterbased/'],
+  // 有多項產品的產品線，列表頁仍然存在
+  ['/product.html?AB=A&pd_type=159&pdid=sub2&m=4&m2=159', '/category/platemaking/other-supplies/'],
+  // 尚無產品的產品線，導到列表頁顯示「尚未上架」而非 404
+  ['/product.html?AB=A&pd_type=141&pdid=sub2&m=1&m2=141', '/category/screen-inks/metallic-glitter/'],
   ['/view.html?id=999&m=1&pg=6', '/products/cw-waterbased/'],
   ['/view.asp?id=1&m=1', '/category/screen-inks/'],
 

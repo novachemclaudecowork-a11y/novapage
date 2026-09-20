@@ -3,20 +3,30 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import CategoryNav from '../../../components/CategoryNav.astro';
 import ProductCard from '../../../components/ProductCard.astro';
-import { categories, products, type Category, type Subcategory } from '../../../data/site';
+import {
+  categories,
+  needsListingPage,
+  productsIn,
+  type Category,
+  type Subcategory,
+} from '../../../data/site';
 
 export function getStaticPaths() {
+  // 只有一項產品的產品線不產生列表頁，選單會直接連到那項產品。
+  // 理由見 src/data/site.ts 的 needsListingPage。
   return categories.flatMap((category) =>
-    category.children.map((sub) => ({
-      params: { category: category.slug, sub: sub.slug },
-      props: { category, sub },
-    })),
+    category.children
+      .filter((sub) => needsListingPage(sub.slug))
+      .map((sub) => ({
+        params: { category: category.slug, sub: sub.slug },
+        props: { category, sub },
+      })),
   );
 }
 
 interface Props { category: Category; sub: Subcategory }
 const { category, sub } = Astro.props;
-const items = products.filter((p) => p.subcategory === sub.slug);
+const items = productsIn(sub.slug);
 ---
 
 <BaseLayout

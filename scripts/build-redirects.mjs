@@ -99,11 +99,13 @@ function main() {
     }
     for (const sub of cat.children ?? []) {
       if (!sub.legacy_m2 || sub.published === false) continue;
-      subcategoryMap[sub.legacy_m2] = `/category/${cat.slug}/${sub.slug}/`;
-      // 多數產品線底下只有一項產品，導到產品頁比導到單品列表頁更貼近原內容
       const inSub = products.filter((p) => p.published && p.subcategory === sub.slug);
       if (inSub.length === 1) {
+        // 只有一項產品時不產生列表頁（見 src/data/site.ts 的 needsListingPage），
+        // 因此只能導到產品頁，不可登記列表頁的網址，否則會導向不存在的頁面
         subcategoryProductMap[sub.legacy_m2] = `/products/${inSub[0].slug}/`;
+      } else {
+        subcategoryMap[sub.legacy_m2] = `/category/${cat.slug}/${sub.slug}/`;
       }
     }
   }
@@ -168,7 +170,15 @@ export function resolveLegacy(pathname, params) {
 
   if (LISTING_PATHS.has(path)) {
     const m2 = params.get("m2");
-    if (m2 && SUBCATEGORY_MAP[m2]) return SUBCATEGORY_MAP[m2];
+    if (m2) {
+      // 只有一項產品的產品線不再有列表頁，導到那項產品才不會少一層內容
+      return (
+        SUBCATEGORY_PRODUCT_MAP[m2] ??
+        SUBCATEGORY_MAP[m2] ??
+        CATEGORY_MAP[params.get("m")] ??
+        "/products/"
+      );
+    }
     return CATEGORY_MAP[params.get("m")] ?? "/products/";
   }
 

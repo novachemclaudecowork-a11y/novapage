@@ -126,6 +126,29 @@ export function categoryOf(product: Product): Category | undefined {
   return categories.find((c) => c.slug === product.category);
 }
 
+/** 該產品線底下的（已上架）產品 */
+export function productsIn(subcategorySlug: string): Product[] {
+  return products.filter((p) => p.subcategory === subcategorySlug);
+}
+
+/**
+ * 產品線是否需要自己的列表頁。
+ *
+ * 舊站的子分類幾乎都是一個分類對一項產品（33 個裡有 31 個），
+ * 那種情況下的列表頁只放得下一張卡片，使用者得多點一次才到得了產品，
+ * 對搜尋引擎也形同重複內容。因此只有 0 項或 2 項以上才產生列表頁。
+ */
+export function needsListingPage(subcategorySlug: string): boolean {
+  return productsIn(subcategorySlug).length !== 1;
+}
+
+/** 產品線在選單上應連往的位置 */
+export function subcategoryHref(categorySlug: string, subcategorySlug: string): string {
+  const items = productsIn(subcategorySlug);
+  if (items.length === 1) return `/products/${items[0].slug}/`;
+  return `/category/${categorySlug}/${subcategorySlug}/`;
+}
+
 export function subcategoryOf(product: Product): Subcategory | undefined {
   if (!product.subcategory) return undefined;
   return categories.flatMap((c) => c.children).find((s) => s.slug === product.subcategory);
