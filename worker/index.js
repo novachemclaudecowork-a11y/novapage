@@ -12,12 +12,41 @@ import { authenticate, handleAdminApi } from './api.js';
 // 診斷用。回 ok 表示 Worker 確實在執行；回 404 表示部署的版本沒帶到 Worker。
 const CHECK_PATH = '/__worker-check';
 
+// 後台需要的設定。這個端點只回報「有沒有設到」，不會洩漏任何值，
+// 用來排查名稱打錯、忘記部署之類的問題——
+// 否則使用者只會看到「後台尚未設定密碼」，無從判斷是哪裡出錯。
+const REQUIRED_SETTINGS = [
+  'ADMIN_PASSWORD_HASH',
+  'SESSION_SECRET',
+  'GITHUB_TOKEN',
+  'GITHUB_REPO',
+];
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
     if (url.pathname === CHECK_PATH) {
-      return new Response('ok\n', {
+      const missing = REQUIRED_SETTINGS.filter((name) => !env[name]);
+      // 一併列出 Worker 實際看得到的設定名稱，方便發現名稱打錯
+      // （例如把 ADMIN_PASSWORD_HASH 打成 ADMIN_PASSOWRD_HASH）。
+      // 只列名稱，不含任何值。
+      const seen = Object.keys(env)
+        .filter((k) => k !== 'ASSETS' && typeof env[k] === 'string')
+        .sort();
+
+      const lines = [
+        'ok',
+        '',
+        missing.length
+          ? `缺少設定：${missing.join('、')}`
+          : '所需設定齊全',
+        '',
+        `Worker 目前讀得到的設定名稱：${seen.length ? seen.join('、') : '（沒有任何設定）'}`,
+        '',
+        '（只列名稱，不含任何值）',
+      ];
+      return new Response(lines.join('\n') + '\n', {
         headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' },
       });
     }
