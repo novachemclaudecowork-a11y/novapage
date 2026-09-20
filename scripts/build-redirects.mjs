@@ -63,8 +63,8 @@ const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 function main() {
   const products = readJson(join(CONTENT, 'products.json'));
   const categories = readJson(join(CONTENT, 'categories.json'));
-  const legacy = readJson(join(ROOT, 'src', 'data', 'legacy-urls.json'));
-  const corrections = readJson(join(ROOT, 'src', 'data', 'name-corrections.json'));
+  const legacy = readJson(join(CONTENT, 'legacy', 'legacy-urls.json'));
+  const corrections = readJson(join(CONTENT, 'legacy', 'name-corrections.json'));
 
   const bySlug = new Map(products.map((p) => [p.slug, p]));
   const slugByName = new Map(products.map((p) => [p.name, p.slug]));

@@ -9,13 +9,17 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolveLegacy } from '../src/lib/legacy-redirects.mjs';
 
-const legacy = JSON.parse(readFileSync('src/data/legacy-urls.json', 'utf8'));
-const catalog = JSON.parse(readFileSync('src/data/catalog.json', 'utf8'));
+const legacy = JSON.parse(readFileSync('content/legacy/legacy-urls.json', 'utf8'));
+// 以 content/ 為準。src/data/catalog.json 是當初匯入的產物，
+// 內容早已過時（例如仍含已停售的品項），不可拿來當測試基準。
+const products = JSON.parse(readFileSync('content/products.json', 'utf8'));
 // 經貴公司確認的錯字修正，比對時要視為同一項產品
-const corrections = JSON.parse(readFileSync('src/data/name-corrections.json', 'utf8'));
+const corrections = JSON.parse(readFileSync('content/legacy/name-corrections.json', 'utf8'));
 const correct = (name) => corrections[name] ?? name;
 
-const nameBySlug = new Map(catalog.products.map((p) => [`/products/${p.slug}/`, p.name]));
+const nameBySlug = new Map(
+  products.filter((p) => p.published).map((p) => [`/products/${p.slug}/`, p.name]),
+);
 
 let ok = 0;
 const unresolved = [];

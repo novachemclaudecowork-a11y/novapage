@@ -91,7 +91,7 @@ export const company = {
   fax: '+886-2-2299-4263',
   email: 'novachem@ms24.hinet.net',
   founded: 1988,
-  tagline: '專營網印油墨、製版資材、筆墨水、洗版劑',
+  tagline: '專營網印油墨、製版資材、洗版劑',
   description:
     '成立於 1988 年，提供絲網印刷油墨、感光乳劑及相關週邊網印商品，' +
     '並擁有自主研發能力。全系列產品符合 RoHS、REACH、TSCA 等規範。',
