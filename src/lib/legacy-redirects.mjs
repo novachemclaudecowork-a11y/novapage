@@ -42,7 +42,6 @@ const PAGE_ID_MAP = {
 // 鍵為 `${m}|${m2}|${pg}` —— 舊站實際用來決定顯示哪項產品的組合。
 // m2 不可省略：子分類頁的 pg 是該子分類內部的序號，與主分類各自獨立。
 const PRODUCT_MAP = {
-  "5||1": "/products/wuji-pen-ink/",
   "1||10": "/products/mpv/",
   "1||11": "/products/pet-label/",
   "1||1": "/products/pet-water-transfer/",
@@ -95,8 +94,7 @@ const CATEGORY_MAP = {
   "1": "/category/screen-inks/",
   "2": "/category/thinners-cleaners/",
   "4": "/category/platemaking/",
-  "10": "/category/cab-381/",
-  "5": "/category/pen-inks/"
+  "10": "/category/cab-381/"
 };
 
 const SUBCATEGORY_MAP = {

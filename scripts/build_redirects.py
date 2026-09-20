@@ -91,6 +91,7 @@ def main() -> int:
         s["legacy_m2"]: f'/category/{c["slug"]}/{s["slug"]}/'
         for c in catalog["categories"]
         for s in c["children"]
+        if s["legacy_m2"]  # 新站自行補上的產品線沒有舊站 m2，跳過
     }
 
     # m2 → 該產品線底下唯一那項產品的新網址。
@@ -104,6 +105,8 @@ def main() -> int:
     sub_product_map = {}
     for c in catalog["categories"]:
         for sub in c["children"]:
+            if not sub["legacy_m2"]:
+                continue
             slugs = products_in_sub.get(sub["slug"], [])
             if len(slugs) == 1:
                 sub_product_map[sub["legacy_m2"]] = f"/products/{slugs[0]}/"

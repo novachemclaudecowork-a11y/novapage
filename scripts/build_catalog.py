@@ -29,6 +29,18 @@ NAME_CORRECTIONS = {
     "TI布熱轉往印油墨": "TI布熱轉印油墨",
 }
 
+# 已停售的產品，不在新站顯示。
+# 舊網址仍會被導向產品列表而非變成 404（見 scripts/build_redirects.py）。
+DISCONTINUED = {
+    "貝星五極中性筆墨水",  # 貴公司 2026-09 確認停售
+}
+
+# 舊站選單漏列、但實際仍在銷售的產品，於新站補為產品線。
+# 格式：產品名稱 -> 應歸屬的主分類 slug
+EXTRA_PRODUCT_LINES = {
+    "矽膠油墨": "screen-inks",  # 貴公司 2026-09 確認仍在銷售
+}
+
 # 中文分類／產品對應的英文網址代稱。
 # 新增產品時在此補一筆即可；未列出者會退回使用 item-<id> 形式。
 SLUGS = {
@@ -171,17 +183,20 @@ def main() -> int:
     tree = parse_category_tree(home)
     sub_names = sub_listing_names()
 
-    # 舊站的左側選單與「產品介紹」頁都沒有列出「貝星五極中性筆墨水」(m=5)，
-    # 只能靠直接輸入網址才進得去。公司簡介明載此為自有品牌，
-    # 顯然是漏掛而非停售，故於新站補回為主分類。
-    if not any(main["legacy_m"] == "5" for main in tree):
-        tree.append({
-            "name": "貝星五極中性筆墨水",
-            "slug": "pen-inks",
-            "legacy_m": "5",
-            "legacy_pd_type": "5",
-            "children": [],
-            "note": "舊站選單漏列，新站補回",
+    # 舊站選單漏列但仍在銷售的產品，補為對應主分類底下的產品線
+    for name, main_slug in EXTRA_PRODUCT_LINES.items():
+        main = next((m for m in tree if m["slug"] == main_slug), None)
+        if main is None:
+            continue
+        slug = slugify(name, "extra")
+        if any(sub["slug"] == slug for sub in main["children"]):
+            continue
+        main["children"].append({
+            "name": name,
+            "slug": slug,
+            "legacy_m2": "",
+            "legacy_pd_type": "",
+            "note": "舊站選單漏列，新站補上",
         })
 
     main_by_m = {main["legacy_m"]: main for main in tree}
@@ -191,8 +206,12 @@ def main() -> int:
     items: list[dict] = []
     used_slugs: dict[str, int] = {}
 
+    skipped: list[str] = []
     for p in products:
         name = NAME_CORRECTIONS.get(p["name"], p["name"])
+        if name in DISCONTINUED:
+            skipped.append(name)
+            continue
         slug = slugify(name, f'item-{p["m"]}-{p["pg"]}')
         used_slugs[slug] = used_slugs.get(slug, 0) + 1
         if used_slugs[slug] > 1:
@@ -272,6 +291,8 @@ def main() -> int:
 
     print(f"分類：{len(tree)} 大類 / {sum(len(m['children']) for m in tree)} 子分類")
     print(f"產品：{len(items)} 項")
+    if skipped:
+        print(f"已停售而未收錄：{len(skipped)} 項 — {', '.join(sorted(set(skipped)))}")
     print(f"轉址對照：{len(redirects)} / {len(legacy)} 筆舊網址")
 
     print("\n各主分類產品數：")
