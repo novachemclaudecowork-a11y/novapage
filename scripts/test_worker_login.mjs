@@ -104,7 +104,17 @@ try {
   check('發出登入通行證', cookie.startsWith('novapage_admin='));
 
   const me = await fetch(`${BASE}/admin/api/me`, { headers: { Cookie: cookie } });
-  check('帶通行證可存取後台 API', me.status === 200, JSON.stringify(await me.json()));
+  const meBody = await me.json();
+  check('帶通行證可存取後台 API', me.status === 200, JSON.stringify(meBody));
+
+  // 前端要能在還沒過期前就提醒，而不是等存檔失敗才說
+  const hours = (meBody.expiresAt - Date.now()) / 3600_000;
+  check('回報到期時間，前端才能提前提醒', hours > 11.9 && hours < 12.1, `剩 ${hours.toFixed(2)} 小時`);
+
+  // me 是前端定時探詢用的。若它也續期，一個沒人在用、只是開著的分頁
+  // 就能讓登入永遠不過期，12 小時的效期等於形同虛設。
+  check('me 不會延長登入時效', me.headers.get('set-cookie') === null,
+    me.headers.get('set-cookie') ?? '（沒有 Set-Cookie，正確）');
 
   const anon = await fetch(`${BASE}/admin/api/me`);
   check('未帶通行證回 401', anon.status === 401);

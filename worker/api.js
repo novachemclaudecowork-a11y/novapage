@@ -16,8 +16,9 @@ import {
   isRateLimited,
   readSessionCookie,
   sessionCookieHeader,
+  sessionExpiry,
+  shouldRenewSession,
   verifyPassword,
-  verifySession,
 } from './auth.js';
 import { GitHubContent } from './github.js';
 
@@ -137,8 +138,9 @@ export async function authenticate(request, env) {
       // Access 未通過時繼續嘗試密碼登入，兩種方式可並存
     }
   }
-  if (await verifySession(readSessionCookie(request), env)) {
-    return { email: '後台管理者', via: 'password' };
+  const expiresAt = await sessionExpiry(readSessionCookie(request), env);
+  if (expiresAt) {
+    return { email: '後台管理者', via: 'password', expiresAt };
   }
   return null;
 }
@@ -190,8 +192,22 @@ export async function handleAdminApi(request, env) {
   const user = await authenticate(request, env);
   if (!user) return fail('尚未登入', 401);
 
+  /**
+   * 過了效期一半就換一張新的通行證，讓持續在編輯的人不會做到一半被登出。
+   * me 不在此列——它是前端定時探詢用的，若連它也續期，
+   * 一個沒人在用、只是開著的分頁就能讓登入永遠不過期。
+   */
+  const withRenewal = async (response) => {
+    if (route === 'me' || user.via !== 'password') return response;
+    if (!shouldRenewSession(user.expiresAt)) return response;
+    const renewed = new Response(response.body, response);
+    renewed.headers.append('Set-Cookie', sessionCookieHeader(await createSession(env)));
+    return renewed;
+  };
+
   if (route === 'me') {
-    return json({ email: user.email });
+    // 回傳到期時間，前端才能在還沒過期前就先提醒，而不是等存檔失敗才說
+    return json({ email: user.email, expiresAt: user.expiresAt ?? null });
   }
 
   let gh;
@@ -212,7 +228,7 @@ export async function handleAdminApi(request, env) {
         readJsonFile(gh, PATHS.news, []),
         readJsonFile(gh, PATHS.about, { title: '公司簡介', body: '' }),
       ]);
-      return json({
+      return withRenewal(json({
         products: products.value,
         categories: categories.value,
         news: news.value,
@@ -223,11 +239,11 @@ export async function handleAdminApi(request, env) {
           news: news.sha,
           about: about.sha,
         },
-      });
+      }));
     }
 
     if (route === 'upload' && request.method === 'POST') {
-      return await handleUpload(request, gh, user);
+      return withRenewal(await handleUpload(request, gh, user));
     }
 
     if (request.method === 'PUT' && PATHS[route]) {
@@ -240,7 +256,7 @@ export async function handleAdminApi(request, env) {
         sha: body.sha,
         author,
       });
-      return json({ ok: true });
+      return withRenewal(json({ ok: true }));
     }
 
     return fail('找不到這個端點', 404);

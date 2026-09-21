@@ -11,6 +11,8 @@ import {
   createSession,
   isRateLimited,
   sessionCookieHeader,
+  sessionExpiry,
+  shouldRenewSession,
   verifyPassword,
   verifySession,
 } from '../worker/auth.js';
@@ -103,6 +105,22 @@ const expiredSig = b64url(
   new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(expiredPayload))),
 );
 check('簽章正確但已過期', await verifySession(`${expiredPayload}.${expiredSig}`, env), false);
+
+check('過期的通行證取不到到期時間',
+  await sessionExpiry(`${expiredPayload}.${expiredSig}`, env), null);
+check('偽造的通行證取不到到期時間', await sessionExpiry('abc.def', env), null);
+
+console.log('\n自動續期：');
+// 持續在編輯的人不該做到一半被登出；沒人在用的分頁也不該永遠有效。
+// 判斷只看剩餘時間，是否真的續期由 worker/api.js 依路由決定。
+const HOUR = 3600 * 1000;
+const expiry = await sessionExpiry(token, env);
+check('新發的通行證有 12 小時', Math.round((expiry - Date.now()) / HOUR), 12);
+check('剛登入不續期', shouldRenewSession(expiry), false);
+check('剩 7 小時不續期', shouldRenewSession(Date.now() + 7 * HOUR), false);
+check('剩 5 小時（過了一半）就續期', shouldRenewSession(Date.now() + 5 * HOUR), true);
+check('剩 1 分鐘當然續期', shouldRenewSession(Date.now() + 60_000), true);
+check('沒有通行證時不續期', shouldRenewSession(null), false);
 
 console.log('\n嘗試次數限制：');
 const attacker = 'ip-attacker';

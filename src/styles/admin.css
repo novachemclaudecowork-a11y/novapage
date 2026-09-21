@@ -222,3 +222,19 @@ input.cat-order { width: 4.5rem; flex: none; text-align: center; padding: 7px 6p
   border-radius: 3px; cursor: pointer; font-size: .75rem; line-height: 1.6; padding: 0;
 }
 .thumb-move button:disabled { opacity: .35; cursor: default; }
+
+/* 就地重新登入：登入過期時不把人丟去登入頁，修改才不會白做 */
+.overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgb(28 32 39 / 55%);
+  display: grid; place-items: center; padding: 20px;
+}
+.relogin {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 24px; width: min(420px, 100%);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 25%);
+}
+.relogin h2 { margin: 0 0 12px; font-size: 1.125rem; }
+.relogin .note { margin-bottom: 16px; }
+.relogin-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.warn-text { color: var(--danger); }

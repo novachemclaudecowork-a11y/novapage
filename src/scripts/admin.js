@@ -64,6 +64,8 @@ function markDirty(section) {
   state.dirty.add(section);
   setStatus('尚未儲存', 'dirty');
   $('save').disabled = false;
+  // 提醒的措辭會因為「有沒有未存的修改」而不同
+  updateSessionNotice();
 }
 
 function clearDirty() {
@@ -80,11 +82,21 @@ function suggestSlug(name) {
 
 /* ---------- 與伺服器溝通 ---------- */
 
+/** 登入過期。單獨一個型別，呼叫端才能和一般錯誤分開處理。 */
+class SessionExpiredError extends Error {
+  constructor() {
+    super('登入已過期');
+    this.name = 'SessionExpiredError';
+  }
+}
+
 async function api(path, options = {}) {
   const res = await fetch(`/admin/api/${path}`, options);
   if (res.status === 401) {
-    window.location.href = '/admin/login/';
-    throw new Error('登入已失效');
+    // 這裡絕對不能直接導去登入頁：使用者可能已經改了一堆東西還沒存，
+    // 一跳轉就全沒了。交給呼叫端決定——存檔時會請使用者就地重新登入，
+    // 修改留在記憶體裡，登入完直接重試。
+    throw new SessionExpiredError();
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error ?? `伺服器錯誤（${res.status}）`);
@@ -103,28 +115,43 @@ async function load() {
   render();
 }
 
+async function writeDirtySections() {
+  for (const section of [...state.dirty]) {
+    const value =
+      section === 'products' ? state.products
+      : section === 'news' ? state.news
+      : section === 'categories' ? state.categories
+      : state.about;
+    await api(section, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value, sha: state.sha[section] }),
+    });
+    // 寫入後 sha 已改變，重新載入才能繼續編輯，否則下次儲存會被判定為衝突
+  }
+  const refreshed = await api('content');
+  state.sha = refreshed.sha ?? {};
+}
+
 async function save() {
   if (!state.dirty.size) return;
   $('save').disabled = true;
   setStatus('儲存中…', 'saving');
 
   try {
-    for (const section of [...state.dirty]) {
-      const value =
-        section === 'products' ? state.products
-        : section === 'news' ? state.news
-        : section === 'categories' ? state.categories
-        : state.about;
-      await api(section, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value, sha: state.sha[section] }),
-      });
-      // 寫入後 sha 已改變，重新載入才能繼續編輯，否則下次儲存會被判定為衝突
+    try {
+      await writeDirtySections();
+    } catch (err) {
+      if (!(err instanceof SessionExpiredError)) throw err;
+      // 登入過期。修改還在記憶體裡，請使用者就地重新登入後直接重試，
+      // 不要把人丟去登入頁——那等於把剛才做的全部丟掉。
+      setStatus('登入已過期', 'dirty');
+      await requireLogin();
+      setStatus('儲存中…', 'saving');
+      await writeDirtySections();
     }
-    const refreshed = await api('content');
-    state.sha = refreshed.sha ?? {};
     clearDirty();
+    refreshSessionInfo();
     notify('已儲存。網站會自動重新建置，約一兩分鐘後看得到變更。');
   } catch (err) {
     setStatus('儲存失敗', 'dirty');
@@ -139,6 +166,152 @@ async function upload(file, kind, name) {
   form.append('kind', kind);
   if (name) form.append('name', name);
   return api('upload', { method: 'POST', body: form });
+}
+
+/* ---------- 登入狀態 ---------- */
+
+/**
+ * 登入過期是這個後台最容易讓人白做工的地方：一次編輯可能動到幾十個欄位，
+ * 若直到按下儲存才發現過期，而且還被踢回登入頁，那些修改就全沒了。
+ *
+ * 因此分三層處理：
+ *   1. 有在動作就自動續期（後端負責，見 worker/api.js 的 withRenewal）
+ *   2. 快到期時先出面提醒，並在過期當下就告知，而不是等到存檔失敗
+ *   3. 真的過期時就地重新登入，修改留在記憶體裡，登入完直接接著存
+ */
+const session = {
+  expiresAt: null,
+  /** 快到期的提醒門檻 */
+  warnBefore: 10 * 60 * 1000,
+  timer: null,
+};
+
+/** 向伺服器問目前的登入狀態。不透過 api()，以免自己觸發重新登入的流程。 */
+async function refreshSessionInfo() {
+  try {
+    const res = await fetch('/admin/api/me');
+    if (res.status === 401) {
+      session.expiresAt = 0;
+    } else if (res.ok) {
+      session.expiresAt = (await res.json()).expiresAt ?? null;
+    }
+  } catch {
+    // 網路不通就先維持原本的判斷，下次再問
+  }
+  updateSessionNotice();
+}
+
+function updateSessionNotice() {
+  const box = $('session-notice');
+  if (!box) return;
+  if (!session.expiresAt) {
+    // 0 代表已確認過期；null 代表還不知道（例如用 Cloudflare Access 登入）
+    if (session.expiresAt === 0) {
+      box.className = 'note warn';
+      box.textContent = state.dirty.size
+        ? '登入已過期。你的修改都還在，按儲存時會請你重新輸入密碼。'
+        : '登入已過期，請重新登入。';
+      box.hidden = false;
+    } else {
+      box.hidden = true;
+    }
+    return;
+  }
+
+  const remaining = session.expiresAt - Date.now();
+  if (remaining <= 0) {
+    session.expiresAt = 0;
+    updateSessionNotice();
+    return;
+  }
+  if (remaining < session.warnBefore) {
+    box.className = 'note warn';
+    box.textContent =
+      `登入將於 ${Math.max(1, Math.round(remaining / 60000))} 分鐘後到期。` +
+      '建議先按儲存，存檔會自動延長登入時間。';
+    box.hidden = false;
+  } else {
+    box.hidden = true;
+  }
+}
+
+function watchSession() {
+  clearInterval(session.timer);
+  // 到期時間是登入時就知道的，平常在本機算就好，不必一直問伺服器
+  session.timer = setInterval(updateSessionNotice, 30_000);
+  // 分頁重新回到前景時才真的問一次：電腦可能剛從休眠醒來，
+  // 也可能在別的分頁登出或續期過
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') refreshSessionInfo();
+  });
+  refreshSessionInfo();
+}
+
+/**
+ * 就地重新登入。
+ * @returns {Promise<void>} 登入成功才 resolve；使用者取消則 reject
+ */
+function requireLogin() {
+  return new Promise((resolve, reject) => {
+    const password = el('input', {
+      id: 'relogin-password', type: 'password', autocomplete: 'current-password',
+    });
+    const error = el('p', { class: 'hint warn-text', hidden: true });
+    const submit = el('button', { class: 'btn', type: 'submit' }, '重新登入並繼續儲存');
+
+    const close = () => overlay.remove();
+
+    const form = el('form', {
+      class: 'relogin',
+      onsubmit: async (e) => {
+        e.preventDefault();
+        submit.disabled = true;
+        error.hidden = true;
+        try {
+          const res = await fetch('/admin/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: password.value }),
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error ?? `登入失敗（${res.status}）`);
+          }
+          close();
+          await refreshSessionInfo();
+          resolve();
+        } catch (err) {
+          error.textContent = err.message;
+          error.hidden = false;
+          submit.disabled = false;
+          password.select();
+        }
+      },
+    },
+      el('h2', {}, '登入已過期'),
+      el('p', { class: 'note' },
+        '你剛才的修改都還在，沒有遺失。輸入密碼後會直接接著儲存。'),
+      el('div', { class: 'field' },
+        el('label', { for: 'relogin-password' }, '密碼'),
+        password,
+      ),
+      error,
+      el('div', { class: 'relogin-actions' },
+        submit,
+        el('button', {
+          class: 'btn ghost', type: 'button',
+          onclick: () => {
+            close();
+            reject(new Error('已取消重新登入。修改仍保留在畫面上，可稍後再儲存。'));
+          },
+        }, '稍後再說'),
+      ),
+    );
+
+    const overlay = el('div', { class: 'overlay' }, form);
+    document.body.append(overlay);
+    password.focus();
+  });
 }
 
 /* ---------- 預覽 ---------- */
@@ -932,7 +1105,14 @@ window.addEventListener('beforeunload', (event) => {
   event.returnValue = '';
 });
 
-load().catch((err) => {
-  setStatus('');
-  notify(`載入失敗：${err.message}`, 'warn');
-});
+load()
+  .then(watchSession)
+  .catch((err) => {
+    setStatus('');
+    // 一進來就過期的話畫面上還沒有東西可以保護，直接請他重新登入即可
+    if (err instanceof SessionExpiredError) {
+      window.location.href = '/admin/login/';
+      return;
+    }
+    notify(`載入失敗：${err.message}`, 'warn');
+  });

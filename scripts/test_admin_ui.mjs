@@ -80,10 +80,33 @@ page.on('response', (r) => {
   }
 });
 
+// 模擬登入狀態。expired 為 true 時，除了登入端點以外一律回 401，
+// 用來驗證「編輯到一半過期」這條路徑。
+const auth = { expired: false, nearlyExpired: false, loginAttempts: [] };
+
 await context.route('**/admin/api/**', async (route) => {
   const request = route.request();
   const path = new URL(request.url()).pathname.replace('/admin/api/', '');
   const method = request.method();
+
+  if (path === 'login' && method === 'POST') {
+    const password = JSON.parse(request.postData() ?? '{}').password ?? '';
+    auth.loginAttempts.push(password);
+    if (password !== '正確密碼') {
+      return route.fulfill({ status: 401, json: { error: '密碼不正確' } });
+    }
+    auth.expired = false;
+    return route.fulfill({ json: { ok: true } });
+  }
+  if (auth.expired) {
+    return route.fulfill({ status: 401, json: { error: '尚未登入' } });
+  }
+  if (path === 'me') {
+    return route.fulfill({ json: {
+      email: '後台管理者',
+      expiresAt: Date.now() + (auth.nearlyExpired ? 5 : 12 * 60) * 60_000,
+    } });
+  }
 
   if (path === 'content' && method === 'GET') {
     return route.fulfill({ json: fixture() });
@@ -356,6 +379,54 @@ const newsPayload = saved.filter((s) => s.section === 'news').pop();
 check('送出最新訊息資料', Boolean(newsPayload), true);
 check('發布狀態有一併送出', newsPayload?.body.value[0]?.published, true);
 check('標題有一併送出', newsPayload?.body.value[0]?.title, '測試訊息');
+
+console.log('\n登入過期：');
+// 這是最容易白做工的地方：編輯了一大堆才在儲存時被告知過期，
+// 而且舊版會直接把人導去登入頁，那些修改就全沒了。
+await page.locator('button[data-tab="about"]').click();
+await page.waitForSelector('#a-body');
+await page.fill('#a-body', '編輯到一半就過期的內容');
+await page.waitForTimeout(150);
+
+auth.expired = true;
+const savedBefore = saved.length;
+await page.locator('#save').click();
+await page.waitForSelector('.relogin', { timeout: 5000 });
+check('過期時不會把人踢去登入頁', new URL(page.url()).pathname, '/admin/');
+check('就地請使用者重新登入', await page.locator('.relogin h2').textContent(), '登入已過期');
+check('明確說明修改還在',
+  (await page.locator('.relogin .note').textContent())?.includes('都還在'), true);
+check('此時還沒有送出任何儲存', saved.length, savedBefore);
+check('編輯中的內容仍在欄位裡',
+  await page.inputValue('#a-body'), '編輯到一半就過期的內容');
+
+// 先打錯一次，確認錯誤有回饋而且不會關掉視窗
+await page.fill('#relogin-password', '錯的密碼');
+await page.locator('.relogin button[type="submit"]').click();
+await page.waitForTimeout(300);
+check('密碼錯誤時留在原地', await page.locator('.relogin').count(), 1);
+check('並顯示錯誤訊息', (await page.locator('.relogin .warn-text').textContent()), '密碼不正確');
+
+await page.fill('#relogin-password', '正確密碼');
+await page.locator('.relogin button[type="submit"]').click();
+await page.waitForTimeout(800);
+check('登入成功後關閉視窗', await page.locator('.relogin').count(), 0);
+check('並自動把剛才的修改存出去', saved.length > savedBefore, true);
+const aboutPayload = saved.filter((s) => s.section === 'about').pop();
+check('存出去的正是過期前編輯的內容',
+  aboutPayload?.body.value.body, '編輯到一半就過期的內容');
+check('沒有多餘的登入嘗試', auth.loginAttempts.length, 2);
+
+console.log('\n快到期的提醒：');
+// 過期當下才說已經太晚了，剩沒多少時間就該先出面提醒
+auth.nearlyExpired = true;
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForSelector('table tbody tr');
+await page.waitForTimeout(400);
+const notice = page.locator('#session-notice');
+check('剩不到十分鐘就提醒', await notice.isVisible(), true);
+check('說明還剩多久', (await notice.textContent())?.includes('5 分鐘後到期'), true);
+check('並告知儲存就會延長', (await notice.textContent())?.includes('延長'), true);
 
 console.log(`\n資源載入失敗：${failedRequests.length === 0 ? '無' : failedRequests.join(' | ')}`);
 if (failedRequests.length) failures.push(`有資源載入失敗：${failedRequests.join(' | ')}`);

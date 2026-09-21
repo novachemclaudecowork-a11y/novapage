@@ -138,25 +138,50 @@ export async function createSession(env) {
   return `${payload}.${b64urlEncode(new Uint8Array(signature))}`;
 }
 
-/** 驗證通行證。任何不符都回傳 false，不丟出例外以免洩漏細節。 */
-export async function verifySession(token, env) {
-  if (!token || !env.SESSION_SECRET) return false;
+/**
+ * 驗證通行證並取出到期時間。
+ * 任何不符都回傳 null，不丟出例外以免洩漏細節。
+ *
+ * @returns {Promise<number|null>} 到期時間（毫秒），無效則為 null
+ */
+export async function sessionExpiry(token, env) {
+  if (!token || !env.SESSION_SECRET) return null;
   const [payload, signature] = token.split('.');
-  if (!payload || !signature) return false;
+  if (!payload || !signature) return null;
 
   const expected = await crypto.subtle.sign(
     'HMAC',
     await hmacKey(env.SESSION_SECRET),
     encoder.encode(payload),
   );
-  if (!timingSafeEqual(new Uint8Array(expected), b64urlDecode(signature))) return false;
+  if (!timingSafeEqual(new Uint8Array(expected), b64urlDecode(signature))) return null;
 
   try {
     const data = JSON.parse(new TextDecoder().decode(b64urlDecode(payload)));
-    return typeof data.exp === 'number' && data.exp > Date.now();
+    if (typeof data.exp !== 'number' || data.exp <= Date.now()) return null;
+    return data.exp;
   } catch {
-    return false;
+    return null;
   }
+}
+
+/** 驗證通行證。任何不符都回傳 false，不丟出例外以免洩漏細節。 */
+export async function verifySession(token, env) {
+  return (await sessionExpiry(token, env)) !== null;
+}
+
+/**
+ * 通行證是否該換新的。
+ *
+ * 過了效期一半就重發，讓持續在編輯的人不會做到一半被登出。
+ * 只在「真的有動作」的請求上呼叫（存檔、讀資料、上傳），
+ * 不包含前端定時探詢的 me——否則一個沒人在用、只是開著的分頁
+ * 就能讓登入永遠不過期。
+ */
+export function shouldRenewSession(expiresAt) {
+  if (!expiresAt) return false;
+  const remaining = expiresAt - Date.now();
+  return remaining < (SESSION_HOURS * 3600 * 1000) / 2;
 }
 
 export function readSessionCookie(request) {
