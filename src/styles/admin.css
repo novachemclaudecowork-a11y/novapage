@@ -238,3 +238,16 @@ input.cat-order { width: 4.5rem; flex: none; text-align: center; padding: 7px 6p
 .relogin .note { margin-bottom: 16px; }
 .relogin-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
 .warn-text { color: var(--danger); }
+
+/* 內文格式二選一：HTML 或 Markdown */
+.format-switch { display: flex; align-items: center; gap: 0; margin-bottom: 8px; flex-wrap: wrap; }
+.format-switch .seg {
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  padding: 5px 14px; font: inherit; font-size: .8125rem; cursor: pointer; line-height: 1.5;
+}
+.format-switch .seg:first-child { border-start-start-radius: var(--radius); border-end-start-radius: var(--radius); }
+.format-switch .seg + .seg { border-inline-start: 0; border-start-end-radius: var(--radius); border-end-end-radius: var(--radius); }
+.format-switch .seg.on {
+  background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600;
+}
+.format-switch .hint { margin: 0 0 0 12px; }

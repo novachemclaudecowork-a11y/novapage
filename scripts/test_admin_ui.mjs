@@ -180,38 +180,35 @@ await page.fill('#f-name', 'CW水性油墨（改）');
 await page.fill('#f-spec', '<p>測試說明</p>');
 await page.waitForTimeout(400);
 
-console.log('\n插入鈕：');
-// 使用者不該需要自己打標籤
-await page.fill('#f-spec', '這是一段話');
-await page.locator('#f-spec').evaluate((t) => t.setSelectionRange(0, 5));
-await page.locator('.html-toolbar .tool', { hasText: '粗體' }).first().click();
-check('選取文字後按粗體會包起來',
-  await page.inputValue('#f-spec'), '<strong>這是一段話</strong>');
+console.log('\n內文格式（HTML／Markdown 二選一）：');
+const seg = page.locator('.edit-with-preview .format-switch .seg');
+check('提供兩個選項', await seg.allTextContents(), ['HTML', 'Markdown']);
+// 舊站匯入的 39 筆產品說明都是 HTML，沒記格式的資料若當成 Markdown，
+// 那些 <p>、<table> 會整個走樣，所以預設必須是 HTML
+check('沒記錄格式的舊資料預設為 HTML', await seg.first().getAttribute('aria-pressed'), 'true');
 
-await page.fill('#f-spec', '甲\n乙');
-await page.locator('#f-spec').evaluate((t) => t.setSelectionRange(0, 3));
-await page.locator('.html-toolbar .tool', { hasText: '項目清單' }).first().click();
-check('選取多行後按項目清單，每行各成一項',
-  await page.inputValue('#f-spec'), '<ul>\n  <li>甲</li>\n  <li>乙</li>\n</ul>');
+await page.fill('#f-spec', '## 小標題\n\n- 甲\n- 乙\n\n**粗體**');
+await page.waitForTimeout(500);
+let doc = await page.locator('.preview-frame').getAttribute('srcdoc');
+check('HTML 模式下 Markdown 語法不生效', doc?.includes('## 小標題'), true);
 
-await page.fill('#f-spec', '');
-await page.locator('.html-toolbar .tool', { hasText: '小標題' }).first().click();
-// 產品說明在產品頁上是 h2 底下的內文，所以小標題從 h3 開始
-check('產品說明的小標題是 h3', await page.inputValue('#f-spec'), '<h3></h3>');
-check('游標停在標籤中間，可以直接打字',
-  await page.locator('#f-spec').evaluate((t) => t.selectionStart), 4);
+await seg.last().click();
+await page.waitForTimeout(500);
+check('切換後換 Markdown 反白', await seg.last().getAttribute('aria-pressed'), 'true');
+check('HTML 不再反白', await seg.first().getAttribute('aria-pressed'), 'false');
+doc = await page.locator('.preview-frame').getAttribute('srcdoc');
+check('預覽改用 Markdown 呈現',
+  doc?.includes('<h2>小標題</h2>') && doc?.includes('<li>甲</li>')
+    && doc?.includes('<strong>粗體</strong>'), true);
+check('原文沒有被改寫', await page.inputValue('#f-spec'), '## 小標題\n\n- 甲\n- 乙\n\n**粗體**');
 
-await page.fill('#f-spec', '');
-await page.locator('.html-toolbar .tool', { hasText: '表格' }).first().click();
-check('表格插入可用的骨架',
-  (await page.inputValue('#f-spec')).startsWith('<table>'), true);
+// Markdown 允許直接混用 HTML，所以 HTML → Markdown 不會讓舊內容壞掉
+await page.fill('#f-spec', '<p>既有的 HTML</p>');
+await page.waitForTimeout(500);
+check('Markdown 模式下 HTML 標籤仍有效',
+  (await page.locator('.preview-frame').getAttribute('srcdoc'))?.includes('<p>既有的 HTML</p>'), true);
 
-await page.fill('#f-spec', '');
-await page.locator('.html-toolbar .tool', { hasText: '段落' }).first().click();
-await page.waitForTimeout(400);
-check('按了插入鈕之後預覽也跟著更新',
-  (await page.locator('.preview-frame').getAttribute('srcdoc'))?.includes('<p></p>'), true);
-check('按了插入鈕會標記為尚未儲存', await page.locator('#save').isDisabled(), false);
+check('切換格式會標記為尚未儲存', await page.locator('#save').isDisabled(), false);
 
 await page.fill('#f-spec', '<p>測試說明</p>');
 await page.waitForTimeout(300);
@@ -273,6 +270,7 @@ check('編號已更新', edited?.code, 'CW-08');
 check('分類已更新', edited?.category, 'thinners-cleaners');
 check('下架狀態已保存', edited?.published, false);
 check('照片為新上傳的', edited?.images, ['/images/products/uploaded-test.png']);
+check('內文格式一併存出去', edited?.spec_format, 'markdown');
 check('轉址所需的 legacy 欄位未遺失', edited?.legacy, { m: '1', pg: 6 });
 
 console.log('\n新增產品：');
@@ -353,10 +351,18 @@ check('有預覽框', await preview.count(), 1);
 check('預覽是完全沙箱化的', await preview.getAttribute('sandbox'), '');
 check('未填內容時有提示', (await preview.getAttribute('srcdoc'))?.includes('（尚未填內容）'), true);
 
-// 訊息頁的 h1 是標題欄位，所以內文的小標題從 h2 開始
-await page.locator('#n-body-0').fill('');
-await page.locator('.html-toolbar .tool', { hasText: '小標題' }).first().click();
-check('最新訊息的小標題是 h2', await page.inputValue('#n-body-0'), '<h2></h2>');
+// 最新訊息也有同一組格式切換
+const newsSeg = page.locator('.panel .format-switch .seg');
+check('最新訊息也能選格式', await newsSeg.allTextContents(), ['HTML', 'Markdown']);
+await newsSeg.last().click();
+await page.locator('#n-body-0').fill('- 第一項\n- 第二項');
+await page.waitForTimeout(500);
+check('訊息預覽也跟著用 Markdown',
+  (await page.locator('.preview-frame').getAttribute('srcdoc'))?.includes('<li>第一項</li>'), true);
+await newsSeg.first().click();
+await page.waitForTimeout(500);
+check('切回 HTML 後 Markdown 語法不再生效',
+  (await page.locator('.preview-frame').getAttribute('srcdoc'))?.includes('<li>第一項</li>'), false);
 
 await page.locator('#n-title-0').fill('測試訊息');
 await page.locator('#n-body-0').fill('<p>第一段</p><h2>小標題</h2>');
@@ -379,6 +385,7 @@ const newsPayload = saved.filter((s) => s.section === 'news').pop();
 check('送出最新訊息資料', Boolean(newsPayload), true);
 check('發布狀態有一併送出', newsPayload?.body.value[0]?.published, true);
 check('標題有一併送出', newsPayload?.body.value[0]?.title, '測試訊息');
+check('內文格式有一併送出', newsPayload?.body.value[0]?.format, 'html');
 
 console.log('\n登入過期：');
 // 這是最容易白做工的地方：編輯了一大堆才在儲存時被告知過期，

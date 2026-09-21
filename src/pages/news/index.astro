@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import { news, plainText } from '../../data/site';
+import { news, newsBodyHtml, plainText } from '../../data/site';
 ---
 
 <BaseLayout title="最新訊息" description="貝星貿易最新消息與產品公告。">
@@ -14,7 +14,7 @@ import { news, plainText } from '../../data/site';
         <li>
           <time datetime={post.date}>{post.date}</time>
           <a href={`/news/${post.slug}/`}>{post.title}</a>
-          <p>{plainText(post.body).slice(0, 100)}</p>
+          <p>{plainText(newsBodyHtml(post)).slice(0, 100)}</p>
         </li>
       ))}
     </ul>

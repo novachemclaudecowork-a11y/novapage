@@ -70,6 +70,14 @@ function safeName(name) {
     .slice(0, 60);
 }
 
+const BODY_FORMATS = new Set(['html', 'markdown']);
+
+/** 內文格式只有兩種。沒填代表舊資料，當成 html。 */
+function validateFormat(value, where) {
+  if (value === undefined || value === null) return;
+  if (!BODY_FORMATS.has(value)) throw new Error(`${where}的內文格式不正確：${value}`);
+}
+
 function validateProducts(products) {
   if (!Array.isArray(products)) throw new Error('產品資料必須是陣列');
   const seen = new Set();
@@ -82,6 +90,7 @@ function validateProducts(products) {
     seen.add(p.slug);
     if (!p.name || typeof p.name !== 'string') throw new Error(`產品「${p.slug}」缺少名稱`);
     if (typeof p.published !== 'boolean') throw new Error(`產品「${p.slug}」缺少上下架狀態`);
+    validateFormat(p.spec_format, `產品「${p.slug}」`);
     // legacy 欄位是舊網址轉址的依據，不能被後台弄丟
     if (p.legacy && (typeof p.legacy.m !== 'string' || typeof p.legacy.pg !== 'number')) {
       throw new Error(`產品「${p.slug}」的轉址對照欄位格式不正確`);
@@ -249,6 +258,10 @@ export async function handleAdminApi(request, env) {
     if (request.method === 'PUT' && PATHS[route]) {
       const body = await request.json();
       if (route === 'products') validateProducts(body.value);
+      if (route === 'news') {
+        if (!Array.isArray(body.value)) throw new Error('訊息資料必須是陣列');
+        for (const post of body.value) validateFormat(post?.format, `訊息「${post?.title ?? ''}」`);
+      }
 
       // sha 用來偵測衝突：若期間有人改過同一個檔案，GitHub 會拒絕寫入，
       // 而不是把對方的修改悄悄蓋掉

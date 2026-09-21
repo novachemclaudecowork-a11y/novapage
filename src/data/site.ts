@@ -9,6 +9,7 @@ import categoriesData from '../../content/categories.json';
 import productsData from '../../content/products.json';
 import aboutData from '../../content/about.json';
 import newsData from '../../content/news.json';
+import { renderBody, type BodyFormat } from '../lib/richtext.js';
 
 export interface Subcategory {
   slug: string;
@@ -46,7 +47,10 @@ export interface Product {
   order: number;
   images: string[];
   documents: ProductDocument[];
+  /** 使用者寫的原始內容。spec_format 為 markdown 時，這裡放的就是 Markdown。 */
   spec_html: string;
+  /** 沒這個欄位的舊資料一律當成 html */
+  spec_format?: BodyFormat;
   legacy: { m: string; pg: number };
 }
 
@@ -55,8 +59,10 @@ export interface NewsPost {
   title: string;
   /** YYYY-MM-DD */
   date: string;
-  /** 可含 HTML */
+  /** 使用者寫的原始內容。format 為 markdown 時，這裡放的就是 Markdown。 */
   body: string;
+  /** 沒這個欄位的舊資料一律當成 html */
+  format?: BodyFormat;
   published: boolean;
 }
 
@@ -127,7 +133,17 @@ export const mainNav = [
   { label: '聯絡我們', href: '/contact/' },
 ] as const;
 
-/** 由 spec_html 取出純文字，供 meta description 與站內搜尋使用 */
+/** 產品說明轉成可直接輸出的 HTML */
+export function productBodyHtml(product: Product): string {
+  return renderBody(product.spec_html, product.spec_format);
+}
+
+/** 訊息內文轉成可直接輸出的 HTML */
+export function newsBodyHtml(post: NewsPost): string {
+  return renderBody(post.body, post.format);
+}
+
+/** 由內文取出純文字，供 meta description 與站內搜尋使用 */
 export function plainText(html: string): string {
   return html
     .replace(/<[^>]+>/g, ' ')

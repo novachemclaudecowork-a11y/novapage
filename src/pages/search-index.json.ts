@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { categories, plainText, products } from '../data/site';
+import { categories, plainText, productBodyHtml, products } from '../data/site';
 
 /*
  * 站內搜尋用的索引，於建置時產生為靜態檔案。
@@ -27,7 +27,7 @@ export const GET: APIRoute = () => {
     g: [categoryName.get(product.category), subName.get(product.subcategory ?? '')]
       .filter(Boolean)
       .join(' '),
-    t: plainText(product.spec_html).slice(0, SPEC_LIMIT),
+    t: plainText(productBodyHtml(product)).slice(0, SPEC_LIMIT),
     i: product.images[0] ?? '',
   }));
 

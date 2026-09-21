@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "redirects": "node scripts/build-redirects.mjs",
-    "test": "node scripts/check_node.mjs && node scripts/check-assets.mjs && node scripts/check-links.mjs && node scripts/test_access.mjs && node scripts/test_auth.mjs && node scripts/test_search.mjs && node scripts/test_news.mjs && node scripts/test_redirects.mjs",
+    "test": "node scripts/check_node.mjs && node scripts/check-assets.mjs && node scripts/check-links.mjs && node scripts/test_access.mjs && node scripts/test_auth.mjs && node scripts/test_search.mjs && node scripts/test_news.mjs && node scripts/test_markdown.mjs && node scripts/test_redirects.mjs",
     "check:node": "node scripts/check_node.mjs",
     "check": "astro check",
     "admin:password": "node scripts/make-admin-password.mjs",
@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^7.3.3"
+    "astro": "^7.3.3",
+    "marked": "^18.0.13"
   },
   "engines": {
     "node": ">=22.12.0"

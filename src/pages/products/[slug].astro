@@ -5,6 +5,7 @@ import CategoryNav from '../../components/CategoryNav.astro';
 import {
   categoryOf,
   plainText,
+  productBodyHtml,
   products,
   productsOf,
   subcategoryOf,
@@ -30,7 +31,8 @@ const crumbs = [{ label: '產品介紹', href: '/products/' }];
 if (category) crumbs.push({ label: category.name, href: `/category/${category.slug}/` });
 crumbs.push({ label: product.name });
 
-const summary = plainText(product.spec_html).slice(0, 150) || `${product.name}｜貝星貿易`;
+const specHtml = productBodyHtml(product);
+const summary = plainText(specHtml).slice(0, 150) || `${product.name}｜貝星貿易`;
 ---
 
 <BaseLayout title={product.name} description={summary} sidebar>
@@ -66,10 +68,10 @@ const summary = plainText(product.spec_html).slice(0, 150) || `${product.name}�
         data-code={product.code}
       >加入詢價清單</button>
 
-      {product.spec_html ? (
+      {specHtml ? (
         <div class="spec">
           <h2 style="margin-top: 1.5rem;">產品說明</h2>
-          <Fragment set:html={product.spec_html} />
+          <Fragment set:html={specHtml} />
         </div>
       ) : (
         <div class="spec">

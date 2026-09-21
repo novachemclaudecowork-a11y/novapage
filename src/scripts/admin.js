@@ -13,6 +13,8 @@
  * 同一份資料，GitHub 會拒絕寫入，後台會提示重新整理而不是悄悄蓋掉對方的修改。
  */
 
+import { renderBody } from '../lib/richtext.js';
+
 const state = {
   products: [],
   categories: [],
@@ -367,83 +369,76 @@ function makePreview(buildDoc, modifier = '') {
   return { frame, refresh };
 }
 
-/* ---------- HTML 插入鈕 ---------- */
+/* ---------- 內文格式 ---------- */
 
 /**
- * 把文字寫進 textarea 目前的選取範圍。
+ * 內文可以用 HTML 或 Markdown 寫，每一則各自記著自己用的是哪一種
+ * （欄位：訊息是 format，產品說明是 spec_format）。
  *
- * 用 execCommand 而不是直接改 value，是為了保留瀏覽器的復原紀錄——
- * 按錯了可以 Ctrl+Z 退回去。某些瀏覽器不支援時再退回 setRangeText。
- */
-function replaceSelection(textarea, text, caretOffsetFromEnd = 0) {
-  textarea.focus();
-  const start = textarea.selectionStart;
-  if (!document.execCommand?.('insertText', false, text)) {
-    textarea.setRangeText(text, start, textarea.selectionEnd, 'end');
-  }
-  const caret = start + text.length - caretOffsetFromEnd;
-  textarea.setSelectionRange(caret, caret);
-  textarea.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-/**
- * 產品說明與最新訊息都是 HTML，但使用者不該需要自己打標籤。
- * 這排按鈕會把選取的文字包起來；沒選取時插入空標籤並把游標放進去。
+ * 沒有記錄的舊資料一律當成 HTML——舊站匯入的 39 筆產品說明都是 HTML，
+ * 若預設成 Markdown，那些 <p>、<table> 會整個走樣。
  *
- * @param {HTMLTextAreaElement} textarea
- * @param {string} headingTag 小標題要用哪一級（產品頁內文用 h3，訊息頁用 h2）
+ * @param {object} owner 要改的物件（一則訊息或一項產品）
+ * @param {string} key   存放格式的欄位名稱
+ * @param {() => void} onChange 切換後要做的事（通常是重畫預覽）
  */
-function htmlToolbar(textarea, headingTag = 'h3') {
-  const wrap = (tag) => () => {
-    const selected = textarea.value.slice(textarea.selectionStart, textarea.selectionEnd);
-    replaceSelection(textarea, `<${tag}>${selected}</${tag}>`,
-      selected ? 0 : tag.length + 3);
+function formatSwitch(owner, key, onChange) {
+  const current = () => (owner[key] === 'markdown' ? 'markdown' : 'html');
+  const note = el('span', { class: 'hint' });
+
+  const describe = () => {
+    note.textContent = current() === 'markdown'
+      ? '用 ## 標題、**粗體**、- 項目。也可以直接混用 HTML 標籤。'
+      : '直接寫網頁標籤，例如 <p>文字</p>、<strong>粗體</strong>。';
   };
+  describe();
 
-  const list = () => {
-    const selected = textarea.value.slice(textarea.selectionStart, textarea.selectionEnd);
-    const lines = selected.split('\n').map((l) => l.trim()).filter(Boolean);
-    const items = lines.length ? lines : [''];
-    const html = `<ul>\n${items.map((l) => `  <li>${l}</li>`).join('\n')}\n</ul>`;
-    replaceSelection(textarea, html, lines.length ? 0 : 11);
-  };
+  const option = (value, label) =>
+    el('button', {
+      type: 'button',
+      class: `seg${current() === value ? ' on' : ''}`,
+      'aria-pressed': current() === value ? 'true' : 'false',
+      onclick: () => {
+        if (current() === value) return;
+        owner[key] = value;
+        // 兩種格式的內容不互相轉換，原文原封不動留著。
+        // Markdown 允許直接寫 HTML，所以 HTML → Markdown 不會壞；
+        // 反過來 Markdown 語法就不再生效，右邊的預覽會立刻顯示差別。
+        markDirty(key === 'format' ? 'news' : 'products');
+        for (const btn of group.querySelectorAll('.seg')) {
+          const on = btn.dataset.value === value;
+          btn.classList.toggle('on', on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
+        describe();
+        onChange();
+      },
+      dataset: { value },
+    }, label);
 
-  const table = () => {
-    replaceSelection(textarea,
-      '<table>\n  <tr><td>項目</td><td>規格</td></tr>\n' +
-      '  <tr><td></td><td></td></tr>\n</table>', 0);
-  };
-
-  const buttons = [
-    ['段落', '把選取的文字變成一段', wrap('p')],
-    ['小標題', '把選取的文字變成小標題', wrap(headingTag)],
-    ['粗體', '把選取的文字變成粗體', wrap('strong')],
-    ['項目清單', '把選取的每一行變成一個項目', list],
-    ['表格', '插入一個兩欄的表格', table],
-    ['換行', '在游標處換行（同一段內）', () => replaceSelection(textarea, '<br>\n')],
-  ];
-
-  return el('div', { class: 'html-toolbar' },
-    ...buttons.map(([label, title, onclick]) =>
-      el('button', { type: 'button', class: 'tool', title, onclick }, label),
-    ),
-    el('span', { class: 'hint' }, '先選取文字再按，或直接按了再打字。'),
+  const group = el('div', { class: 'format-switch', role: 'group', 'aria-label': '內文格式' },
+    option('html', 'HTML'),
+    option('markdown', 'Markdown'),
+    note,
   );
+  return group;
 }
 
 /** 最新訊息在網站上的樣子 */
 function newsPreviewDoc(post) {
+  const body = renderBody(post.body, post.format);
   return previewShell(`<article class="news-post">
 <h1>${escapeHtml(post.title) || '<span style="color:#9aa3b0">（尚未填標題）</span>'}</h1>
 <time datetime="${escapeHtml(post.date)}">${escapeHtml(post.date)}</time>
-<div>${post.body || placeholder('（尚未填內容）')}</div>
+<div>${body || placeholder('（尚未填內容）')}</div>
 </article>`);
 }
 
 /** 產品說明在產品頁上的樣子。標題與說明的排版比照 src/pages/products/[slug].astro */
 function productPreviewDoc(product) {
-  const spec = product.spec_html
-    ? `<div class="spec"><h2 style="margin-top:1.5rem">產品說明</h2>${product.spec_html}</div>`
+  const specHtml = renderBody(product.spec_html, product.spec_format);
+  const spec = specHtml
+    ? `<div class="spec"><h2 style="margin-top:1.5rem">產品說明</h2>${specHtml}</div>`
     : '<div class="spec"><p class="notice warn">此產品尚無說明資料，歡迎來電洽詢。</p></div>';
   // 產品頁只會用第一張照片；沒有照片時是一塊「尚無產品照」的灰底
   const photo = product.images[0]
@@ -746,9 +741,8 @@ function renderProductEditor(product) {
     el('div', { class: 'edit-with-preview' },
       el('div', { class: 'field' },
         el('label', { for: 'f-spec' }, '產品說明'),
-        htmlToolbar(specInput, 'h3'),
+        formatSwitch(product, 'spec_format', specPreview.refresh),
         specInput,
-        el('p', { class: 'hint' }, '也可以直接打 HTML。'),
       ),
       el('div', { class: 'field' },
         el('label', {}, '預覽（產品頁上的樣子）'),
@@ -1014,19 +1008,14 @@ function renderNewsTab(root) {
           ),
         ),
         el('div', { class: 'edit-with-preview' },
-          (() => {
-            const bodyInput = el('textarea', {
+          el('div', { class: 'field' },
+            el('label', { for: `n-body-${index}` }, '內容'),
+            formatSwitch(post, 'format', refresh),
+            el('textarea', {
               id: `n-body-${index}`,
               oninput: (e) => { post.body = e.target.value; markDirty('news'); },
-            }, post.body ?? '');
-            // 訊息頁的 h1 是標題欄位，所以內文的小標題從 h2 開始
-            return el('div', { class: 'field' },
-              el('label', { for: `n-body-${index}` }, '內容'),
-              htmlToolbar(bodyInput, 'h2'),
-              bodyInput,
-              el('p', { class: 'hint' }, '也可以直接打 HTML。'),
-            );
-          })(),
+            }, post.body ?? ''),
+          ),
           el('div', { class: 'field' },
             el('label', {}, '預覽（網站上的樣子）'),
             frame,
