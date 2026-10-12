@@ -115,6 +115,27 @@ h3 { font-size: 1.0625rem; margin: 1.5rem 0 .5rem; }
 .cat-nav ul ul a { padding-inline-start: 32px; font-size: .875rem; color: var(--text-muted); }
 .cat-nav .empty { opacity: .55; }
 
+/* 大分類：圖示＋名稱＋產品數。四個大分類一眼分得出來，不必逐字讀 */
+.cat-nav .cat-main { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.cat-nav .cat-label { flex: 1; min-width: 0; }
+.cat-icon { width: 18px; height: 18px; flex: none; color: var(--brand); }
+.cat-nav .cat-main[aria-current] .cat-icon { color: var(--brand-dark); }
+.cat-count {
+  flex: none; font-size: .75rem; font-weight: 600; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 0 7px; line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+.cat-nav .cat-main[aria-current] .cat-count {
+  background: var(--brand); border-color: var(--brand); color: #fff;
+}
+
+/* 側欄跟著捲動，看產品時分類仍在手邊。
+   只在放得下的高螢幕上釘住，否則長清單的末端會被切掉而捲不到。 */
+@media (min-width: 900px) {
+  .layout > .cat-nav { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; }
+}
+
 /* ---------- 產品格線 ---------- */
 .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 .card {
