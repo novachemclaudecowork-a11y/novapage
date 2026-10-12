@@ -162,6 +162,23 @@ async function save() {
   }
 }
 
+/**
+ * 這次編輯中剛上傳的檔案：網站上的路徑 → 瀏覽器裡這份原檔的本機網址。
+ *
+ * 上傳只是把檔案送進 GitHub，要等網站重新建置（約一兩分鐘）才會真的
+ * 出現在網站上。在那之前照著路徑連過去一定是 404——縮圖會破圖，
+ * 「檢視」會說找不到頁面，看起來像上傳失敗，其實只是還沒輪到它上線。
+ *
+ * 所以剛上傳的檔案一律顯示瀏覽器手上的那份原檔，使用者立刻看得到自己傳了什麼。
+ */
+const justUploaded = new Map();
+
+/** 要顯示給使用者看的網址：剛上傳的用本機那份，其餘用網站上的路徑 */
+const displaySrc = (path) => justUploaded.get(path) ?? path;
+
+/** 這個檔案是不是還沒上線 */
+const isPending = (path) => justUploaded.has(path);
+
 async function upload(file, kind, name) {
   const form = new FormData();
   form.append('file', file);
@@ -613,8 +630,10 @@ function renderProductEditor(product) {
       ...product.images.map((src, index) =>
         el('div', { class: 'thumb' },
           // 另開分頁看原圖，縮圖看不清楚的時候用得上
-          el('a', { href: src, target: '_blank', rel: 'noopener', title: '另開分頁看原圖' },
-            el('img', { src, alt: '' }),
+          el('a', {
+            href: displaySrc(src), target: '_blank', rel: 'noopener', title: '另開分頁看原圖',
+          },
+            el('img', { src: displaySrc(src), alt: '' }),
           ),
           el('button', {
             class: 'thumb-remove',
@@ -628,6 +647,7 @@ function renderProductEditor(product) {
           }, '×'),
           // 產品頁只會用第一張當主圖，所以順序是有意義的，要讓使用者看得出來
           index === 0 ? el('span', { class: 'thumb-main' }, '主圖') : null,
+          isPending(src) ? el('span', { class: 'pending-badge' }, '待上線') : null,
           el('span', { class: 'thumb-name', title: src }, src.split('/').pop()),
           el('div', { class: 'thumb-move' },
             el('button', {
@@ -657,11 +677,13 @@ function renderProductEditor(product) {
         try {
           notify(`上傳「${file.name}」中…`);
           const result = await upload(file, 'image', product.slug);
+          justUploaded.set(result.path, URL.createObjectURL(file));
           product.images.push(result.path);
           markDirty('products');
           renderThumbs();
           specPreview.refresh();
-          notify(`已加入「${file.name}」，記得按右上角儲存。`);
+          notify(`已加入「${file.name}」，記得按右上角儲存。` +
+            '檔案要等網站重新建置（約一兩分鐘）才會出現在網站上。');
         } catch (err) {
           notify(`上傳失敗：${err.message}`, 'warn');
         }
@@ -686,7 +708,8 @@ function renderProductEditor(product) {
             'aria-label': '文件名稱',
             oninput: (e) => { doc.label = e.target.value; markDirty('products'); },
           }),
-          el('a', { href: doc.file, target: '_blank', rel: 'noopener' }, '檢視'),
+          el('a', { href: displaySrc(doc.file), target: '_blank', rel: 'noopener' }, '檢視'),
+          isPending(doc.file) ? el('span', { class: 'pending-badge' }, '待上線') : null,
           el('button', {
             class: 'btn danger small', type: 'button',
             onclick: () => {
@@ -710,6 +733,7 @@ function renderProductEditor(product) {
         try {
           notify(`上傳「${file.name}」中…`);
           const result = await upload(file, 'document', `${product.slug}-${file.name}`);
+          justUploaded.set(result.path, URL.createObjectURL(file));
           product.documents = product.documents ?? [];
           product.documents.push({
             label: file.name.replace(/\.pdf$/i, ''),
@@ -717,7 +741,8 @@ function renderProductEditor(product) {
           });
           markDirty('products');
           renderDocs();
-          notify(`已加入「${file.name}」，記得按右上角儲存。`);
+          notify(`已加入「${file.name}」，記得按右上角儲存。` +
+            '檔案要等網站重新建置（約一兩分鐘）才會出現在網站上。');
         } catch (err) {
           notify(`上傳失敗：${err.message}`, 'warn');
         }

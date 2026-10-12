@@ -251,3 +251,10 @@ input.cat-order { width: 4.5rem; flex: none; text-align: center; padding: 7px 6p
   background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600;
 }
 .format-switch .hint { margin: 0 0 0 12px; }
+
+/* 剛上傳、網站還沒重新建置完的檔案 */
+.pending-badge {
+  background: #b26a00; color: #fff; font-size: .6875rem; font-weight: 600;
+  border-radius: 3px; padding: 1px 6px; white-space: nowrap;
+}
+.thumb .pending-badge { position: absolute; top: 26px; inset-inline-start: 4px; }

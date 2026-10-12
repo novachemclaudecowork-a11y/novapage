@@ -258,6 +258,11 @@ await page.setInputFiles('#f-image', {
 await page.waitForTimeout(400);
 check('上傳後加回一張', await page.locator('.thumb').count(), 1);
 check('確實呼叫了上傳端點', uploads.length > 0, true);
+check('新照片標示為待上線',
+  await page.locator('.thumb .pending-badge').textContent(), '待上線');
+// 同理：剛上傳的照片在網站上還不存在，縮圖直接指過去會破圖
+check('縮圖顯示本機的原檔',
+  (await page.locator('.thumb img').getAttribute('src'))?.startsWith('blob:'), true);
 check('預覽跟著放上主圖',
   (await page.locator('.preview-frame').getAttribute('srcdoc'))
     ?.includes('/images/products/uploaded-test.png'), true);
@@ -281,6 +286,11 @@ await page.waitForTimeout(400);
 check('上傳後加回一份', await page.locator('.docs li').count(), 1);
 check('名稱預設取檔名（去掉副檔名）',
   await page.locator('.docs li .label').inputValue(), 'sds');
+// 剛上傳的檔案要等網站重新建置才會上線，在那之前直接連過去一定是 404。
+// 「檢視」改指向瀏覽器手上的那份原檔，否則看起來像上傳失敗。
+check('標示為待上線', await page.locator('.docs .pending-badge').textContent(), '待上線');
+check('檢視指向本機的原檔而非尚未上線的網址',
+  (await page.locator('.docs li a').getAttribute('href'))?.startsWith('blob:'), true);
 
 console.log('\n儲存：');
 await page.locator('#save').click();
