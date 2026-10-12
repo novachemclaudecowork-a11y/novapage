@@ -54,6 +54,26 @@ try {
     await page.locator('.cat-count').allTextContents(),
     published.map((c) => String(countOf(c.slug))));
 
+  console.log('\n只展開目前所在的大分類：');
+  const activeChildren = published.find((c) => c.slug === 'platemaking')
+    ?.children.filter((x) => x.published !== false).length;
+  check('只有一個大分類展開', await page.locator('.cat-nav ul ul').count(), 1);
+  check('展開的是目前所在的分類',
+    await page.locator('.cat-nav > ul > li:has(ul) .cat-main').getAttribute('href'),
+    '/category/platemaking/');
+  check('列出該分類底下所有產品線',
+    await page.locator('.cat-nav ul ul li').count(), activeChildren);
+  // 全部攤開是三十幾列，得先捲過整串網印油墨才看得到自己在哪一區
+  check('總列數遠少於全部攤開',
+    await page.locator('.cat-nav li').count(), published.length + activeChildren);
+
+  console.log('\n沒有指定分類時（產品總覽頁）：');
+  const overview = await context.newPage();
+  await overview.goto(`${server.base}/products/`, { waitUntil: 'networkidle' });
+  check('全部收起來', await overview.locator('.cat-nav ul ul').count(), 0);
+  check('四個大分類仍在', await overview.locator('.cat-main').count(), published.length);
+  await overview.close();
+
   console.log('\n目前所在位置：');
   check('目前的分類有標記',
     await page.locator('.cat-main[aria-current="true"]').count(), 1);

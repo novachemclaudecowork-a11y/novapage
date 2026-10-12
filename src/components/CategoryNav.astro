@@ -23,7 +23,12 @@ const { activeCategory, activeSubcategory } = Astro.props;
           <span class="cat-label">{cat.name}</span>
           <span class="cat-count">{productsOf(cat.slug).length}</span>
         </a>
-        {cat.children.length > 0 && (
+        {/*
+          只展開目前所在的大分類。全部攤開是 33 條產品線、約 40 列，
+          在製版資材頁面上得先捲過整串網印油墨才看得到自己在哪一區。
+          收起來的分類點一下就進到它的頁面，那時才展開。
+        */}
+        {cat.slug === activeCategory && cat.children.length > 0 && (
           <ul>
             {cat.children.map((sub) => (
               <li>

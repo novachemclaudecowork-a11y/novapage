@@ -1,9 +1,13 @@
 /**
- * 檢查網站內部連結是否都指向存在的頁面。
+ * 檢查網站內部連結是否都指向存在的頁面，以及每一頁都走得到。
  *
  * 會加這支檢查，是因為調整產品線選單時可能不小心連到已不存在的頁面
  * （例如只有一項產品的產品線不再產生列表頁），而這種錯誤不會讓建置失敗，
  * 只有使用者點到才會發現是 404。
+ *
+ * 另一半是反過來的問題：頁面還在、但沒有任何地方連得過去。
+ * 側欄改成只展開目前所在的大分類時，產品線的列表頁差一點就變成這樣——
+ * 這種錯連 404 都不會有，只是從此沒人找得到。
  *
  * 用法：npm run build && node scripts/check-links.mjs
  */
@@ -75,3 +79,42 @@ if (broken.size) {
   process.exit(1);
 }
 console.log('✅ 所有站內連結都指向存在的頁面');
+
+/* ---------- 有沒有頁面是從首頁走不到的 ---------- */
+
+// 後台不公開；搜尋頁靠頁首的表單送出；404 由伺服器在找不到頁面時送出
+const UNLINKED_BY_DESIGN = ['/admin/', '/admin/login/', '/search/', '/404.html'];
+
+const pageUrl = (file) => {
+  const rel = file.slice(DIST.length).replaceAll('\\', '/');
+  return rel.endsWith('/index.html') ? rel.slice(0, -'index.html'.length) : rel;
+};
+
+const reachable = new Set();
+const queue = ['/'];
+const byUrl = new Map(files.map((f) => [pageUrl(f), f]));
+
+while (queue.length) {
+  const url = queue.pop();
+  if (reachable.has(url)) continue;
+  reachable.add(url);
+  const file = byUrl.get(url);
+  if (!file) continue;
+  for (const [, target] of readFileSync(file, 'utf8').matchAll(/href="([^"]+)"/g)) {
+    const clean = target.split('#')[0].split('?')[0];
+    if (!clean.startsWith('/') || clean.startsWith('//')) continue;
+    const normalized = clean.endsWith('/') || clean.includes('.') ? clean : `${clean}/`;
+    if (byUrl.has(normalized) && !reachable.has(normalized)) queue.push(normalized);
+  }
+}
+
+const orphans = [...byUrl.keys()]
+  .filter((url) => !reachable.has(url) && !UNLINKED_BY_DESIGN.includes(url))
+  .sort();
+
+if (orphans.length) {
+  console.error(`\n❌ 有 ${orphans.length} 頁從首頁點不到：`);
+  for (const url of orphans) console.error(`   ${url}`);
+  process.exit(1);
+}
+console.log(`✅ ${reachable.size} 頁都從首頁走得到`);
