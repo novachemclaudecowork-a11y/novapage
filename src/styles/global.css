@@ -345,3 +345,6 @@ h3 { font-size: 1.0625rem; margin: 1.5rem 0 .5rem; }
   font-size: .6875rem; font-weight: 700; letter-spacing: .04em;
   background: var(--accent); color: #fff; border-radius: 3px; padding: 1px 6px;
 }
+
+/* 公司簡介的落款 */
+.signature { text-align: end; margin-top: 28px; color: var(--text-muted); }
