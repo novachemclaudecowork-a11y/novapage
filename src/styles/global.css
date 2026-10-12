@@ -116,18 +116,49 @@ h3 { font-size: 1.0625rem; margin: 1.5rem 0 .5rem; }
 .cat-nav .empty { opacity: .55; }
 
 /* 大分類：圖示＋名稱＋產品數。四個大分類一眼分得出來，不必逐字讀 */
-.cat-nav .cat-main { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.cat-nav .cat-row { display: flex; align-items: stretch; }
+/* 右側留給箭頭，所以不再自己留右邊距，否則「稀釋劑&洗版劑」會被擠到換行 */
+.cat-nav .cat-main {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px;
+  font-weight: 600; padding-inline-end: 4px;
+}
 .cat-nav .cat-label { flex: 1; min-width: 0; }
 .cat-icon { width: 18px; height: 18px; flex: none; color: var(--brand); }
 .cat-nav .cat-main[aria-current] .cat-icon { color: var(--brand-dark); }
 .cat-count {
   flex: none; font-size: .75rem; font-weight: 600; color: var(--text-muted);
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 0 7px; line-height: 1.6;
+  border-radius: 10px; padding: 0 6px; line-height: 1.6;
   font-variant-numeric: tabular-nums;
 }
 .cat-nav .cat-main[aria-current] .cat-count {
   background: var(--brand); border-color: var(--brand); color: #fff;
+}
+
+/* 展開／收合的箭頭。分類名稱本身仍是連結，這顆鈕只管原地展開 */
+.cat-toggle {
+  flex: none; width: 30px; border: 0; background: none; cursor: pointer;
+  color: var(--text-muted); display: grid; place-items: center; padding: 0;
+}
+.cat-toggle:hover { background: var(--brand-light); color: var(--brand-dark); }
+.cat-toggle svg { width: 16px; height: 16px; transition: transform .22s ease; }
+.cat-nav li.open > .cat-row > .cat-toggle svg { transform: rotate(180deg); }
+
+/* 收合動畫。用 grid-template-rows 0fr→1fr，不必事先量內容高度，
+   也就不會在產品線數量不同時出現跳動。 */
+.cat-sub {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .26s ease;
+}
+.cat-nav li.open > .cat-sub { grid-template-rows: 1fr; }
+.cat-sub > div { overflow: hidden; }
+/* 收起時不該被鍵盤 Tab 到，也不該被搜尋頁面文字找到 */
+.cat-sub > div > ul { visibility: hidden; transition: visibility .26s; }
+.cat-nav li.open > .cat-sub > div > ul { visibility: visible; }
+
+/* 使用者在系統設定裡要求減少動態效果時，直接切換不做過場 */
+@media (prefers-reduced-motion: reduce) {
+  .cat-sub, .cat-toggle svg, .cat-sub > div > ul { transition: none; }
 }
 
 /* 側欄跟著捲動，看產品時分類仍在手邊。

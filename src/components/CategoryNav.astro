@@ -12,39 +12,77 @@ const { activeCategory, activeSubcategory } = Astro.props;
 <nav class="cat-nav" aria-label="產品分類">
   <h2>產品分類</h2>
   <ul>
-    {categories.map((cat) => (
-      <li>
-        <a
-          class="cat-main"
-          href={`/category/${cat.slug}/`}
-          aria-current={cat.slug === activeCategory ? 'true' : undefined}
-        >
-          <CategoryIcon slug={cat.slug} />
-          <span class="cat-label">{cat.name}</span>
-          <span class="cat-count">{productsOf(cat.slug).length}</span>
-        </a>
-        {/*
-          只展開目前所在的大分類。全部攤開是 33 條產品線、約 40 列，
-          在製版資材頁面上得先捲過整串網印油墨才看得到自己在哪一區。
-          收起來的分類點一下就進到它的頁面，那時才展開。
-        */}
-        {cat.slug === activeCategory && cat.children.length > 0 && (
-          <ul>
-            {cat.children.map((sub) => (
-              <li>
-                <a
-                  href={subcategoryHref(cat.slug, sub.slug)}
-                  class={sub.productCount === 0 ? 'empty' : undefined}
-                  aria-current={sub.slug === activeSubcategory ? 'true' : undefined}
-                  title={sub.productCount === 0 ? '此產品線尚未上架內容' : undefined}
-                >
-                  {sub.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </li>
-    ))}
+    {categories.map((cat) => {
+      // 目前所在的大分類預設展開，其餘收起。
+      // 全部攤開是 33 條產品線、約四十列，在製版資材頁面上得先捲過
+      // 整串網印油墨才看得到自己在哪一區。
+      const open = cat.slug === activeCategory;
+      const panelId = `cat-sub-${cat.slug}`;
+      return (
+        <li class={open ? 'open' : undefined}>
+          <div class="cat-row">
+            <a
+              class="cat-main"
+              href={`/category/${cat.slug}/`}
+              aria-current={open ? 'true' : undefined}
+            >
+              <CategoryIcon slug={cat.slug} />
+              <span class="cat-label">{cat.name}</span>
+              <span class="cat-count">{productsOf(cat.slug).length}</span>
+            </a>
+            {cat.children.length > 0 && (
+              <button
+                type="button"
+                class="cat-toggle"
+                aria-expanded={open ? 'true' : 'false'}
+                aria-controls={panelId}
+                aria-label={`展開或收合 ${cat.name} 的產品線`}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            )}
+          </div>
+          {cat.children.length > 0 && (
+            /* 外層負責收合動畫（grid-template-rows 0fr→1fr），
+               內層 overflow:hidden 把內容裁掉，不必先量高度 */
+            <div class="cat-sub" id={panelId}>
+              <div>
+                <ul>
+                  {cat.children.map((sub) => (
+                    <li>
+                      <a
+                        href={subcategoryHref(cat.slug, sub.slug)}
+                        class={sub.productCount === 0 ? 'empty' : undefined}
+                        aria-current={sub.slug === activeSubcategory ? 'true' : undefined}
+                        title={sub.productCount === 0 ? '此產品線尚未上架內容' : undefined}
+                      >
+                        {sub.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </li>
+      );
+    })}
   </ul>
 </nav>
+
+<script>
+  // 分類名稱本身是連結，點了會進到該分類頁；這個箭頭只在原地展開／收合，
+  // 讓人不離開目前頁面也能看其他分類底下有什麼。
+  // 沒有 JavaScript 時維持伺服器產生的狀態（目前所在的分類展開），仍可正常瀏覽。
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.cat-toggle')) {
+    button.addEventListener('click', () => {
+      const item = button.closest('li');
+      if (!item) return;
+      const open = item.classList.toggle('open');
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+</script>

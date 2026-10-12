@@ -57,22 +57,58 @@ try {
   console.log('\n只展開目前所在的大分類：');
   const activeChildren = published.find((c) => c.slug === 'platemaking')
     ?.children.filter((x) => x.published !== false).length;
-  check('只有一個大分類展開', await page.locator('.cat-nav ul ul').count(), 1);
+  check('只有一個大分類是展開的', await page.locator('.cat-nav > ul > li.open').count(), 1);
   check('展開的是目前所在的分類',
-    await page.locator('.cat-nav > ul > li:has(ul) .cat-main').getAttribute('href'),
+    await page.locator('.cat-nav > ul > li.open .cat-main').first().getAttribute('href'),
     '/category/platemaking/');
-  check('列出該分類底下所有產品線',
-    await page.locator('.cat-nav ul ul li').count(), activeChildren);
-  // 全部攤開是三十幾列，得先捲過整串網印油墨才看得到自己在哪一區
-  check('總列數遠少於全部攤開',
-    await page.locator('.cat-nav li').count(), published.length + activeChildren);
+  check('展開的分類列出底下所有產品線',
+    await page.locator('.cat-nav > ul > li.open .cat-sub li').count(), activeChildren);
+  // 收起來的產品線仍在 HTML 裡（連結才不會斷），但不該被看到
+  const collapsed = page.locator('.cat-nav > ul > li:not(.open)').first();
+  check('收起來的產品線看不到',
+    await collapsed.locator('.cat-sub li a').first().isVisible(), false);
+  check('但連結仍在頁面上（不會變成找不到的孤島）',
+    (await collapsed.locator('.cat-sub li a').count()) > 0, true);
 
   console.log('\n沒有指定分類時（產品總覽頁）：');
   const overview = await context.newPage();
   await overview.goto(`${server.base}/products/`, { waitUntil: 'networkidle' });
-  check('全部收起來', await overview.locator('.cat-nav ul ul').count(), 0);
+  check('全部收起來', await overview.locator('.cat-nav > ul > li.open').count(), 0);
   check('四個大分類仍在', await overview.locator('.cat-main').count(), published.length);
   await overview.close();
+
+  console.log('\n展開與收合：');
+  const first = page.locator('.cat-nav > ul > li').first();
+  const panel = first.locator('.cat-sub');
+  const panelHeight = async () => Math.round((await panel.boundingBox()).height);
+  check('一開始是收合的（高度為零）', await panelHeight(), 0);
+  check('箭頭標示為未展開',
+    await first.locator('.cat-toggle').getAttribute('aria-expanded'), 'false');
+
+  await first.locator('.cat-toggle').click();
+  await page.waitForTimeout(110);
+  const midway = await panelHeight();
+  await page.waitForTimeout(500);
+  const opened = await panelHeight();
+  // 只檢查最終高度的話，瞬間跳開也會通過；要確認中途真的在長高
+  check('展開過程中高度逐漸變化', midway > 0 && midway < opened, true);
+  check('展開後高度等於內容高度', opened > 100, true);
+  check('箭頭改標示為已展開',
+    await first.locator('.cat-toggle').getAttribute('aria-expanded'), 'true');
+  check('展開後兩個分類同時打開', await page.locator('.cat-nav > ul > li.open').count(), 2);
+
+  await first.locator('.cat-toggle').click();
+  await page.waitForTimeout(600);
+  check('再按一次收回去', await panelHeight(), 0);
+  check('收合後產品線不可見',
+    await first.locator('.cat-sub li a').first().isVisible(), false);
+
+  // 分類名稱本身仍是連結，點了要進到該分類頁，不能被箭頭搶走
+  await first.locator('.cat-main').click();
+  await page.waitForLoadState('networkidle');
+  check('點分類名稱會進到該分類頁',
+    new URL(page.url()).pathname, `/category/${published[0].slug}/`);
+  await page.goto(`${server.base}/category/platemaking/`, { waitUntil: 'networkidle' });
 
   console.log('\n目前所在位置：');
   check('目前的分類有標記',
