@@ -10,10 +10,7 @@ const paragraphs = about.body.split('\n').filter((line) => line.trim());
   <Breadcrumb items={[{ label: '公司簡介' }]} />
   <h1>公司簡介</h1>
 
-  {paragraphs.map((text, index) => (
-    /* 最後一行是落款，靠右、不縮排，才看得出是署名而不是又一段內文 */
-    <p class={index === paragraphs.length - 1 ? 'signature' : undefined}>{text}</p>
-  ))}
+  {paragraphs.map((text) => <p>{text}</p>)}
 
   <h2>聯絡資訊</h2>
   <dl class="product-meta">
