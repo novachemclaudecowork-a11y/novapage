@@ -672,6 +672,12 @@ function renderProductEditor(product) {
   /* 文件（SDS、說明書） */
   const docList = el('ul', { class: 'docs' });
   const renderDocs = () => {
+    // replaceChildren 不會忽略 null（el() 才會），直接傳進去會印出字串 "null"，
+    // 所以空狀態要另外判斷
+    if (!(product.documents ?? []).length) {
+      docList.replaceChildren(el('p', { class: 'hint' }, '尚未上傳文件'));
+      return;
+    }
     docList.replaceChildren(
       ...(product.documents ?? []).map((doc, index) =>
         el('li', {},
@@ -691,7 +697,6 @@ function renderProductEditor(product) {
           }, '移除'),
         ),
       ),
-      (product.documents ?? []).length ? null : el('p', { class: 'hint' }, '尚未上傳文件'),
     );
   };
   renderDocs();

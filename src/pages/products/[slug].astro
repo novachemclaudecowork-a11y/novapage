@@ -78,6 +78,22 @@ const summary = plainText(specHtml).slice(0, 150) || `${product.name}｜貝星�
           <p class="notice warn">此產品尚無說明資料，歡迎來電洽詢。</p>
         </div>
       )}
+
+      {product.documents.length > 0 && (
+        <div class="spec documents">
+          <h2>相關文件下載</h2>
+          <ul>
+            {product.documents.map((doc) => (
+              <li>
+                <a href={doc.file} target="_blank" rel="noopener" download>
+                  {doc.label}
+                  <span class="doc-type">PDF</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   </article>
 

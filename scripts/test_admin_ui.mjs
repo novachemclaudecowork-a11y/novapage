@@ -22,7 +22,8 @@ const fixture = () => ({
       category: 'screen-inks', subcategory: 'cw-waterbased',
       published: true, order: 60,
       images: ['/images/products/1/127-1b.jpg', '/images/products/1/121-1l.jpg'],
-      documents: [], spec_html: '<p>測試說明</p>', legacy: { m: '1', pg: 6 },
+      documents: [{ label: '安全資料表', file: '/documents/test-sds.pdf' }],
+      spec_html: '<p>測試說明</p>', legacy: { m: '1', pg: 6 },
     },
     {
       slug: 'bs-thinner', name: '油墨專用稀釋劑', code: 'BS 稀釋劑系列',
@@ -112,8 +113,12 @@ await context.route('**/admin/api/**', async (route) => {
     return route.fulfill({ json: fixture() });
   }
   if (path === 'upload' && method === 'POST') {
-    uploads.push(request.postData()?.length ?? 0);
-    return route.fulfill({ json: { path: '/images/products/uploaded-test.png', name: 'uploaded-test.png' } });
+    const body = request.postData() ?? '';
+    uploads.push(body.length);
+    const isPdf = body.includes('application/pdf');
+    return route.fulfill({ json: isPdf
+      ? { path: '/documents/uploaded-test.pdf', name: 'uploaded-test.pdf' }
+      : { path: '/images/products/uploaded-test.png', name: 'uploaded-test.png' } });
   }
   if (method === 'PUT') {
     saved.push({ section: path, body: JSON.parse(request.postData() ?? '{}') });
@@ -257,6 +262,26 @@ check('預覽跟著放上主圖',
   (await page.locator('.preview-frame').getAttribute('srcdoc'))
     ?.includes('/images/products/uploaded-test.png'), true);
 
+console.log('\n安全資料表與說明書：');
+check('列出既有文件', await page.locator('.docs li').count(), 1);
+check('文件名稱可直接改', await page.locator('.docs li .label').inputValue(), '安全資料表');
+check('可另開分頁檢視',
+  await page.locator('.docs li a').getAttribute('href'), '/documents/test-sds.pdf');
+
+await page.locator('.docs li').getByRole('button', { name: '移除' }).click();
+await page.waitForTimeout(150);
+check('移除後顯示空狀態', (await page.locator('.docs').textContent())?.trim(), '尚未上傳文件');
+// replaceChildren 不會忽略 null，之前會在清單旁邊印出字串 "null"
+check('空狀態不會印出 null', (await page.locator('.docs').textContent())?.includes('null'), false);
+
+await page.setInputFiles('#f-doc', {
+  name: 'sds.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4'),
+});
+await page.waitForTimeout(400);
+check('上傳後加回一份', await page.locator('.docs li').count(), 1);
+check('名稱預設取檔名（去掉副檔名）',
+  await page.locator('.docs li .label').inputValue(), 'sds');
+
 console.log('\n儲存：');
 await page.locator('#save').click();
 await page.waitForTimeout(600);
@@ -271,6 +296,8 @@ check('分類已更新', edited?.category, 'thinners-cleaners');
 check('下架狀態已保存', edited?.published, false);
 check('照片為新上傳的', edited?.images, ['/images/products/uploaded-test.png']);
 check('內文格式一併存出去', edited?.spec_format, 'markdown');
+check('文件一併存出去', edited?.documents,
+  [{ label: 'sds', file: '/documents/uploaded-test.pdf' }]);
 check('轉址所需的 legacy 欄位未遺失', edited?.legacy, { m: '1', pg: 6 });
 
 console.log('\n新增產品：');

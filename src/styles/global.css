@@ -276,3 +276,20 @@ h3 { font-size: 1.0625rem; margin: 1.5rem 0 .5rem; }
 @media (max-width: 480px) {
   .home-news li { flex-direction: column; gap: 2px; }
 }
+
+/* 產品的安全資料表與說明書下載 */
+.documents { margin-top: 24px; }
+.documents h2 { margin-top: 1.5rem; }
+.documents ul { list-style: none; margin: 0; padding: 0; }
+.documents li + li { margin-top: 8px; }
+.documents a {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 14px; text-decoration: none; background: var(--surface);
+  font-size: .9375rem;
+}
+.documents a:hover { border-color: var(--brand); background: var(--brand-light); }
+.doc-type {
+  font-size: .6875rem; font-weight: 700; letter-spacing: .04em;
+  background: var(--accent); color: #fff; border-radius: 3px; padding: 1px 6px;
+}
